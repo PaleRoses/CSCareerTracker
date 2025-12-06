@@ -21,7 +21,7 @@
     "@supabase/supabase-js": "^2.86.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
-    "next": "16.0.6",
+    "next": "^16.0.7",
     "next-auth": "^5.0.0-beta.30",
     "react": "19.2.0",
     "react-dom": "19.2.0",
