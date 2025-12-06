@@ -1,0 +1,383 @@
+/**
+ * Global Styles Entry Point
+ *
+ * This file imports Tailwind CSS and defines custom theme values
+ * that mirror our design token system.
+ *
+ * Tailwind v4 uses a CSS-first configuration approach with @theme.
+ */
+
+@import "tailwindcss";
+
+/* Import design system CSS tokens */
+@import "../design-system/css-tokens.css";
+
+/* =============================================================================
+   TAILWIND THEME CONFIGURATION (v4 CSS-first approach)
+   ============================================================================= */
+
+@theme {
+  /* Color tokens - mapped to design system */
+  --color-primary: #6ee7ff;
+  --color-primary-hover: #5dd6ee;
+  --color-primary-muted: rgba(110, 231, 255, 0.15);
+  --color-primary-subtle: rgba(110, 231, 255, 0.08);
+  --color-primary-highlight: rgba(110, 231, 255, 0.12);
+
+  --color-secondary: #a78bfa;
+  --color-secondary-hover: #9678e9;
+  --color-secondary-muted: rgba(167, 139, 250, 0.15);
+  --color-secondary-subtle: rgba(167, 139, 250, 0.08);
+
+  --color-success: #6fffc1;
+  --color-success-muted: rgba(111, 255, 193, 0.15);
+
+  --color-warning: #fcd34d;
+  --color-warning-muted: rgba(252, 211, 77, 0.15);
+
+  --color-error: #ff6b6b;
+  --color-error-text: #fda4af;
+  --color-error-muted: rgba(253, 164, 175, 0.15);
+
+  /* Background colors */
+  --color-background: #040714;
+  --color-background-paper: #0a0f1f;
+  --color-background-elevated: #0d1225;
+  --color-background-glass: rgba(255, 255, 255, 0.08);
+  --color-background-glass-hover: rgba(255, 255, 255, 0.12);
+  --color-background-glass-subtle: rgba(255, 255, 255, 0.05);
+  --color-background-glass-faint: rgba(255, 255, 255, 0.03);
+  --color-background-sidebar: rgba(255, 255, 255, 0.04);
+
+  /* Text colors */
+  --color-foreground: #f6f8ff;
+  --color-foreground-secondary: rgba(239, 242, 255, 0.7);
+  --color-foreground-muted: rgba(255, 255, 255, 0.5);
+  --color-foreground-disabled: rgba(255, 255, 255, 0.2);
+
+  /* Border colors */
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-muted: rgba(255, 255, 255, 0.08);
+  --color-border-faint: rgba(255, 255, 255, 0.05);
+
+  /* Font family */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-default: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadows */
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 4px 20px rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 4px 20px rgba(255, 255, 255, 0.08);
+  --shadow-glow: 0 0 20px rgba(110, 231, 255, 0.3);
+
+  /* Layout */
+  --width-sidebar: 260px;
+  --height-topbar: 64px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-default: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Backdrop filters */
+  --backdrop-glass: blur(12px) saturate(180%);
+  --backdrop-glass-sm: blur(4px) saturate(180%);
+  --backdrop-glass-lg: blur(20px) saturate(180%);
+}
+
+/* =============================================================================
+   BASE STYLES
+   ============================================================================= */
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Ensure dark mode is always active */
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* =============================================================================
+   COMPONENT UTILITY CLASSES
+   ============================================================================= */
+
+@layer components {
+  /**
+   * Glass Card - Glassmorphism card effect
+   * Use: <div className="glass-card">...</div>
+   */
+  .glass-card {
+    background-color: var(--color-background-glass);
+    backdrop-filter: var(--backdrop-glass-sm);
+    -webkit-backdrop-filter: var(--backdrop-glass-sm);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--transition-default);
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /**
+   * Glass Card (no hover) - For cards that shouldn't animate
+   */
+  .glass-card-static {
+    background-color: var(--color-background-glass);
+    backdrop-filter: var(--backdrop-glass-sm);
+    -webkit-backdrop-filter: var(--backdrop-glass-sm);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  /**
+   * Glass Surface - For sidebars, topbars, panels
+   * Use: <aside className="glass-surface">...</aside>
+   */
+  .glass-surface {
+    background-color: var(--color-background-sidebar);
+    backdrop-filter: var(--backdrop-glass);
+    -webkit-backdrop-filter: var(--backdrop-glass);
+  }
+
+  /**
+   * Primary Gradient Button
+   * Use: <button className="btn-gradient-primary">...</button>
+   */
+  .btn-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    color: var(--color-background);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-default);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all var(--transition-default);
+  }
+
+  .btn-gradient-primary:hover {
+    background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-secondary-hover) 100%);
+    box-shadow: var(--shadow-glow);
+  }
+
+  /**
+   * Gradient Text - For logo/branding
+   * Use: <h1 className="text-gradient-primary">...</h1>
+   */
+  .text-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /**
+   * Status Chips
+   * Use: <span className="chip-offer">Offer</span>
+   */
+  .chip-offer {
+    background-color: var(--status-offer-bg);
+    color: var(--status-offer-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  .chip-rejected {
+    background-color: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  .chip-pending {
+    background-color: var(--status-pending-bg);
+    color: var(--status-pending-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  .chip-in-progress {
+    background-color: var(--status-in-progress-bg);
+    color: var(--status-in-progress-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  .chip-upcoming {
+    background-color: var(--status-upcoming-bg);
+    color: var(--status-upcoming-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  .chip-withdrawn {
+    background-color: var(--status-withdrawn-bg);
+    color: var(--status-withdrawn-text);
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+  }
+
+  /**
+   * Navigation Item (active state)
+   * Use: <a className="nav-item nav-item-active">...</a>
+   */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-default);
+    color: var(--color-foreground-secondary);
+    transition: all var(--transition-fast);
+  }
+
+  .nav-item:hover {
+    background-color: var(--color-background-glass-subtle);
+    color: var(--color-foreground);
+  }
+
+  .nav-item-active {
+    background-color: var(--color-primary-highlight);
+    color: var(--color-primary);
+  }
+
+  .nav-item-active:hover {
+    background-color: var(--color-primary-highlight-hover);
+  }
+
+  /**
+   * Data Table Container
+   * Use: <div className="data-table-container">...</div>
+   */
+  .data-table-container {
+    background-color: var(--color-background-glass-faint);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  /**
+   * Page Header
+   * Use: <header className="page-header">...</header>
+   */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* =============================================================================
+   UTILITY CLASSES
+   ============================================================================= */
+
+@layer utilities {
+  /**
+   * Background gradient for main content area
+   */
+  .bg-main-gradient {
+    background: linear-gradient(180deg, var(--color-background) 0%, var(--color-background-paper) 100%);
+  }
+
+  /**
+   * Login page decorative background
+   */
+  .bg-login-gradient {
+    background:
+      radial-gradient(circle at top, rgba(110, 231, 255, 0.15), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1), transparent 50%);
+  }
+
+  /**
+   * Sidebar width utility
+   */
+  .w-sidebar {
+    width: var(--width-sidebar);
+  }
+
+  /**
+   * Content area margin (accounts for sidebar)
+   */
+  .ml-sidebar {
+    margin-left: var(--width-sidebar);
+  }
+
+  /**
+   * Topbar height utility
+   */
+  .h-topbar {
+    height: var(--height-topbar);
+  }
+
+  /**
+   * Content padding top (accounts for topbar)
+   */
+  .pt-topbar {
+    padding-top: var(--height-topbar);
+  }
+
+  /**
+   * Backdrop blur utilities
+   */
+  .backdrop-glass {
+    backdrop-filter: var(--backdrop-glass);
+    -webkit-backdrop-filter: var(--backdrop-glass);
+  }
+
+  .backdrop-glass-sm {
+    backdrop-filter: var(--backdrop-glass-sm);
+    -webkit-backdrop-filter: var(--backdrop-glass-sm);
+  }
+
+  .backdrop-glass-lg {
+    backdrop-filter: var(--backdrop-glass-lg);
+    -webkit-backdrop-filter: var(--backdrop-glass-lg);
+  }
+
+  /**
+   * Transition utilities
+   */
+  .transition-fast {
+    transition: all var(--transition-fast);
+  }
+
+  .transition-default {
+    transition: all var(--transition-default);
+  }
+
+  .transition-slow {
+    transition: all var(--transition-slow);
+  }
+}

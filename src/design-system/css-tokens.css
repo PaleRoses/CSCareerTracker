@@ -1,0 +1,270 @@
+/**
+ * CSS Custom Properties (Design Tokens)
+ *
+ * These CSS variables mirror the TypeScript tokens in tokens.ts.
+ * They provide a bridge between the design system and CSS/Tailwind.
+ *
+ * When migrating to Hero UI, these will be mapped to --heroui-* variables.
+ */
+
+:root {
+  /* ==========================================================================
+     COLOR TOKENS - Brand
+     ========================================================================== */
+
+  /* Primary */
+  --color-primary: #6ee7ff;
+  --color-primary-hover: #5dd6ee;
+  --color-primary-muted: rgba(110, 231, 255, 0.15);
+  --color-primary-subtle: rgba(110, 231, 255, 0.08);
+  --color-primary-highlight: rgba(110, 231, 255, 0.12);
+  --color-primary-highlight-hover: rgba(110, 231, 255, 0.18);
+
+  /* Secondary */
+  --color-secondary: #a78bfa;
+  --color-secondary-hover: #9678e9;
+  --color-secondary-muted: rgba(167, 139, 250, 0.15);
+  --color-secondary-subtle: rgba(167, 139, 250, 0.08);
+
+  /* Success */
+  --color-success: #6fffc1;
+  --color-success-muted: rgba(111, 255, 193, 0.15);
+  --color-success-subtle: rgba(111, 255, 193, 0.08);
+
+  /* Warning */
+  --color-warning: #fcd34d;
+  --color-warning-muted: rgba(252, 211, 77, 0.15);
+  --color-warning-subtle: rgba(252, 211, 77, 0.08);
+
+  /* Error */
+  --color-error: #ff6b6b;
+  --color-error-text: #fda4af;
+  --color-error-muted: rgba(253, 164, 175, 0.15);
+  --color-error-subtle: rgba(253, 164, 175, 0.08);
+
+  /* ==========================================================================
+     COLOR TOKENS - Background
+     ========================================================================== */
+
+  --color-bg-default: #040714;
+  --color-bg-paper: #0a0f1f;
+  --color-bg-elevated: #0d1225;
+  --color-bg-glass: rgba(255, 255, 255, 0.08);
+  --color-bg-glass-hover: rgba(255, 255, 255, 0.12);
+  --color-bg-glass-subtle: rgba(255, 255, 255, 0.05);
+  --color-bg-glass-faint: rgba(255, 255, 255, 0.03);
+  --color-bg-sidebar: rgba(255, 255, 255, 0.04);
+
+  /* ==========================================================================
+     COLOR TOKENS - Text
+     ========================================================================== */
+
+  --color-text-primary: #f6f8ff;
+  --color-text-secondary: rgba(239, 242, 255, 0.7);
+  --color-text-muted: rgba(255, 255, 255, 0.5);
+  --color-text-disabled: rgba(255, 255, 255, 0.2);
+
+  /* ==========================================================================
+     COLOR TOKENS - Border
+     ========================================================================== */
+
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  --color-border-muted: rgba(255, 255, 255, 0.08);
+  --color-border-faint: rgba(255, 255, 255, 0.05);
+
+  /* ==========================================================================
+     COLOR TOKENS - Overlay
+     ========================================================================== */
+
+  --color-overlay-light: rgba(255, 255, 255, 0.05);
+  --color-overlay-medium: rgba(255, 255, 255, 0.1);
+  --color-overlay-dark: rgba(0, 0, 0, 0.5);
+
+  /* ==========================================================================
+     TYPOGRAPHY TOKENS
+     ========================================================================== */
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fira Code", "SF Mono", Monaco, "Cascadia Code", monospace;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ==========================================================================
+     SPACING TOKENS
+     ========================================================================== */
+
+  --spacing-px: 1px;
+  --spacing-0: 0;
+  --spacing-0-5: 0.25rem;
+  --spacing-1: 0.5rem;
+  --spacing-1-5: 0.75rem;
+  --spacing-2: 1rem;
+  --spacing-2-5: 1.25rem;
+  --spacing-3: 1.5rem;
+  --spacing-4: 2rem;
+  --spacing-5: 2.5rem;
+  --spacing-6: 3rem;
+  --spacing-8: 4rem;
+  --spacing-10: 5rem;
+  --spacing-12: 6rem;
+
+  /* ==========================================================================
+     BORDER RADIUS TOKENS
+     ========================================================================== */
+
+  --radius-none: 0;
+  --radius-sm: 0.25rem;
+  --radius-default: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-full: 9999px;
+
+  /* ==========================================================================
+     SHADOW TOKENS
+     ========================================================================== */
+
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-default: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 4px 20px rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 4px 20px rgba(255, 255, 255, 0.08);
+  --shadow-glow: 0 0 20px rgba(110, 231, 255, 0.3);
+  --shadow-glow-secondary: 0 0 20px rgba(167, 139, 250, 0.3);
+
+  /* ==========================================================================
+     TRANSITION TOKENS
+     ========================================================================== */
+
+  --transition-fast: 150ms ease;
+  --transition-default: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 500ms ease;
+
+  --duration-fast: 150ms;
+  --duration-default: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+
+  /* ==========================================================================
+     EFFECT TOKENS (Glassmorphism)
+     ========================================================================== */
+
+  --blur-none: blur(0);
+  --blur-sm: blur(4px);
+  --blur-default: blur(12px);
+  --blur-lg: blur(20px);
+  --blur-xl: blur(40px);
+
+  --saturate-default: saturate(180%);
+  --saturate-high: saturate(200%);
+
+  --backdrop-glass: blur(12px) saturate(180%);
+  --backdrop-glass-sm: blur(4px) saturate(180%);
+  --backdrop-glass-lg: blur(20px) saturate(180%);
+
+  /* ==========================================================================
+     GRADIENT TOKENS
+     ========================================================================== */
+
+  --gradient-primary: linear-gradient(135deg, #6ee7ff 0%, #a78bfa 100%);
+  --gradient-primary-hover: linear-gradient(135deg, #5dd6ee 0%, #9678e9 100%);
+  --gradient-primary-subtle: linear-gradient(135deg, rgba(110, 231, 255, 0.2) 0%, rgba(167, 139, 250, 0.2) 100%);
+
+  --gradient-background: linear-gradient(180deg, #040714 0%, #0a0f1f 100%);
+  --gradient-background-radial: radial-gradient(ellipse at top, #0d1225 0%, #040714 100%);
+
+  --gradient-radial-primary: radial-gradient(circle at top, rgba(110, 231, 255, 0.15), transparent 50%);
+  --gradient-radial-secondary: radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1), transparent 50%);
+  --gradient-radial-success: radial-gradient(circle at top right, rgba(111, 255, 193, 0.1), transparent 50%);
+
+  /* ==========================================================================
+     LAYOUT TOKENS
+     ========================================================================== */
+
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 72px;
+  --topbar-height: 64px;
+  --max-content-width: 1400px;
+  --container-padding: 2rem;
+
+  /* ==========================================================================
+     Z-INDEX TOKENS
+     ========================================================================== */
+
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+
+  /* ==========================================================================
+     STATUS COLORS (Semantic)
+     ========================================================================== */
+
+  /* Offer */
+  --status-offer-bg: rgba(111, 255, 193, 0.15);
+  --status-offer-text: #6fffc1;
+
+  /* Rejected */
+  --status-rejected-bg: rgba(253, 164, 175, 0.15);
+  --status-rejected-text: #fda4af;
+
+  /* Pending */
+  --status-pending-bg: rgba(252, 211, 77, 0.15);
+  --status-pending-text: #fcd34d;
+
+  /* In Progress */
+  --status-in-progress-bg: rgba(110, 231, 255, 0.15);
+  --status-in-progress-text: #6ee7ff;
+
+  /* Upcoming */
+  --status-upcoming-bg: rgba(167, 139, 250, 0.15);
+  --status-upcoming-text: #a78bfa;
+
+  /* Withdrawn */
+  --status-withdrawn-bg: rgba(156, 163, 175, 0.15);
+  --status-withdrawn-text: #9ca3af;
+
+  /* ==========================================================================
+     STAGE COLORS (Application Stages)
+     ========================================================================== */
+
+  --stage-applied: #6ee7ff;
+  --stage-screening: #a78bfa;
+  --stage-interview: #fcd34d;
+  --stage-assessment: #f97316;
+  --stage-offer: #6fffc1;
+  --stage-rejected: #ff6b6b;
+}
+
+/* Dark mode is the default and only mode for this app */
+html {
+  color-scheme: dark;
+}
