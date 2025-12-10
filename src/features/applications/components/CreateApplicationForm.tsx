@@ -45,7 +45,8 @@ export function CreateApplicationForm({
   )
 
   const today = new Date().toISOString().split('T')[0]
-  const jobError = state.fieldErrors?.['jobId']?.[0]
+  // Only show job error if no job is actually selected (clears stale validation errors)
+  const jobError = !selectedJob ? state.fieldErrors?.['jobId']?.[0] : undefined
 
   return (
     <div className="p-6">
