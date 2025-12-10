@@ -13,6 +13,9 @@
 DROP POLICY IF EXISTS "Users can view own profile" ON users;
 DROP POLICY IF EXISTS "Users can update own profile" ON users;
 DROP POLICY IF EXISTS "Users can create own profile" ON users;
+DROP POLICY IF EXISTS "Admins can view all users" ON users;
+DROP POLICY IF EXISTS "Admins can update all users" ON users;
+DROP POLICY IF EXISTS "Admins can delete users" ON users;
 DROP POLICY IF EXISTS "Companies are viewable by everyone" ON companies;
 DROP POLICY IF EXISTS "Admins can insert companies" ON companies;
 DROP POLICY IF EXISTS "Authenticated users can insert companies" ON companies;
@@ -68,6 +71,40 @@ CREATE POLICY "Users can update own profile"
 CREATE POLICY "Users can create own profile"
   ON users FOR INSERT
   WITH CHECK (get_user_id() = user_id);
+
+-- Admins and techno_warlords can view all users
+CREATE POLICY "Admins can view all users"
+  ON users FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM users u
+      WHERE u.user_id = get_user_id()
+      AND u.role IN ('admin', 'techno_warlord')
+    )
+  );
+
+-- Admins and techno_warlords can update any user
+CREATE POLICY "Admins can update all users"
+  ON users FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM users u
+      WHERE u.user_id = get_user_id()
+      AND u.role IN ('admin', 'techno_warlord')
+    )
+  );
+
+-- Admins and techno_warlords can delete users (except themselves)
+CREATE POLICY "Admins can delete users"
+  ON users FOR DELETE
+  USING (
+    get_user_id() != user_id
+    AND EXISTS (
+      SELECT 1 FROM users u
+      WHERE u.user_id = get_user_id()
+      AND u.role IN ('admin', 'techno_warlord')
+    )
+  );
 
 -- =============================================================================
 -- COMPANIES POLICIES (Public read access)

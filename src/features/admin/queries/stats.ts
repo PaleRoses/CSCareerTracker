@@ -1,6 +1,6 @@
 'use server'
 
-import { createUserClient } from '@/lib/supabase/server'
+import { createCacheClient } from '@/lib/supabase/server'
 import { auth } from '@/features/auth'
 import { isAdminRole } from '../constants'
 import { logger } from '@/lib/logger'
@@ -25,15 +25,21 @@ export async function getAdminStats(): Promise<AdminStats> {
       return defaultStats
     }
 
-    const userId = session.user.id
-    const supabase = createUserClient(userId)
+    // Use service role client since we've already verified admin status
+    // This bypasses RLS which would otherwise create a circular dependency
+    const supabase = createCacheClient()
 
     const { data: users, error } = await supabase
       .from('users')
       .select('user_id, role, status, signup_date')
 
     if (error) {
-      logger.error('Error fetching admin stats', { error })
+      logger.error('Error fetching admin stats', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+      })
       return defaultStats
     }
 

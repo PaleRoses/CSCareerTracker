@@ -34,7 +34,12 @@ export default async function JobBrowserPage() {
       />
 
       <QueryPreview query="jobs-list">
-        <JobsTable jobs={jobs} canManageJobs={hasJobManagement} currentUserId={session?.user?.id} />
+        <JobsTable
+          jobs={jobs}
+          canManageJobs={hasJobManagement}
+          currentUserId={session?.user?.id}
+          companies={companyOptions}
+        />
       </QueryPreview>
     </Box>
   );

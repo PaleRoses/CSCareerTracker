@@ -22,18 +22,22 @@ import type { Job } from "../types";
 import { JOB_TYPE_LABELS } from "../types";
 import { removeJobAction } from "../actions";
 import { JOB_TYPE_VARIANTS } from "../constants";
+import { EditJobModal, type CompanyOption } from "@/features/recruiter";
 
 interface JobsTableProps {
   jobs: Job[];
   canManageJobs?: boolean;
   currentUserId?: string;
+  /** Companies for the edit modal - required if canManageJobs is true */
+  companies?: CompanyOption[];
 }
 
-export default function JobsTable({ jobs, canManageJobs = false, currentUserId }: JobsTableProps) {
+export default function JobsTable({ jobs, canManageJobs = false, currentUserId, companies = [] }: JobsTableProps) {
   const canEditJob = (job: Job) => canManageJobs && job.postedBy === currentUserId;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [jobToRemove, setJobToRemove] = useState<Job | null>(null);
+  const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
 
   const handleRemoveJob = () => {
     if (!jobToRemove) return;
@@ -127,7 +131,7 @@ export default function JobsTable({ jobs, canManageJobs = false, currentUserId }
                   size="small"
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(ROUTES.recruiter.jobDetail(params.row.id));
+                    setJobToEdit(params.row);
                   }}
                   aria-label="Edit job"
                   className="text-foreground/50 hover:text-primary hover:bg-primary/10"
@@ -206,6 +210,16 @@ export default function JobsTable({ jobs, canManageJobs = false, currentUserId }
           </Button>
         </DialogActions>
       </Dialog>
+
+      {jobToEdit && (
+        <EditJobModal
+          open={!!jobToEdit}
+          onClose={() => setJobToEdit(null)}
+          companies={companies}
+          job={jobToEdit}
+          onSuccess={() => router.refresh()}
+        />
+      )}
     </>
   );
 }

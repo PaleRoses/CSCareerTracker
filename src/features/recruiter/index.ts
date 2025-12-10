@@ -17,6 +17,7 @@ export { OUTCOME_VARIANTS } from './constants'
 export {
   JobPostingForm,
   PostJobModal,
+  EditJobModal,
   RecruiterJobsActions,
   JobFormRouterWrapper,
   CandidatesList,

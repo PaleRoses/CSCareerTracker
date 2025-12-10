@@ -2,7 +2,7 @@
 
 import { auth } from '@/features/auth/auth'
 import { isAdminRole } from '../constants'
-import { createUserClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { DeleteUserSchema } from '../schemas/user-management.schema'
 import {
   validationError,
@@ -40,7 +40,7 @@ export async function deleteUserAction(
 
     const { userId } = validation.data
     const adminUserId = session.user.id
-    const supabase = createUserClient(adminUserId)
+    const supabase = await createAdminClient()
 
     if (userId === adminUserId) {
       return authError('You cannot delete your own account')

@@ -53,7 +53,7 @@ export default async function RecruiterJobsPage() {
                 </Text>
               </Box>
             )}
-            <JobsTable jobs={jobs} canManageJobs currentUserId={userId} />
+            <JobsTable jobs={jobs} canManageJobs currentUserId={userId} companies={companyOptions} />
           </>
         )}
       </QueryPreview>

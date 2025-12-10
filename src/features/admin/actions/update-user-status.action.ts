@@ -2,7 +2,7 @@
 
 import { auth } from '@/features/auth/auth'
 import { isAdminRole } from '../constants'
-import { createUserClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { UpdateUserStatusSchema } from '../schemas/user-management.schema'
 import {
   validationError,
@@ -46,7 +46,7 @@ export async function updateUserStatusAction(
 
     const { userId, newStatus, reason } = validation.data
     const adminUserId = session.user.id
-    const supabase = createUserClient(adminUserId)
+    const supabase = await createAdminClient()
 
     if (userId === adminUserId) {
       return authError('You cannot change your own status')
