@@ -18,7 +18,6 @@ const getCachedCompaniesWithStats = unstable_cache(
   async (): Promise<Company[]> => {
     const supabase = createCacheClient()
 
-    // Get companies with job count
     const { data, error } = await supabase
       .from('companies')
       .select(`

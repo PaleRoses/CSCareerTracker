@@ -81,7 +81,7 @@ export async function createApplicationAction(
           .from('companies')
           .insert({
             company_name: companyName,
-            website: '', // Could be added to form later
+            website: '',
           })
           .select('company_id')
           .single()

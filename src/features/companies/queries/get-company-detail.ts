@@ -38,8 +38,7 @@ const getCachedCompanyDetail = unstable_cache(
       .single()
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        // No rows returned
+      if (error.code === 'PGRST116') { // No rows
         return null
       }
       logger.error('Error fetching company detail', { error, companyId })

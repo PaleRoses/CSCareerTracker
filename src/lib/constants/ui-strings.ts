@@ -104,12 +104,8 @@ export const UI_STRINGS = {
     withdrawn: 'Application was withdrawn',
     offerReceived: 'Offer received! 🎉',
     stageClickHint: 'Click any stage to add notes',
-
-    // Dashboard
     allUpToDate: 'All applications are up to date!',
     needsAttention: (days: number) => `Applications with no updates in ${days}+ days`,
-
-    // Empty states
     noApplications: 'No applications yet',
     noActivity: 'No recent activity',
   },

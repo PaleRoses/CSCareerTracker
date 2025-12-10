@@ -11,8 +11,7 @@ import { UI_STRINGS } from "@/lib/constants/ui-strings";
 import { QueryPreview } from "@/components/dev";
 
 export default async function DashboardPage() {
-  // Layout guarantees auth - session.user is always present
-  const session = (await auth())!;
+  const session = (await auth())!; // Layout guarantees auth
   const user = session.user!;
 
   const dashboardData = await getDashboardStats();

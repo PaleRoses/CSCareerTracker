@@ -54,7 +54,6 @@ export async function proxy(request: NextRequest) {
 
   // 3. Onboarding routes - allow authenticated users without role
   if (isOnboardingRoute(pathname)) {
-    // If user already has a role, redirect them to dashboard
     if (session.user.role) {
       return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.nextUrl.origin))
     }
@@ -63,7 +62,6 @@ export async function proxy(request: NextRequest) {
 
   // 4. Protected routes - require role
   if (!session.user.role) {
-    // User needs to complete onboarding
     return NextResponse.redirect(new URL(AUTH_CALLBACKS.NEEDS_ONBOARDING, request.nextUrl.origin))
   }
 

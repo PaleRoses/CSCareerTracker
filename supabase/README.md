@@ -6,54 +6,6 @@ This directory contains all SQL code for the Career Tracker application database
 
 **Database System:** PostgreSQL 15+ (via Supabase)
 
-## Entity-Relationship Diagram
-
-```
-┌─────────────┐       ┌─────────────┐       ┌─────────────┐
-│   USERS     │       │  COMPANIES  │       │   STAGES    │
-├─────────────┤       ├─────────────┤       ├─────────────┤
-│ user_id (PK)│       │ company_id  │       │ stage_id    │
-│ email       │       │ company_name│       │ stage_name  │
-│ fname/lname │       │ website     │       │ order_index │
-│ role        │       │ locations[] │       │ success_flag│
-│ status      │       │ size        │       └──────┬──────┘
-└──────┬──────┘       └──────┬──────┘              │
-       │                     │                     │
-       │                     │                     │
-       │              ┌──────┴──────┐              │
-       │              │    JOBS     │              │
-       │              ├─────────────┤              │
-       │              │ job_id (PK) │              │
-       │              │ company_id  │──FK          │
-       │              │ job_title   │              │
-       │              │ job_type    │              │
-       │              │ posted_by   │──FK (users)  │
-       │              └──────┬──────┘              │
-       │                     │                     │
-       │                     │                     │
-       │         ┌───────────┴───────────┐        │
-       │         │     APPLICATIONS      │        │
-       │         ├───────────────────────┤        │
-       └────FK───│ user_id              │        │
-                 │ job_id               │──FK     │
-                 │ position_title       │        │
-                 │ application_date     │        │
-                 │ final_outcome        │        │
-                 └───────────┬───────────┘        │
-                             │                    │
-                             │                    │
-                 ┌───────────┴───────────┐        │
-                 │  APPLICATION_STAGES   │        │
-                 ├───────────────────────┤        │
-                 │ app_stage_id (PK)     │        │
-                 │ application_id        │──FK    │
-                 │ stage_id              │──FK────┘
-                 │ started_at/ended_at   │
-                 │ status                │
-                 │ notes                 │
-                 │ updated_by            │──FK (users)
-                 └───────────────────────┘
-```
 
 ## File Descriptions
 

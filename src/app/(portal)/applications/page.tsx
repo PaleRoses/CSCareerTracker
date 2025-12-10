@@ -8,13 +8,11 @@ import { UI_STRINGS } from "@/lib/constants/ui-strings";
 import { QueryPreview } from "@/components/dev";
 
 export default async function ApplicationsPage() {
-  // Fetch applications and companies server-side in parallel
   const [applications, companiesData] = await Promise.all([
     getApplications(),
     getCompanies(),
   ]);
 
-  // Transform companies for the form dropdown
   const companies = transformCompaniesToOptions(companiesData);
 
   return (

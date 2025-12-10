@@ -27,7 +27,6 @@ const getCachedApplicationsByCompany = unstable_cache(
   async (userId: string, companyId: string): Promise<Application[]> => {
     const supabase = createCacheClient()
 
-    // First, get all job IDs for this company
     const { data: jobs, error: jobsError } = await supabase
       .from('jobs')
       .select('job_id')
@@ -44,7 +43,6 @@ const getCachedApplicationsByCompany = unstable_cache(
 
     const jobIds = jobs.map((j) => j.job_id)
 
-    // Then get applications for those jobs
     const { data, error } = await supabase
       .from('applications')
       .select(APPLICATION_SELECT_QUERY)

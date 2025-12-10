@@ -22,14 +22,12 @@ export async function deleteApplicationAction(
   formData: FormData
 ): Promise<ActionState> {
   try {
-    // 1. Authenticate
     const authContext = await requireAuth()
     if (!authContext) {
       return authError('You must be logged in to delete an application')
     }
     const { supabase } = authContext
 
-    // 2. Validate input
     const id = formData.get('id')
     const validation = DeleteApplicationSchema.safeParse({ id })
 
@@ -40,22 +38,18 @@ export async function deleteApplicationAction(
       }
     }
 
-    // 3. Delete from Supabase
-    // Stages will be deleted automatically via ON DELETE CASCADE
+    // Stages deleted via ON DELETE CASCADE, RLS enforces ownership
     const { error } = await supabase
       .from('applications')
       .delete()
       .eq('application_id', validation.data.id)
-      // Note: RLS enforces user can only delete their own applications
 
     if (error) {
       return databaseError(error, 'delete application')
     }
 
-    // 4. Invalidate cache
     invalidateApplicationById(validation.data.id)
 
-    // 5. Return success (redirect handled by caller or below)
     return {
       success: true,
     }
@@ -83,8 +77,7 @@ export async function deleteApplicationAndRedirect(
   await supabase
     .from('applications')
     .delete()
-    .eq('application_id', id)
-    // Note: RLS enforces user can only delete their own applications
+    .eq('application_id', id) // RLS enforces ownership
 
   invalidateApplicationCaches()
 
@@ -110,8 +103,7 @@ export async function deleteApplication(
     const { error } = await supabase
       .from('applications')
       .delete()
-      .eq('application_id', id)
-      // Note: RLS enforces user can only delete their own applications
+      .eq('application_id', id) // RLS enforces ownership
 
     if (error) {
       return { success: false, error: error.message }

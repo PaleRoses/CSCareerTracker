@@ -10,12 +10,10 @@ export default async function RecruiterLayout({
 }) {
   const session = await auth()
 
-  // Must be logged in
   if (!session?.user) {
     redirect(ROUTES.home)
   }
 
-  // Must have recruiter role
   const userRole = session.user.role
   if (!userRole || !RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number])) {
     redirect(ROUTES.dashboard)
