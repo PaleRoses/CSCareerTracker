@@ -46,6 +46,7 @@ export function JobPicker({
       error={error}
       errorMessage={errorMessage}
       groupBy={(option) => (option as JobOption).companyName}
+      isOptionEqualToValue={(option, value) => (option as JobOption).id === (value as JobOption).id}
       noOptionsText="No jobs available"
     />
   )
