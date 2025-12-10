@@ -44,8 +44,6 @@ export function DeleteCompanyDialog({
     }
   }, [state.success, onDeleted, onClose])
 
-  const hasJobs = jobCount > 0
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <form action={formAction}>
@@ -63,7 +61,7 @@ export function DeleteCompanyDialog({
               This action cannot be undone!
             </Text>
             <Text variant="body2" className="text-foreground/70">
-              You are about to permanently delete the following company:
+              This will permanently delete the company AND all associated jobs and applications.
             </Text>
           </Box>
 
@@ -76,24 +74,13 @@ export function DeleteCompanyDialog({
             </Text>
             {jobCount > 0 && (
               <Text variant="caption" color="error" className="mt-2 block">
-                {jobCount} associated job{jobCount > 1 ? 's' : ''}
+                {jobCount} job{jobCount > 1 ? 's' : ''} will be deleted
               </Text>
             )}
           </Box>
 
-          {hasJobs && (
-            <Box className="bg-warning/10 border border-warning/30 rounded-lg p-4 mt-4">
-              <Text variant="body2" color="warning" className="font-medium">
-                Warning: This company has associated jobs
-              </Text>
-              <Text variant="body2" className="text-foreground/70 mt-1">
-                You must delete or reassign all jobs before deleting this company.
-              </Text>
-            </Box>
-          )}
-
           <Text variant="body2" className="mt-4 text-foreground/70">
-            All associated data will be permanently removed.
+            All jobs, applications, and application history will be permanently removed.
           </Text>
 
           {state.error && (

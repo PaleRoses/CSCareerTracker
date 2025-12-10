@@ -5,6 +5,7 @@ import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
 import { invalidateCompanyCaches } from '../utils/cache-utils'
 import { invalidateJobCaches } from '@/features/jobs/utils'
+import { invalidateApplicationCaches } from '@/features/applications/utils/cache-utils'
 import { DeleteCompanySchema, type ActionState } from '../schemas'
 import {
   validationError,
@@ -55,20 +56,7 @@ export async function deleteCompanyAction(
       return notFoundError('Company')
     }
 
-    // Check for associated jobs
-    const { count: jobCount } = await supabase
-      .from('jobs')
-      .select('*', { count: 'exact', head: true })
-      .eq('company_id', companyId)
-
-    if (jobCount && jobCount > 0) {
-      return {
-        success: false,
-        error: `Cannot delete company with ${jobCount} associated job${jobCount > 1 ? 's' : ''}. Delete the jobs first or mark them inactive.`,
-      }
-    }
-
-    // Delete the company (cascades to any remaining references via FK)
+    // Delete the company (cascades to jobs, applications, and stages via FK)
     const { error: deleteError } = await supabase
       .from('companies')
       .delete()
@@ -81,7 +69,8 @@ export async function deleteCompanyAction(
 
     invalidateCompanyCaches()
     invalidateJobCaches()
-    logger.info('Company deleted', { companyId, companyName: existing.company_name, deletedBy: userId })
+    invalidateApplicationCaches()
+    logger.info('Company deleted (cascaded to jobs and applications)', { companyId, companyName: existing.company_name, deletedBy: userId })
 
     return { success: true }
   } catch (error) {

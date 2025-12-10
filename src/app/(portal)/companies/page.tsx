@@ -26,7 +26,7 @@ export default async function CompaniesPage() {
         action={canManageCompanies ? <AddCompanyButton /> : undefined}
       />
       <QueryPreview query="companies-with-stats">
-        <CompaniesTable companies={companies} />
+        <CompaniesTable companies={companies} canManage={canManageCompanies} />
       </QueryPreview>
     </Box>
   )
