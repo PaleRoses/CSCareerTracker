@@ -12,7 +12,6 @@ export interface LinearProgressProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: "determinate" | "indeterminate" | "buffer" | "query";
   color?: "primary" | "secondary" | "success" | "warning" | "error";
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -45,7 +44,6 @@ export interface CircularProgressProps extends HTMLAttributes<HTMLSpanElement> {
   size?: CircularProgressSize | number;
   thickness?: number;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

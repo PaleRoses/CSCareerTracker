@@ -14,7 +14,6 @@ export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
   gap?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12;
   wrap?: boolean;
   inline?: boolean;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

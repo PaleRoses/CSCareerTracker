@@ -17,7 +17,6 @@ import { getFieldError, getFieldErrorProps } from '@/lib/form-utils'
 import { createJobAction } from '../actions/create-job.action'
 import type { ActionState } from '@/lib/actions/error-utils'
 import { JOB_TYPE_LABELS } from '@/features/jobs/types'
-import type { JobType } from '@/features/jobs/types'
 
 export interface CompanyOption {
   id: string

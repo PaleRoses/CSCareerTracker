@@ -281,7 +281,7 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
             <Card>
               <CardContent className="text-center py-8">
                 <Text className="text-foreground/60 mb-4">
-                  You haven't applied to any positions at {company.name} yet.
+                  You haven&apos;t applied to any positions at {company.name} yet.
                 </Text>
                 {jobs.length > 0 && (
                   <Text variant="body2" className="text-foreground/50">

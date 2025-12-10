@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 export interface BoxProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
   component?: React.ElementType;
 }

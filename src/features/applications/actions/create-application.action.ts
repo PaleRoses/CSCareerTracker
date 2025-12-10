@@ -2,7 +2,7 @@
 
 import { auth } from '@/features/auth/auth'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateApplicationCaches, invalidateCacheTag } from '@/lib/actions/cache-utils'
+import { invalidateApplicationCaches, invalidateCompanyCaches } from '@/lib/actions/cache-utils'
 import {
   CreateApplicationSchema,
   type ActionState,
@@ -91,7 +91,7 @@ export async function createApplicationAction(
         }
 
         resolvedCompanyId = newCompany.company_id
-        invalidateCacheTag('companies')
+        invalidateCompanyCaches()
       }
     }
 

@@ -12,7 +12,6 @@ export interface AppBarProps {
   position?: "fixed" | "absolute" | "sticky" | "static" | "relative";
   sidebarOffset?: boolean;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

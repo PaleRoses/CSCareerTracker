@@ -1,6 +1,10 @@
-export const ADMIN_ROLES = ['admin', 'recruiter', 'techno_warlord'] as const;
-export type AdminRole = typeof ADMIN_ROLES[number];
+import { PRIVILEGED_ROLES, hasPrivilegedAccess } from '@/features/auth/constants'
+import type { PrivilegedRole } from '@/features/auth/constants'
+
+// Re-export for backward compatibility
+export const ADMIN_ROLES = PRIVILEGED_ROLES
+export type AdminRole = PrivilegedRole
 
 export function canManageJobs(userRole: string | null | undefined): boolean {
-  return !!userRole && ADMIN_ROLES.includes(userRole as AdminRole);
+  return hasPrivilegedAccess(userRole)
 }

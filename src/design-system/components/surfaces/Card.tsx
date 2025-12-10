@@ -14,7 +14,6 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   glass?: boolean;
   hoverable?: boolean;
   flat?: boolean;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -43,7 +42,6 @@ export interface CardContentProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
   noPadding?: boolean;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -64,7 +62,6 @@ export interface CardHeaderProps extends Omit<HTMLAttributes<HTMLDivElement>, "t
   subtitle?: ReactNode;
   action?: ReactNode;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -90,7 +87,6 @@ export interface CardActionsProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
   alignRight?: boolean;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

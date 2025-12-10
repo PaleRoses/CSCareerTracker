@@ -14,7 +14,6 @@ export interface NavLinkProps {
   active?: boolean;
   onClick?: () => void;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

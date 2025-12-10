@@ -222,7 +222,6 @@ export async function withdrawApplicationAction(
   }
   const { userId, supabase } = authContext
 
-  // Verify ownership
   const isOwner = await verifyApplicationOwnership(supabase, applicationId, userId)
   if (!isOwner) {
     return notFoundError('Application')

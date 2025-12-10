@@ -3,7 +3,8 @@ import {
   getCompanyDetail,
   getApplicationsByCompany,
 } from '@/features/companies'
-import { getJobs } from '@/lib/queries/jobs'
+import { getJobs } from '@/features/shared'
+import { QueryPreview } from '@/components/dev'
 
 interface CompanyPageProps {
   params: Promise<{ id: string }>
@@ -33,10 +34,12 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
   ])
 
   return (
-    <CompanyDetail
-      company={company}
-      jobs={jobs}
-      applications={applications}
-    />
+    <QueryPreview query="company-detail">
+      <CompanyDetail
+        company={company}
+        jobs={jobs}
+        applications={applications}
+      />
+    </QueryPreview>
   )
 }

@@ -11,7 +11,14 @@ export {
   getApplications,
   getApplication,
   getApplicationWithTag,
-} from '@/lib/queries'
+  getApplicationsPaginated,
+  applicationExists,
+  getApplicationTimeline,
+  getCompanies,
+  type ApplicationTimeline,
+  type TimelineStage,
+  type CompanyOption,
+} from './queries'
 
 export {
   ApplicationSchema,

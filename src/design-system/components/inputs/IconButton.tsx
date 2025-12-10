@@ -11,17 +11,10 @@ export type IconButtonSize = "small" | "medium" | "large";
 export interface IconButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
   children: ReactNode;
-  /** Button style variant */
   variant?: IconButtonVariant;
-  /** Button size */
   size?: IconButtonSize;
-  /** Accessible label for screen readers */
   "aria-label": string;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

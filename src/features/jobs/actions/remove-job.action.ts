@@ -1,17 +1,20 @@
 'use server'
 
 import { auth } from '@/features/auth/auth'
+import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient, createCacheClient } from '@/lib/supabase/server'
 import { invalidateJobCaches } from '@/lib/actions/cache-utils'
 import { logger } from '@/lib/logger'
+import {
+  authError,
+  databaseError,
+  unexpectedError,
+  type ActionState,
+} from '@/lib/actions/error-utils'
 
 type RemoveJobResult = {
-  success: boolean
-  action?: 'archived' | 'deleted'
-  error?: string
+  action: 'archived' | 'deleted'
 }
-
-const ADMIN_ROLES = ['admin', 'recruiter', 'techno_warlord'] as const
 
 /**
  * Remove a job from the system.
@@ -20,20 +23,27 @@ const ADMIN_ROLES = ['admin', 'recruiter', 'techno_warlord'] as const
  * - If job has applications: soft delete (archive) - sets is_active = false
  * - If job has no applications: hard delete - removes from database
  *
- * Only admin, recruiter, and techno_warlord roles can perform this action.
+ * Only privileged roles (admin, recruiter, techno_warlord) can perform this action.
  * RLS policies enforce this at the database level.
  */
-export async function removeJob(jobId: string): Promise<RemoveJobResult> {
+export async function removeJobAction(
+  _prevState: ActionState<RemoveJobResult> | undefined,
+  formData: FormData
+): Promise<ActionState<RemoveJobResult>> {
   try {
     // 1. Authenticate and check role
     const session = await auth()
     if (!session?.user?.id) {
-      return { success: false, error: 'You must be logged in' }
+      return authError('You must be logged in')
     }
 
-    const userRole = session.user.role
-    if (!userRole || !ADMIN_ROLES.includes(userRole as typeof ADMIN_ROLES[number])) {
-      return { success: false, error: 'You do not have permission to remove jobs' }
+    if (!hasPrivilegedAccess(session.user.role)) {
+      return authError('You do not have permission to remove jobs')
+    }
+
+    const jobId = formData.get('jobId') as string
+    if (!jobId) {
+      return { success: false, error: 'Job ID is required' }
     }
 
     const userId = session.user.id
@@ -48,7 +58,7 @@ export async function removeJob(jobId: string): Promise<RemoveJobResult> {
 
     if (countError) {
       logger.error('Failed to count applications for job', { error: countError, jobId })
-      return { success: false, error: 'Failed to check job applications' }
+      return databaseError(countError, 'check job applications')
     }
 
     const hasApplications = (count ?? 0) > 0
@@ -62,13 +72,13 @@ export async function removeJob(jobId: string): Promise<RemoveJobResult> {
 
       if (updateError) {
         logger.error('Failed to archive job', { error: updateError, jobId })
-        return { success: false, error: updateError.message }
+        return databaseError(updateError, 'archive job')
       }
 
       invalidateJobCaches()
       logger.info('Job archived (soft delete)', { jobId, applicationCount: count })
 
-      return { success: true, action: 'archived' }
+      return { success: true, data: { action: 'archived' } }
     } else {
       // 3b. Hard delete - no applications, safe to remove completely
       const { error: deleteError } = await supabase
@@ -78,19 +88,16 @@ export async function removeJob(jobId: string): Promise<RemoveJobResult> {
 
       if (deleteError) {
         logger.error('Failed to delete job', { error: deleteError, jobId })
-        return { success: false, error: deleteError.message }
+        return databaseError(deleteError, 'delete job')
       }
 
       invalidateJobCaches()
       logger.info('Job deleted (hard delete)', { jobId })
 
-      return { success: true, action: 'deleted' }
+      return { success: true, data: { action: 'deleted' } }
     }
   } catch (error) {
-    logger.error('Unexpected error in removeJob', { error, jobId })
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'An unexpected error occurred',
-    }
+    logger.error('Unexpected error in removeJobAction', { error })
+    return unexpectedError(error, 'removeJobAction')
   }
 }

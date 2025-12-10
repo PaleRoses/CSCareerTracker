@@ -1,6 +1,7 @@
 import { Box } from '@/design-system/components'
 import { PageHeader } from '@/components/ui'
 import { CompaniesTable, getCompaniesWithStats } from '@/features/companies'
+import { QueryPreview } from '@/components/dev'
 
 export const metadata = {
   title: 'Companies | Career Tracker',
@@ -16,7 +17,9 @@ export default async function CompaniesPage() {
         title="Companies"
         subtitle="Browse companies and view their open positions"
       />
-      <CompaniesTable companies={companies} />
+      <QueryPreview query="companies-with-stats">
+        <CompaniesTable companies={companies} />
+      </QueryPreview>
     </Box>
   )
 }

@@ -1,6 +1,7 @@
 import { Box, Card, CardContent } from '@/design-system/components'
 import PageHeader from '@/components/ui/PageHeader'
-import { getCompanies } from '@/lib/queries'
+import { getCompanies } from '@/features/applications/queries'
+import { QueryPreview } from '@/components/dev'
 import JobPostingFormWrapper from './JobPostingFormWrapper'
 
 export default async function NewJobPage() {
@@ -18,13 +19,15 @@ export default async function NewJobPage() {
         subtitle="Create a new job posting for candidates to apply to"
       />
 
-      <Box className="max-w-2xl mx-auto">
-        <Card>
-          <CardContent>
-            <JobPostingFormWrapper companies={companyOptions} />
-          </CardContent>
-        </Card>
-      </Box>
+      <QueryPreview query="companies-list">
+        <Box className="max-w-2xl mx-auto">
+          <Card>
+            <CardContent>
+              <JobPostingFormWrapper companies={companyOptions} />
+            </CardContent>
+          </Card>
+        </Box>
+      </QueryPreview>
     </Box>
   )
 }

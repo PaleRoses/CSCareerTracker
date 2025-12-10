@@ -21,7 +21,6 @@ export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   size?: AvatarSize;
   variant?: "circular" | "rounded" | "square";
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

@@ -11,13 +11,17 @@ import {
   ExportButtons,
 } from '@/features/reports'
 
-import { getOverviewStats } from '@/lib/queries/stats/overview'
-import { getMonthlyTrends } from '@/lib/queries/analytics/monthly-trends'
-import { getOfferRateByCompany } from '@/lib/queries/analytics/offer-rate'
-import { getConversionRates } from '@/lib/queries/stats/conversion-rates'
-import { getAverageTimeInStage } from '@/lib/queries/stats/time-in-stage'
-import { getSuccessRateByRole } from '@/lib/queries/analytics/success-by-role'
-import { getHiddenGemCompanies } from '@/lib/queries/admin/hidden-gems'
+import {
+  getOverviewStats,
+  getMonthlyTrends,
+  getOfferRateByCompany,
+  getConversionRates,
+  getAverageTimeInStage,
+  getSuccessRateByRole,
+  getHiddenGemCompanies,
+} from '@/features/reports/queries'
+
+import { QueryPreview } from '@/components/dev'
 
 export const metadata = {
   title: 'Reports | Career Tracker',
@@ -54,32 +58,46 @@ export default async function ReportsPage() {
       </Flex>
 
       <Box className="mb-6">
-        <OverviewStatsCard stats={overviewStats} />
+        <QueryPreview query="overview-stats">
+          <OverviewStatsCard stats={overviewStats} />
+        </QueryPreview>
       </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, lg: 6 }}>
-          <MonthlyTrendsChart data={monthlyTrends} />
+          <QueryPreview query="monthly-trends">
+            <MonthlyTrendsChart data={monthlyTrends} />
+          </QueryPreview>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 6 }}>
-          <ConversionFunnel data={conversionRates} />
+          <QueryPreview query="conversion-rates">
+            <ConversionFunnel data={conversionRates} />
+          </QueryPreview>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <OfferRateTable data={offerRates} />
+          <QueryPreview query="offer-rate-by-company">
+            <OfferRateTable data={offerRates} />
+          </QueryPreview>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 6 }}>
-          <TimeInStageChart data={timeInStage} />
+          <QueryPreview query="time-in-stage">
+            <TimeInStageChart data={timeInStage} />
+          </QueryPreview>
         </Grid>
 
         <Grid size={{ xs: 12, lg: 6 }}>
-          <SuccessByRoleCard data={successByRole} />
+          <QueryPreview query="success-rate-by-role">
+            <SuccessByRoleCard data={successByRole} />
+          </QueryPreview>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <HiddenGemsCard data={hiddenGems} />
+          <QueryPreview query="hidden-gems">
+            <HiddenGemsCard data={hiddenGems} />
+          </QueryPreview>
         </Grid>
       </Grid>
     </Box>

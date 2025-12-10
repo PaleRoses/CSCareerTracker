@@ -7,13 +7,8 @@ import { cn } from "@/lib/utils";
 
 export interface NavListProps {
   children: ReactNode;
-  /** List title/header */
   title?: string;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

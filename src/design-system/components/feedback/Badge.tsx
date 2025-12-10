@@ -17,7 +17,6 @@ export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, "conte
   dot?: boolean;
   invisible?: boolean;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

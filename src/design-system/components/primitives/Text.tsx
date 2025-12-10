@@ -22,21 +22,12 @@ export type TextColor =
 export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "color"> {
   children?: ReactNode;
   className?: string;
-  /** Text style variant */
   variant?: TextVariant;
-  /** Text color */
   color?: TextColor;
-  /** Font weight */
   weight?: "normal" | "medium" | "semibold" | "bold";
-  /** Text alignment */
   align?: "left" | "center" | "right";
-  /** Truncate text with ellipsis */
   truncate?: boolean;
-  /** HTML element to render */
   as?: "p" | "span" | "div" | "label";
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

@@ -1,11 +1,9 @@
 export const ROUTES = {
-  // Public routes
   home: '/',
   login: '/login',
   signup: '/signup',
   selectRole: '/select-role',
 
-  // Applicant routes
   dashboard: '/dashboard',
   applications: '/applications',
   applicationDetail: (id: string) => `/applications/${id}` as const,
@@ -14,7 +12,6 @@ export const ROUTES = {
   companyDetail: (id: string) => `/companies/${id}` as const,
   reports: '/reports',
 
-  // Recruiter routes
   recruiter: {
     dashboard: '/recruiter-dashboard',
     jobs: '/jobs',
@@ -24,7 +21,7 @@ export const ROUTES = {
     candidateDetail: (candidateId: string) => `/candidates/${candidateId}` as const,
   },
 
-  // Legacy uppercase aliases (for backward compatibility)
+  // Legacy - prefer camelCase above
   HOME: '/',
   LOGIN: '/login',
   SIGNUP: '/signup',
@@ -61,7 +58,6 @@ export interface NavDividerItem {
 
 export type NavItem = NavLinkItem | NavDividerItem
 
-// Standard nav items for all users
 export const NAV_ITEMS: NavItem[] = [
   {
     kind: 'link',
@@ -101,7 +97,6 @@ export const NAV_ITEMS: NavItem[] = [
   },
 ] as const
 
-// Additional nav items for recruiters/admins
 export const RECRUITER_NAV_ITEMS: NavItem[] = [
   { kind: 'divider' },
   {
@@ -127,7 +122,8 @@ export const RECRUITER_NAV_ITEMS: NavItem[] = [
   },
 ] as const
 
-export const RECRUITER_ROLES = ['recruiter', 'admin', 'techno_warlord'] as const
+// Re-export for backward compatibility, prefer @/features/auth/constants
+export { PRIVILEGED_ROLES as RECRUITER_ROLES } from '@/features/auth/constants'
 
 export function isRouteActive(pathname: string, route: string): boolean {
   return pathname === route || pathname.startsWith(`${route}/`)

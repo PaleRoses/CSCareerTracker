@@ -11,15 +11,9 @@ import { cn } from "@/lib/utils";
 
 export interface ListProps extends HTMLAttributes<HTMLUListElement> {
   children?: ReactNode;
-  /** Dense mode reduces padding */
   dense?: boolean;
-  /** Remove padding */
   disablePadding?: boolean;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 
@@ -58,17 +52,10 @@ List.displayName = "List";
 
 export interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, "children"> {
   children?: ReactNode;
-  /** Remove default padding */
   disablePadding?: boolean;
-  /** Align items to flex-start */
   alignItems?: "flex-start" | "center";
-  /** Secondary action element (e.g., icon button) */
   secondaryAction?: ReactNode;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 
@@ -116,19 +103,11 @@ ListItem.displayName = "ListItem";
 
 export interface ListItemButtonProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
-  /** Render as a different component (e.g., Link) */
   component?: ElementType;
-  /** href for link components */
   href?: string;
-  /** Whether the item is selected/active */
   selected?: boolean;
-  /** Disable the button */
   disabled?: boolean;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 
@@ -192,11 +171,7 @@ ListItemButton.displayName = "ListItemButton";
 
 export interface ListItemIconProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 
@@ -229,28 +204,20 @@ export const ListItemIcon = forwardRef<HTMLDivElement, ListItemIconProps>(
 ListItemIcon.displayName = "ListItemIcon";
 
 export interface ListItemTextProps extends HTMLAttributes<HTMLDivElement> {
-  /** Primary text content */
   primary?: ReactNode;
-  /** Secondary text content */
   secondary?: ReactNode;
-  /** Props passed to the primary Typography component */
   primaryTypographyProps?: {
     fontWeight?: number | string;
     color?: string;
     fontSize?: string;
     className?: string;
   };
-  /** Props passed to the secondary Typography component */
   secondaryTypographyProps?: {
     color?: string;
     fontSize?: string;
     className?: string;
   };
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

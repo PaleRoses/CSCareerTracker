@@ -58,3 +58,18 @@ export const ROLE_OPTIONS: Array<{
     iconId: 'bolt',
   },
 ]
+
+/**
+ * Roles with elevated privileges (job management, recruiter features)
+ */
+export const PRIVILEGED_ROLES = ['recruiter', 'admin', 'techno_warlord'] as const
+export type PrivilegedRole = (typeof PRIVILEGED_ROLES)[number]
+
+/**
+ * Type guard to check if a role has privileged access
+ */
+export function hasPrivilegedAccess(
+  role: string | null | undefined
+): role is PrivilegedRole {
+  return !!role && PRIVILEGED_ROLES.includes(role as PrivilegedRole)
+}

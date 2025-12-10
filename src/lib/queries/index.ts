@@ -1,79 +1,9 @@
-// Application Queries
-export {
-  getApplications,
-  getApplicationsPaginated,
-  getApplication,
-  getApplicationWithTag,
-  applicationExists,
-  getCompanies,
-  type CompanyOption,
-} from './applications'
+// Re-export from feature locations for backward compatibility
+export * from '@/features/applications/queries'
+export * from '@/features/dashboard/queries'
+export * from '@/features/reports/queries'
+export * from '@/features/jobs/queries'
+export * from '@/features/recruiter/queries'
 
-// Statistics Queries
-export {
-  getOverviewStats,
-  getStageDistribution,
-  getStaleApplications,
-  getAverageTimeInStage,
-  getConversionRates,
-  getDashboardStats,
-  DEFAULT_STALE_THRESHOLD_DAYS,
-  MAX_STALE_APPLICATIONS,
-} from './stats'
-
-// Analytics Queries
-export {
-  getOfferRateByCompany,
-  getResponseTimeByCompany,
-  getSuccessRateByRole,
-  getReapplications,
-  getMonthlyTrends,
-  getStageDropoff,
-} from './analytics'
-
-// Admin Queries (require admin role)
-export {
-  getCompanyConsistencyStats,
-  getHiddenGemCompanies,
-  getOfferAcceptanceRatio,
-} from './admin'
-
-// Export Utilities
-export {
-  generateApplicationsCSV,
-  generateApplicationsCSVBlob,
-  extractCalendarEvents,
-  generateCalendar,
-  generateCalendarBlob,
-} from './exports'
-
-// Types
-export type {
-  ApplicationFilters,
-  DateRange,
-  QueryResult,
-  OverviewStats,
-  StageDistribution,
-  StaleApplication,
-  ActivityItem,
-  DashboardStats,
-  CompanyStats,
-  StageConversion,
-  TimeInStage,
-  RoleStats,
-  CalendarEvent,
-  ReapplicationStats,
-  MonthlyStats,
-  StageDropoff,
-  CompanyConsistency,
-  HiddenGem,
-  OfferAcceptance,
-} from './core'
-
-// Utilities
-export {
-  QUERY_CACHE_TAGS,
-  createFilterCacheKey,
-  APPLICATION_SELECT_QUERY,
-  transformDbToApplication,
-} from './core'
+// Core (stays in place)
+export * from './core'

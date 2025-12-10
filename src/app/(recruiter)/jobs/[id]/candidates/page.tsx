@@ -1,9 +1,10 @@
 import { Box, Text } from '@/design-system/components'
 import PageHeader from '@/components/ui/PageHeader'
 import { CandidatesList } from '@/features/recruiter'
-import { getCandidates } from '@/lib/queries/recruiter'
-import { getJobs } from '@/lib/queries/jobs'
+import { getCandidates } from '@/features/recruiter/queries'
+import { getJobs } from '@/features/jobs/queries'
 import { auth } from '@/features/auth/auth'
+import { QueryPreview } from '@/components/dev'
 import { notFound } from 'next/navigation'
 
 interface CandidatesPageProps {
@@ -31,15 +32,17 @@ export default async function JobCandidatesPage({ params }: CandidatesPageProps)
         subtitle={`${candidates.length} candidate${candidates.length !== 1 ? 's' : ''} at ${job.companyName}`}
       />
 
-      {candidates.length === 0 ? (
-        <Box className="text-center py-12">
-          <Text variant="body1" className="text-foreground/60">
-            No candidates have applied for this position yet.
-          </Text>
-        </Box>
-      ) : (
-        <CandidatesList candidates={candidates} jobId={jobId} />
-      )}
+      <QueryPreview query="recruiter-candidates">
+        {candidates.length === 0 ? (
+          <Box className="text-center py-12">
+            <Text variant="body1" className="text-foreground/60">
+              No candidates have applied for this position yet.
+            </Text>
+          </Box>
+        ) : (
+          <CandidatesList candidates={candidates} jobId={jobId} />
+        )}
+      </QueryPreview>
     </Box>
   )
 }

@@ -8,15 +8,9 @@ import { cn } from "@/lib/utils";
 export interface PaperProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
-  /** Elevation level (0-3) */
   elevation?: 0 | 1 | 2 | 3;
-  /** Apply glassmorphism effect */
   glass?: boolean;
-  /** Make the paper outlined instead of elevated */
   outlined?: boolean;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

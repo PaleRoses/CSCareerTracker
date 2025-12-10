@@ -12,12 +12,6 @@ export {
   type UpdateJobPostingInput,
 } from './schemas/job-posting.schema'
 
-export {
-  createJobAction,
-  updateCandidateStageAction,
-  advanceCandidateAction,
-} from './actions'
-
 export { OUTCOME_VARIANTS } from './constants'
 
 export {
@@ -31,3 +25,5 @@ export {
   ApplicationDetailsCard,
   StageHistoryTimeline,
 } from './components'
+
+// Server-only exports (actions, queries) not re-exported - import directly from /actions or /queries

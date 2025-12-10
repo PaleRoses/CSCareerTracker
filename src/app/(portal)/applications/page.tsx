@@ -1,10 +1,11 @@
 import { Box } from "@/design-system/components";
 import PageHeader from "@/components/ui/PageHeader";
 import ApplicationsTable from "@/features/applications/components/ApplicationsTable";
-import { getApplications, getCompanies } from "@/lib/queries";
+import { getApplications, getCompanies } from "@/features/applications/queries";
 import AddApplicationButton from "@/features/applications/components/AddApplicationButton";
 import { transformCompaniesToOptions } from "@/features/applications/utils/company-utils";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
+import { QueryPreview } from "@/components/dev";
 
 export default async function ApplicationsPage() {
   // Fetch applications and companies server-side in parallel
@@ -24,7 +25,9 @@ export default async function ApplicationsPage() {
         action={<AddApplicationButton companies={companies} />}
       />
 
-      <ApplicationsTable applications={applications} />
+      <QueryPreview query="applications-list">
+        <ApplicationsTable applications={applications} />
+      </QueryPreview>
     </Box>
   );
 }

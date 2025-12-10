@@ -25,7 +25,6 @@ export interface ButtonProps
   endIcon?: ReactNode;
   loading?: boolean;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

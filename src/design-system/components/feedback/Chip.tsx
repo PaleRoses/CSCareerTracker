@@ -26,7 +26,6 @@ export interface ChipProps
   variant?: ChipVariant;
   size?: ChipSize;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

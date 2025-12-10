@@ -11,21 +11,13 @@ export type DrawerVariant = "permanent" | "persistent" | "temporary";
 
 export interface DrawerProps {
   children: ReactNode;
-  /** Whether the drawer is open (for temporary/persistent variants) */
+  /** For temporary/persistent variants */
   open?: boolean;
-  /** Anchor position */
   anchor?: DrawerAnchor;
-  /** Drawer behavior variant */
   variant?: DrawerVariant;
-  /** Width of the drawer */
   width?: number | string;
-  /** Handler for close events */
   onClose?: () => void;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

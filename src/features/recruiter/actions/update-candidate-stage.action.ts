@@ -1,6 +1,7 @@
 'use server'
 
 import { auth } from '@/features/auth/auth'
+import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
@@ -11,20 +12,20 @@ import {
   type ActionState,
 } from '@/lib/actions/error-utils'
 
-const RECRUITER_ROLES = ['recruiter', 'admin', 'techno_warlord'] as const
-
 type UpdateStageResult = {
   stageId: string
 }
 
-interface UpdateCandidateStageInput {
+/** Input shape for updateCandidateStageAction - used via FormData */
+interface _UpdateCandidateStageInput {
   applicationId: string
   stageId: string  // Current stage to update
   newStatus: 'successful' | 'rejected'
   notes?: string
 }
 
-interface AdvanceCandidateInput {
+/** Input shape for advanceCandidateAction - used via FormData */
+interface _AdvanceCandidateInput {
   applicationId: string
   nextStageName: string
   notes?: string
@@ -43,8 +44,7 @@ export async function updateCandidateStageAction(
       return authError('You must be logged in')
     }
 
-    const userRole = session.user.role
-    if (!userRole || !RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number])) {
+    if (!hasPrivilegedAccess(session.user.role)) {
       return authError('You do not have permission to update candidate stages')
     }
 
@@ -63,7 +63,6 @@ export async function updateCandidateStageAction(
       }
     }
 
-    // Verify the recruiter owns this job
     const { data: application, error: appError } = await supabase
       .from('applications')
       .select(`
@@ -85,7 +84,6 @@ export async function updateCandidateStageAction(
       return authError('You do not have permission to update this candidate')
     }
 
-    // Update the stage
     const updateData: Record<string, unknown> = {
       status: newStatus,
       ended_at: new Date().toISOString(),
@@ -144,8 +142,7 @@ export async function advanceCandidateAction(
       return authError('You must be logged in')
     }
 
-    const userRole = session.user.role
-    if (!userRole || !RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number])) {
+    if (!hasPrivilegedAccess(session.user.role)) {
       return authError('You do not have permission to advance candidates')
     }
 
@@ -163,7 +160,6 @@ export async function advanceCandidateAction(
       }
     }
 
-    // Verify the recruiter owns this job
     const { data: application, error: appError } = await supabase
       .from('applications')
       .select(`
@@ -185,7 +181,6 @@ export async function advanceCandidateAction(
       return authError('You do not have permission to advance this candidate')
     }
 
-    // Get the next stage ID
     const { data: nextStage, error: stageError } = await supabase
       .from('stages')
       .select('stage_id')
@@ -196,7 +191,6 @@ export async function advanceCandidateAction(
       return { success: false, error: 'Stage not found' }
     }
 
-    // Close current active stage (mark as successful)
     const { error: closeError } = await supabase
       .from('application_stages')
       .update({
@@ -212,7 +206,6 @@ export async function advanceCandidateAction(
       return databaseError(closeError, 'close current stage')
     }
 
-    // Create new stage entry
     const { data: newStageEntry, error: createError } = await supabase
       .from('application_stages')
       .insert({

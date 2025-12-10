@@ -35,7 +35,6 @@ export interface AutocompleteProps<T extends AutocompleteOption = AutocompleteOp
   noOptionsText?: string;
   loading?: boolean;
   loadingText?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

@@ -20,7 +20,7 @@ import { OpenInNewIcon, DeleteIcon } from "@/design-system/icons";
 import { formatDate, capitalize } from "@/lib/utils";
 import type { Job } from "../types";
 import { JOB_TYPE_LABELS } from "../types";
-import { removeJob } from "../actions";
+import { removeJobAction } from "../actions";
 
 interface JobsTableProps {
   jobs: Job[];
@@ -39,15 +39,18 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [jobToRemove, setJobToRemove] = useState<Job | null>(null);
-  const [lastAction, setLastAction] = useState<'archived' | 'deleted' | null>(null);
+  const [_lastAction, setLastAction] = useState<'archived' | 'deleted' | null>(null);
 
   const handleRemoveJob = () => {
     if (!jobToRemove) return;
 
     startTransition(async () => {
-      const result = await removeJob(jobToRemove.id);
-      if (result.success) {
-        setLastAction(result.action ?? null);
+      const formData = new FormData();
+      formData.append('jobId', jobToRemove.id);
+
+      const result = await removeJobAction(undefined, formData);
+      if (result.success && result.data) {
+        setLastAction(result.data.action);
         router.refresh();
       } else {
         // For now, log the error. Could add toast/snackbar later.

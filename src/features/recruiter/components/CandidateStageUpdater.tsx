@@ -16,7 +16,7 @@ import {
 } from '@/design-system/components'
 import { CheckCircleIcon, CloseIcon, ArrowForwardIcon } from '@/design-system/icons'
 import { FormError } from '@/components/ui/FormError'
-import type { Candidate, CandidateStage } from '../types'
+import type { Candidate } from '../types'
 import {
   updateCandidateStageAction,
   advanceCandidateAction,
@@ -57,7 +57,7 @@ const initialState: ActionState<{ stageId: string }> = {
   success: false,
 }
 
-export function CandidateStageUpdater({ candidate, onUpdate }: CandidateStageUpdaterProps) {
+export function CandidateStageUpdater({ candidate, onUpdate: _onUpdate }: CandidateStageUpdaterProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogAction, setDialogAction] = useState<'reject' | 'advance' | null>(null)
   const [notes, setNotes] = useState('')

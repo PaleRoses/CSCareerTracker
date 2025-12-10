@@ -1,6 +1,7 @@
 "use client";
 
 import { Box } from "@/design-system/components";
+import { DevModeProvider } from "@/components/dev";
 import Sidebar, { DRAWER_WIDTH } from "./Sidebar";
 import TopBar from "./TopBar";
 
@@ -9,7 +10,7 @@ interface AppShellProps {
   userRole?: string | null;
 }
 
-export default function AppShell({ children, userRole }: AppShellProps) {
+function AppShellContent({ children, userRole }: AppShellProps) {
   return (
     <Box className="flex min-h-screen">
       <TopBar />
@@ -27,4 +28,18 @@ export default function AppShell({ children, userRole }: AppShellProps) {
       </Box>
     </Box>
   );
+}
+
+export default function AppShell({ children, userRole }: AppShellProps) {
+  const isDev = process.env.NODE_ENV !== "production";
+
+  if (isDev) {
+    return (
+      <DevModeProvider>
+        <AppShellContent userRole={userRole}>{children}</AppShellContent>
+      </DevModeProvider>
+    );
+  }
+
+  return <AppShellContent userRole={userRole}>{children}</AppShellContent>;
 }

@@ -10,15 +10,9 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   children?: ReactNode;
   className?: string;
-  /** Heading level (1-6) */
   level?: HeadingLevel;
-  /** Apply gradient text effect */
   gradient?: boolean;
-  /** Text alignment */
   align?: "left" | "center" | "right";
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

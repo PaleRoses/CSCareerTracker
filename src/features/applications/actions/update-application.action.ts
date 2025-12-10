@@ -26,19 +26,16 @@ export async function updateApplicationAction(
   formData: FormData
 ): Promise<ActionState> {
   try {
-    // 1. Authenticate
     const authContext = await requireAuth()
     if (!authContext) {
       return authError('You must be logged in to update an application')
     }
     const { userId, supabase } = authContext
 
-    // 2. Extract and validate form data
     const rawData: Record<string, unknown> = {
       id: formData.get('id'),
     }
 
-    // Only include fields that were provided
     const company = formData.get('company')
     const positionTitle = formData.get('positionTitle')
     const dateApplied = formData.get('dateApplied')
@@ -61,9 +58,7 @@ export async function updateApplicationAction(
 
     const { id, ...updateData } = validation.data
 
-    // 3. Build update object (convert camelCase to snake_case)
-    // Note: company is in companies table via jobs FK - not directly updatable here
-    // location/jobUrl are stored in metadata JSONB column
+    // company is in companies table via jobs FK, location/jobUrl are in metadata JSONB
     const dbUpdate: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     }
@@ -78,9 +73,8 @@ export async function updateApplicationAction(
       dbUpdate.final_outcome = updateData.outcome
     }
 
-    // Update metadata if location or jobUrl provided
     if (updateData.location !== undefined || updateData.jobUrl !== undefined) {
-      // We need to merge with existing metadata, so fetch first
+      // Merge with existing metadata
       const { data: existing } = await supabase
         .from('applications')
         .select('metadata')
@@ -96,7 +90,6 @@ export async function updateApplicationAction(
       }
     }
 
-    // 4. Update in Supabase
     const { error } = await supabase
       .from('applications')
       .update(dbUpdate)
@@ -107,7 +100,6 @@ export async function updateApplicationAction(
       return databaseError(error, 'update application')
     }
 
-    // 5. Invalidate cache
     invalidateApplicationById(id)
 
     return {

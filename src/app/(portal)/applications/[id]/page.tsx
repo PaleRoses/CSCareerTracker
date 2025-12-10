@@ -1,5 +1,6 @@
-import { getApplicationWithTag } from "@/lib/queries";
+import { getApplicationWithTag } from "@/features/applications/queries";
 import ApplicationDetail from "@/features/applications/components/ApplicationDetail";
+import { QueryPreview } from "@/components/dev";
 
 export default async function ApplicationDetailPage({
   params,
@@ -8,8 +9,11 @@ export default async function ApplicationDetailPage({
 }) {
   const { id } = await params;
 
-  // Fetch application from Supabase with cache tag for this specific application
   const application = await getApplicationWithTag(id);
 
-  return <ApplicationDetail application={application ?? undefined} />;
+  return (
+    <QueryPreview query="application-detail">
+      <ApplicationDetail application={application ?? undefined} />
+    </QueryPreview>
+  );
 }

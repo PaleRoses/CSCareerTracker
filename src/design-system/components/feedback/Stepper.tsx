@@ -25,7 +25,6 @@ export interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical";
   nonLinear?: boolean;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -57,7 +56,6 @@ export interface StepProps extends HTMLAttributes<HTMLDivElement> {
   expanded?: boolean;
   active?: boolean;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 
@@ -79,7 +77,6 @@ export interface StepLabelProps extends Omit<HTMLAttributes<HTMLSpanElement>, "c
   optional?: ReactNode;
   icon?: ReactNode;
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

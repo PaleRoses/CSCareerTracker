@@ -5,9 +5,10 @@ import StageChart from "@/features/dashboard/components/StageChart";
 import StaleApplications from "@/features/dashboard/components/StaleApplications";
 import EventsList from "@/features/dashboard/components/EventsList";
 import { auth } from "@/features/auth/auth";
-import { getDashboardStats } from "@/lib/queries";
+import { getDashboardStats } from "@/features/dashboard/queries";
 import { transformDashboardData } from "@/features/dashboard/services/dashboard-transformer";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
+import { QueryPreview } from "@/components/dev";
 
 export default async function DashboardPage() {
   // Layout guarantees auth - session.user is always present
@@ -30,17 +31,25 @@ export default async function DashboardPage() {
         Signed in as {user.email ?? "unknown user"}.
       </Text>
 
-      <StatsGrid stats={stats} />
+      <QueryPreview query="dashboard-stats">
+        <StatsGrid stats={stats} />
+      </QueryPreview>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
-          <StageChart stageDistribution={stageDistribution} />
+          <QueryPreview query="stage-distribution">
+            <StageChart stageDistribution={stageDistribution} />
+          </QueryPreview>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
-          <StaleApplications staleApplications={staleApplications} />
+          <QueryPreview query="stale-applications">
+            <StaleApplications staleApplications={staleApplications} />
+          </QueryPreview>
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <EventsList activities={dashboardData.recentActivity} />
+          <QueryPreview query="dashboard-stats">
+            <EventsList activities={dashboardData.recentActivity} />
+          </QueryPreview>
         </Grid>
       </Grid>
     </Box>

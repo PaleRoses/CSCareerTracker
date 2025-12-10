@@ -1,1 +1,1 @@
-export { removeJob } from './remove-job.action'
+export { removeJobAction } from './remove-job.action'

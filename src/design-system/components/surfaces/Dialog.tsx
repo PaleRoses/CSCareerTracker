@@ -16,7 +16,6 @@ export interface DialogProps {
   fullWidth?: boolean;
   className?: string;
   glass?: boolean;
-  /** @deprecated Use className with Tailwind instead. */
   sx?: SxProps<Theme>;
 }
 
@@ -75,7 +74,6 @@ Dialog.displayName = "Dialog";
 export interface DialogTitleProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
-  /** @deprecated Use className with Tailwind instead. */
   sx?: SxProps<Theme>;
 }
 
@@ -100,7 +98,6 @@ export interface DialogContentProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
   noPadding?: boolean;
-  /** @deprecated Use className with Tailwind instead. */
   sx?: SxProps<Theme>;
 }
 
@@ -124,7 +121,6 @@ DialogContent.displayName = "DialogContent";
 export interface DialogActionsProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
   className?: string;
-  /** @deprecated Use className with Tailwind instead. */
   sx?: SxProps<Theme>;
 }
 

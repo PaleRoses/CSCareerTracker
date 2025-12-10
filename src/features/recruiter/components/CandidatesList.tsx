@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import {
   DataTable,
   Chip,
@@ -41,7 +40,7 @@ const OUTCOME_VARIANTS: Record<string, ChipVariant> = {
   'withdrawn': 'warning',
 }
 
-export function CandidatesList({ candidates, jobId }: CandidatesListProps) {
+export function CandidatesList({ candidates, jobId: _jobId }: CandidatesListProps) {
   const columns: ColumnDef<Candidate>[] = [
     {
       id: 'userName',

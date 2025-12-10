@@ -26,7 +26,6 @@ export interface TextFieldProps
   value?: string | number;
   onChange?: MuiTextFieldProps["onChange"];
   className?: string;
-  /** @deprecated Use className with Tailwind */
   sx?: SxProps<Theme>;
 }
 

@@ -3,8 +3,7 @@
 import { useState, useTransition } from 'react'
 import { Button, Flex } from '@/design-system/components'
 import { DownloadIcon, CalendarTodayIcon } from '@/design-system/icons'
-import { generateApplicationsCSVBlob } from '@/lib/queries/exports/csv'
-import { generateCalendarBlob } from '@/lib/queries/exports/calendar'
+import { generateApplicationsCSVBlob, generateCalendarBlob } from '@/features/reports/queries'
 
 export function ExportButtons() {
   const [isPending, startTransition] = useTransition()

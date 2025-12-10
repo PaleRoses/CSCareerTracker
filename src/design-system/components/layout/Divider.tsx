@@ -6,15 +6,10 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import { cn } from "@/lib/utils";
 
 export interface DividerProps {
-  /** Orientation of the divider */
   orientation?: "horizontal" | "vertical";
-  /** Flex item (for vertical dividers in flex containers) */
+  /** Required for vertical dividers in flex containers */
   flexItem?: boolean;
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

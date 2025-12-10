@@ -7,14 +7,9 @@ import { cn } from "@/lib/utils";
 
 export interface GridProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
-  /** Is this a container? */
   container?: boolean;
-  /** Spacing between items (in MUI spacing units) */
   spacing?: number;
-  /**
-   * Size configuration for responsive breakpoints.
-   * Number of columns to span (1-12), "auto", or "grow".
-   */
+  /** Columns to span (1-12), "auto", or "grow" */
   size?:
     | number
     | "auto"
@@ -26,11 +21,7 @@ export interface GridProps extends HTMLAttributes<HTMLDivElement> {
         lg?: number | "auto" | "grow";
         xl?: number | "auto" | "grow";
       };
-  /** Additional class names */
   className?: string;
-  /**
-   * @deprecated Use className with Tailwind instead.
-   */
   sx?: SxProps<Theme>;
 }
 

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { Switch, FormControlLabel } from "@mui/material";
 import {
   Box,
   Drawer,
@@ -11,7 +12,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Text,
 } from "@/design-system/components";
 import { cn } from "@/lib/utils";
 import {
@@ -32,10 +32,10 @@ import {
   type NavItem,
 } from "@/config/routes";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
+import { useDevMode } from "@/components/dev";
 
 const DRAWER_WIDTH = layout.sidebarWidth;
 
-// Icon mapping for nav items
 const ICON_MAP: Record<NavLinkItem['icon'], React.ReactNode> = {
   DashboardIcon: <DashboardIcon />,
   WorkIcon: <WorkIcon />,
@@ -51,11 +51,11 @@ interface SidebarProps {
 
 export default function Sidebar({ userRole }: SidebarProps) {
   const pathname = usePathname();
+  const { sqlModeEnabled, toggleSqlMode } = useDevMode();
+  const isDev = process.env.NODE_ENV !== "production";
 
-  // Determine if user is a recruiter
   const isRecruiter = userRole && RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number]);
 
-  // Build nav items based on role
   const navItems: NavItem[] = isRecruiter
     ? [...NAV_ITEMS, ...RECRUITER_NAV_ITEMS]
     : [...NAV_ITEMS];
@@ -71,7 +71,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
         </Heading>
       </Box>
 
-      <List className="px-3 py-4">
+      <List className="px-3 py-4 flex-1">
         {navItems.map((item, index) => {
           if (item.kind === "divider") {
             return <div key={`divider-${index}`} className="my-3" />;
@@ -111,6 +111,39 @@ export default function Sidebar({ userRole }: SidebarProps) {
           );
         })}
       </List>
+
+      {isDev && (
+        <Box className="px-4 py-3 border-t border-white/10">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={sqlModeEnabled}
+                onChange={toggleSqlMode}
+                size="small"
+                sx={{
+                  '& .MuiSwitch-switchBase.Mui-checked': {
+                    color: '#a855f7',
+                  },
+                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                    backgroundColor: '#a855f7',
+                  },
+                }}
+              />
+            }
+            label="SQL Mode"
+            slotProps={{
+              typography: {
+                sx: {
+                  fontSize: '0.75rem',
+                  fontFamily: 'monospace',
+                  color: 'rgba(255,255,255,0.5)',
+                  fontWeight: 500,
+                },
+              },
+            }}
+          />
+        </Box>
+      )}
     </Drawer>
   );
 }

@@ -1,7 +1,8 @@
 import { Box, Text } from '@/design-system/components'
 import PageHeader from '@/components/ui/PageHeader'
 import { CandidatesList, StageSummaryBar } from '@/features/recruiter'
-import { getCandidates, getCandidateCountsByStage } from '@/lib/queries/recruiter'
+import { getCandidates, getCandidateCountsByStage } from '@/features/recruiter/queries'
+import { QueryPreview } from '@/components/dev'
 
 export default async function AllCandidatesPage() {
   const [candidates, stageCounts] = await Promise.all([
@@ -18,17 +19,21 @@ export default async function AllCandidatesPage() {
         subtitle={`${totalActive} active candidate${totalActive !== 1 ? 's' : ''} across all your job postings`}
       />
 
-      <StageSummaryBar stageCounts={stageCounts} />
+      <QueryPreview query="candidate-counts-by-stage">
+        <StageSummaryBar stageCounts={stageCounts} />
+      </QueryPreview>
 
-      {candidates.length === 0 ? (
-        <Box className="text-center py-12">
-          <Text variant="body1" className="text-foreground/60">
-            No candidates have applied to your job postings yet.
-          </Text>
-        </Box>
-      ) : (
-        <CandidatesList candidates={candidates} />
-      )}
+      <QueryPreview query="recruiter-candidates">
+        {candidates.length === 0 ? (
+          <Box className="text-center py-12">
+            <Text variant="body1" className="text-foreground/60">
+              No candidates have applied to your job postings yet.
+            </Text>
+          </Box>
+        ) : (
+          <CandidatesList candidates={candidates} />
+        )}
+      </QueryPreview>
     </Box>
   )
 }

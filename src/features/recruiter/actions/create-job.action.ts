@@ -1,8 +1,9 @@
 'use server'
 
 import { auth } from '@/features/auth/auth'
+import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateJobCaches, invalidateCacheTag } from '@/lib/actions/cache-utils'
+import { invalidateJobCaches, invalidateCompanyCaches } from '@/lib/actions/cache-utils'
 import { JobPostingSchema } from '../schemas/job-posting.schema'
 import {
   validationError,
@@ -17,8 +18,6 @@ type CreateJobResult = {
   jobId: string
 }
 
-const RECRUITER_ROLES = ['recruiter', 'admin', 'techno_warlord'] as const
-
 /**
  * Create a new job posting
  * Only recruiters, admins, and techno_warlords can post jobs
@@ -28,21 +27,18 @@ export async function createJobAction(
   formData: FormData
 ): Promise<ActionState<CreateJobResult>> {
   try {
-    // 1. Auth & role check
     const session = await auth()
     if (!session?.user?.id) {
       return authError('You must be logged in to post a job')
     }
 
-    const userRole = session.user.role
-    if (!userRole || !RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number])) {
+    if (!hasPrivilegedAccess(session.user.role)) {
       return authError('You do not have permission to post jobs')
     }
 
     const userId = session.user.id
     const supabase = createUserClient(userId)
 
-    // 2. Parse and validate form data
     const locationsRaw = formData.get('locations')
     let locations: string[] = []
 
@@ -73,7 +69,6 @@ export async function createJobAction(
     const { companyId, companyName, title, type, url } = validation.data
     const validatedLocations = validation.data.locations
 
-    // 3. Resolve company (use existing or create new)
     let resolvedCompanyId = companyId
 
     if (!resolvedCompanyId && companyName) {
@@ -87,7 +82,6 @@ export async function createJobAction(
       if (existingCompany) {
         resolvedCompanyId = existingCompany.company_id
       } else {
-        // Create new company
         const { data: newCompany, error: companyError } = await supabase
           .from('companies')
           .insert({
@@ -104,7 +98,7 @@ export async function createJobAction(
         }
 
         resolvedCompanyId = newCompany.company_id
-        invalidateCacheTag('companies')
+        invalidateCompanyCaches()
       }
     }
 
@@ -115,7 +109,6 @@ export async function createJobAction(
       }
     }
 
-    // 4. Create the job posting
     const { data: job, error: jobError } = await supabase
       .from('jobs')
       .insert({
@@ -124,7 +117,7 @@ export async function createJobAction(
         job_type: type,
         locations: validatedLocations,
         url: url || null,
-        posted_by: userId,  // Track who posted this job
+        posted_by: userId,
       })
       .select('job_id')
       .single()

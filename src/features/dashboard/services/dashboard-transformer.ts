@@ -2,7 +2,7 @@ import type {
   DashboardStats,
   StageDistribution,
   StaleApplication,
-} from '@/lib/queries'
+} from '@/features/dashboard/queries'
 
 export interface TransformedStats {
   totalApplications: number

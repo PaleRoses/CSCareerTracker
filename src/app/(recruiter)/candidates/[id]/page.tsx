@@ -1,7 +1,8 @@
 import { Box } from '@/design-system/components'
 import PageHeader from '@/components/ui/PageHeader'
 import { ApplicationDetailsCard, StageHistoryTimeline } from '@/features/recruiter'
-import { getCandidateDetail } from '@/lib/queries/recruiter'
+import { getCandidateDetail } from '@/features/recruiter/queries'
+import { QueryPreview } from '@/components/dev'
 import { notFound } from 'next/navigation'
 
 interface CandidateDetailPageProps {
@@ -20,14 +21,16 @@ export default async function CandidateDetailPage({ params }: CandidateDetailPag
     <Box>
       <PageHeader title={candidate.userName} subtitle={candidate.userEmail} />
 
-      <Box className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Box className="lg:col-span-2">
-          <ApplicationDetailsCard candidate={candidate} />
+      <QueryPreview query="recruiter-candidates">
+        <Box className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Box className="lg:col-span-2">
+            <ApplicationDetailsCard candidate={candidate} />
+          </Box>
+          <Box>
+            <StageHistoryTimeline stages={candidate.stages} />
+          </Box>
         </Box>
-        <Box>
-          <StageHistoryTimeline stages={candidate.stages} />
-        </Box>
-      </Box>
+      </QueryPreview>
     </Box>
   )
 }
