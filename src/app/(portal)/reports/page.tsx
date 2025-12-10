@@ -9,6 +9,11 @@ import {
   SuccessByRoleCard,
   OverviewStatsCard,
   ExportButtons,
+  ResponseTimeTable,
+  StageDropoffChart,
+  ReapplicationsCard,
+  CompanyConsistencyTable,
+  OfferAcceptanceTable,
 } from '@/features/reports'
 
 import {
@@ -19,6 +24,11 @@ import {
   getAverageTimeInStage,
   getSuccessRateByRole,
   getHiddenGemCompanies,
+  getResponseTimeByCompany,
+  getStageDropoff,
+  getReapplications,
+  getCompanyConsistencyStats,
+  getOfferAcceptanceRatio,
 } from '@/features/reports/queries'
 
 import { QueryPreview } from '@/features/shared/dev'
@@ -37,6 +47,11 @@ export default async function ReportsPage() {
     timeInStage,
     successByRole,
     hiddenGems,
+    responseTime,
+    stageDropoff,
+    reapplications,
+    companyConsistency,
+    offerAcceptance,
   ] = await Promise.all([
     getOverviewStats(),
     getMonthlyTrends(),
@@ -45,7 +60,14 @@ export default async function ReportsPage() {
     getAverageTimeInStage(),
     getSuccessRateByRole(),
     getHiddenGemCompanies(),
+    getResponseTimeByCompany(),
+    getStageDropoff(),
+    getReapplications(),
+    getCompanyConsistencyStats(),
+    getOfferAcceptanceRatio(),
   ])
+
+  const hasAdminData = companyConsistency.length > 0 || offerAcceptance.length > 0
 
   return (
     <Box>
@@ -99,6 +121,42 @@ export default async function ReportsPage() {
             <HiddenGemsCard data={hiddenGems} />
           </QueryPreview>
         </Grid>
+
+        {/* New Analytics Section */}
+        <Grid size={{ xs: 12 }}>
+          <QueryPreview query="response-time">
+            <ResponseTimeTable data={responseTime} />
+          </QueryPreview>
+        </Grid>
+
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <QueryPreview query="stage-dropoff">
+            <StageDropoffChart data={stageDropoff} />
+          </QueryPreview>
+        </Grid>
+
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <QueryPreview query="reapplications">
+            <ReapplicationsCard data={reapplications} />
+          </QueryPreview>
+        </Grid>
+
+        {/* Admin-Only Section */}
+        {hasAdminData && (
+          <>
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <QueryPreview query="company-consistency">
+                <CompanyConsistencyTable data={companyConsistency} />
+              </QueryPreview>
+            </Grid>
+
+            <Grid size={{ xs: 12, lg: 6 }}>
+              <QueryPreview query="offer-acceptance">
+                <OfferAcceptanceTable data={offerAcceptance} />
+              </QueryPreview>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Box>
   )

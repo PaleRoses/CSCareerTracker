@@ -1,7 +1,6 @@
 'use client'
 
-import { useActionState, useRef, useCallback, useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRef, useCallback, useState } from 'react'
 import {
   TextField,
   Autocomplete,
@@ -11,10 +10,9 @@ import {
   Box,
   Chip,
 } from '@/design-system/components'
-import { FormError, FormActionButtons } from '@/features/shared'
+import { FormError, FormActionButtons, useFormAction } from '@/features/shared'
 import { createJobAction } from '../actions/create-job.action'
 import { updateJobAction } from '../actions/update-job.action'
-import type { ActionState } from '@/lib/actions/error-utils'
 import { JOB_TYPE_LABELS, type Job } from '@/features/jobs/types'
 
 export interface CompanyOption {
@@ -28,14 +26,6 @@ interface JobPostingFormProps {
   initialData?: Job  // For edit mode - pre-populate form with existing job data
   onSuccess?: (jobId: string) => void
   onCancel?: () => void
-}
-
-type CreateJobResult = {
-  jobId: string
-}
-
-const initialState: ActionState<CreateJobResult> = {
-  success: false,
 }
 
 interface JobTypeOption {
@@ -55,7 +45,6 @@ export function JobPostingForm({
   onSuccess,
   onCancel,
 }: JobPostingFormProps) {
-  const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const isEditMode = !!initialData
 
@@ -73,9 +62,6 @@ export function JobPostingForm({
   const [locations, setLocations] = useState<string[]>(initialData?.locations || [])
   const [locationInput, setLocationInput] = useState('')
 
-  const action = isEditMode ? updateJobAction : createJobAction
-  const [state, formAction, isPending] = useActionState(action, initialState)
-
   const resetFormState = useCallback(() => {
     formRef.current?.reset()
     setSelectedCompany(null)
@@ -85,35 +71,30 @@ export function JobPostingForm({
     setLocationInput('')
   }, [])
 
-  // Handle successful form submission
-  useEffect(() => {
-    if (state.success && state.data) {
-      resetFormState()
-      onSuccess?.(state.data.jobId)
-      router.refresh()
+  const action = isEditMode ? updateJobAction : createJobAction
+  const { state, formAction, isPending, getFieldError } = useFormAction(
+    action,
+    {
+      onSuccess: (data) => {
+        resetFormState()
+        if (data?.jobId) {
+          onSuccess?.(data.jobId)
+        }
+      },
     }
-  }, [state.success, state.data, resetFormState, onSuccess, router])
-
-  // Helper to extract field error props for TextField
-  const fieldError = (field: string) => {
-    const msg = state.fieldErrors?.[field]?.[0]
-    return { error: !!msg, errorMessage: msg }
-  }
+  )
 
   const handleCompanyChange = (
     _event: React.SyntheticEvent,
     newValue: CompanyOption | string | null
   ) => {
     if (typeof newValue === 'string') {
-      // User typed a custom value
       setSelectedCompany(null)
       setCompanyInputValue(newValue)
     } else if (newValue) {
-      // User selected an existing option
       setSelectedCompany(newValue)
       setCompanyInputValue(newValue.label)
     } else {
-      // Cleared
       setSelectedCompany(null)
       setCompanyInputValue('')
     }
@@ -213,7 +194,7 @@ export function JobPostingForm({
             required
             fullWidth
             disabled={isPending}
-            {...fieldError('title')}
+            {...getFieldError('title')}
           />
 
           <Autocomplete
@@ -268,7 +249,7 @@ export function JobPostingForm({
             defaultValue={initialData?.url || ''}
             fullWidth
             disabled={isPending}
-            {...fieldError('url')}
+            {...getFieldError('url')}
           />
 
           <FormActionButtons

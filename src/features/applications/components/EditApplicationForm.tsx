@@ -1,16 +1,15 @@
 'use client'
 
-import { useActionState, useRef, useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import {
   TextField,
   Stack,
   Heading,
   Text,
 } from '@/design-system/components'
-import { FormError, FormActionButtons } from '@/features/shared'
+import { FormError, FormActionButtons, useFormAction } from '@/features/shared'
 import { updateApplicationAction } from '../actions/update-application.action'
-import type { ActionState, Application, Outcome } from '../schemas/application.schema'
+import type { Application, Outcome } from '../schemas/application.schema'
 import { OUTCOME_OPTIONS } from '../config'
 import { UI_STRINGS } from '@/lib/constants/ui-strings'
 
@@ -20,41 +19,21 @@ interface EditApplicationFormProps {
   onCancel?: () => void
 }
 
-const initialState: ActionState = {
-  success: false,
-}
-
 export function EditApplicationForm({
   application,
   onSuccess,
   onCancel,
 }: EditApplicationFormProps) {
-  const router = useRouter()
-  const formRef = useRef<HTMLFormElement>(null)
   const [outcome, setOutcome] = useState<Outcome | ''>(application.outcome || '')
 
-  const [state, formAction, isPending] = useActionState(
+  const { state, formAction, isPending, getFieldError } = useFormAction(
     updateApplicationAction,
-    initialState
+    { onSuccess }
   )
-
-  // Handle successful form submission
-  useEffect(() => {
-    if (state.success) {
-      onSuccess?.()
-      router.refresh()
-    }
-  }, [state.success, onSuccess, router])
-
-  // Helper to extract field error props for TextField
-  const fieldError = (field: string) => {
-    const msg = state.fieldErrors?.[field]?.[0]
-    return { error: !!msg, errorMessage: msg }
-  }
 
   return (
     <div className="p-6">
-      <form ref={formRef} action={formAction}>
+      <form action={formAction}>
         <Stack gap={4}>
           <Heading level={3} className="text-center">
             {UI_STRINGS.forms.application.editTitle}
@@ -84,7 +63,7 @@ export function EditApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={application.positionTitle}
-            {...fieldError('positionTitle')}
+            {...getFieldError('positionTitle')}
           />
 
           <TextField
@@ -95,7 +74,7 @@ export function EditApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={application.dateApplied}
-            {...fieldError('dateApplied')}
+            {...getFieldError('dateApplied')}
           />
 
           <div className="space-y-1">
@@ -137,7 +116,7 @@ export function EditApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={application.metadata.location || ''}
-            {...fieldError('location')}
+            {...getFieldError('location')}
           />
 
           <TextField
@@ -148,7 +127,7 @@ export function EditApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={application.metadata.jobUrl || ''}
-            {...fieldError('jobUrl')}
+            {...getFieldError('jobUrl')}
           />
 
           <FormActionButtons

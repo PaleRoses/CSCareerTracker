@@ -1,4 +1,4 @@
-export type { AdminUser, AdminStats, UserFilters, UserStatus, AuditLogEntry, AuditActionType } from './types'
+export type { AdminUser, AdminStats, UserFilters, UserStatus } from './types'
 
 export { ADMIN_ROLES, isAdminRole, STATUS_VARIANTS, ROLE_VARIANTS, STATUS_LABELS } from './constants'
 

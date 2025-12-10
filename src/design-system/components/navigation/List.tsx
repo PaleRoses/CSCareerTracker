@@ -17,20 +17,6 @@ export interface ListProps extends HTMLAttributes<HTMLUListElement> {
   sx?: SxProps<Theme>;
 }
 
-/**
- * List - A container for list items
- *
- * @example
- * <List>
- *   <ListItem>First item</ListItem>
- *   <ListItem>Second item</ListItem>
- * </List>
- *
- * @example
- * <List dense disablePadding>
- *   <ListItem>Compact item</ListItem>
- * </List>
- */
 export const List = forwardRef<HTMLUListElement, ListProps>(
   ({ children, dense = false, disablePadding = false, className, sx, ...props }, ref) => {
     return (
@@ -59,17 +45,6 @@ export interface ListItemProps extends Omit<HTMLAttributes<HTMLLIElement>, "chil
   sx?: SxProps<Theme>;
 }
 
-/**
- * ListItem - A single item in a list
- *
- * @example
- * <List>
- *   <ListItem>Simple text item</ListItem>
- *   <ListItem disablePadding>
- *     <ListItemButton>Clickable item</ListItemButton>
- *   </ListItem>
- * </List>
- */
 export const ListItem = forwardRef<HTMLLIElement, ListItemProps>(
   (
     {
@@ -111,22 +86,6 @@ export interface ListItemButtonProps extends HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-/**
- * ListItemButton - An interactive list item
- *
- * @example
- * <ListItem disablePadding>
- *   <ListItemButton selected={isActive}>
- *     <ListItemText primary="Dashboard" />
- *   </ListItemButton>
- * </ListItem>
- *
- * @example
- * // With Link component
- * <ListItemButton component={Link} href="/dashboard">
- *   <ListItemText primary="Dashboard" />
- * </ListItemButton>
- */
 export const ListItemButton = forwardRef<HTMLDivElement, ListItemButtonProps>(
   (
     {
@@ -175,17 +134,6 @@ export interface ListItemIconProps extends HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-/**
- * ListItemIcon - Icon container for list items
- *
- * @example
- * <ListItemButton>
- *   <ListItemIcon>
- *     <DashboardIcon />
- *   </ListItemIcon>
- *   <ListItemText primary="Dashboard" />
- * </ListItemButton>
- */
 export const ListItemIcon = forwardRef<HTMLDivElement, ListItemIconProps>(
   ({ children, className, sx, ...props }, ref) => {
     return (
@@ -221,21 +169,6 @@ export interface ListItemTextProps extends HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-/**
- * ListItemText - Text content for list items
- *
- * @example
- * <ListItemText
- *   primary="Item title"
- *   secondary="Item description"
- * />
- *
- * @example
- * <ListItemText
- *   primary="Dashboard"
- *   primaryTypographyProps={{ fontWeight: 600, color: "text.primary" }}
- * />
- */
 export const ListItemText = forwardRef<HTMLDivElement, ListItemTextProps>(
   (
     {

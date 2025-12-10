@@ -8,10 +8,6 @@ import { logger } from '@/lib/logger'
 import { LONG_REVALIDATE_SECONDS, QUERY_CACHE_TAGS } from '@/lib/queries/core/cache'
 import type { Job, JobType } from '@/features/jobs/types'
 
-/**
- * Get a single job by ID
- * For recruiters editing their own jobs - verifies ownership
- */
 export async function getJob(jobId: string): Promise<Job | null> {
   const session = await auth()
 
@@ -20,7 +16,6 @@ export async function getJob(jobId: string): Promise<Job | null> {
     return null
   }
 
-  // Only privileged users (recruiters, admins) can fetch job details for editing
   if (!hasPrivilegedAccess(session.user.role)) {
     logger.warn('getJob: User does not have privileged access')
     return null
@@ -52,7 +47,7 @@ const getCachedJob = unstable_cache(
         )
       `)
       .eq('job_id', jobId)
-      .eq('posted_by', userId) // Ownership check - only fetch if user owns the job
+      .eq('posted_by', userId)
       .maybeSingle()
 
     if (error) {
@@ -73,10 +68,6 @@ const getCachedJob = unstable_cache(
   }
 )
 
-/**
- * Get a job by ID without ownership check
- * For public job viewing (job browser, candidate applications)
- */
 export async function getJobPublic(jobId: string): Promise<Job | null> {
   return getCachedJobPublic(jobId)
 }
@@ -104,7 +95,7 @@ const getCachedJobPublic = unstable_cache(
         )
       `)
       .eq('job_id', jobId)
-      .eq('is_active', true) // Only active jobs for public viewing
+      .eq('is_active', true)
       .maybeSingle()
 
     if (error) {

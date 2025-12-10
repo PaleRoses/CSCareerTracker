@@ -6,7 +6,6 @@ import { JobsTable } from '@/features/jobs'
 import { getJobs } from '@/features/jobs/queries'
 import { auth } from '@/features/auth/auth'
 import { ROUTES } from '@/config/routes'
-import { filterJobsByStatus } from '@/features/jobs/utils'
 import { pluralize } from '@/lib/utils'
 import { QueryPreview } from '@/features/shared/dev'
 
@@ -19,7 +18,8 @@ export default async function RecruiterJobsPage() {
     includeArchived: true,
   })
 
-  const { active, archived } = filterJobsByStatus(jobs)
+  const active = jobs.filter(job => job.isActive)
+  const archived = jobs.filter(job => !job.isActive)
 
   return (
     <Box>
@@ -28,7 +28,7 @@ export default async function RecruiterJobsPage() {
         subtitle={`You have ${active.length} active ${pluralize(active.length, 'job')} posted`}
         action={
           <Link href={ROUTES.recruiter.newJob}>
-            <Button variant="primary" startIcon={<AddIcon />}>
+            <Button variant="gradient" startIcon={<AddIcon />} className="animate-glow-gradient">
               Post New Job
             </Button>
           </Link>
@@ -42,7 +42,7 @@ export default async function RecruiterJobsPage() {
               You haven&apos;t posted any jobs yet.
             </Text>
             <Link href={ROUTES.recruiter.newJob}>
-              <Button variant="primary" startIcon={<AddIcon />}>
+              <Button variant="gradient" startIcon={<AddIcon />} className="animate-glow-gradient">
                 Post Your First Job
               </Button>
             </Link>
@@ -56,7 +56,7 @@ export default async function RecruiterJobsPage() {
                 </Text>
               </Box>
             )}
-            <JobsTable jobs={jobs} canManageJobs />
+            <JobsTable jobs={jobs} canManageJobs currentUserId={userId} />
           </>
         )}
       </QueryPreview>

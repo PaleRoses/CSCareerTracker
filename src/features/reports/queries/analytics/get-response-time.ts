@@ -14,10 +14,10 @@ export async function getResponseTimeByCompany(): Promise<CompanyStats[]> {
     return []
   }
 
-  return getCachedResponseTimes(session.user.id)
+  return getCachedResponseTime(session.user.id)
 }
 
-const getCachedResponseTimes = unstable_cache(
+const getCachedResponseTime = unstable_cache(
   async (userId: string): Promise<CompanyStats[]> => {
     const supabase = createCacheClient()
 
@@ -44,7 +44,7 @@ const getCachedResponseTimes = unstable_cache(
       .eq('user_id', userId)
 
     if (error) {
-      logger.error('Error fetching response times', { error })
+      logger.error('Error fetching response time data', { error })
       return []
     }
 
@@ -66,7 +66,7 @@ const getCachedResponseTimes = unstable_cache(
 
     const apps = (data || []) as unknown as AppRow[]
 
-    const companyMap = new Map<string, {
+    const companyData = new Map<string, {
       companyName: string
       total: number
       offers: number
@@ -80,7 +80,7 @@ const getCachedResponseTimes = unstable_cache(
       const companyName = app.jobs?.companies?.company_name
       if (!companyId || !companyName) continue
 
-      const existing = companyMap.get(companyId) || {
+      const existing = companyData.get(companyId) || {
         companyName,
         total: 0,
         offers: 0,
@@ -104,13 +104,13 @@ const getCachedResponseTimes = unstable_cache(
       }
 
       const stages = app.application_stages || []
-      const secondStage = stages
+      const firstResponse = stages
         .filter(s => s.stages && s.stages.order_index > 1 && s.started_at)
         .sort((a, b) => (a.stages?.order_index || 0) - (b.stages?.order_index || 0))[0]
 
-      if (secondStage?.started_at) {
+      if (firstResponse?.started_at) {
         const applicationDate = new Date(app.application_date)
-        const responseDate = new Date(secondStage.started_at)
+        const responseDate = new Date(firstResponse.started_at)
         const daysDiff = Math.floor(
           (responseDate.getTime() - applicationDate.getTime()) / (1000 * 60 * 60 * 24)
         )
@@ -119,28 +119,26 @@ const getCachedResponseTimes = unstable_cache(
         }
       }
 
-      companyMap.set(companyId, existing)
+      companyData.set(companyId, existing)
     }
 
     const results: CompanyStats[] = []
 
-    for (const [companyId, stats] of companyMap) {
-      const avgResponseDays = stats.responseDays.length > 0
+    for (const [companyId, data] of companyData) {
+      const avgResponseDays = data.responseDays.length > 0
         ? Math.round(
-            (stats.responseDays.reduce((a, b) => a + b, 0) / stats.responseDays.length) * 10
+            (data.responseDays.reduce((a, b) => a + b, 0) / data.responseDays.length) * 10
           ) / 10
         : null
 
       results.push({
         companyId,
-        companyName: stats.companyName,
-        totalApplications: stats.total,
-        offers: stats.offers,
-        rejections: stats.rejections,
-        pending: stats.pending,
-        offerRate: stats.total > 0
-          ? Math.round((stats.offers / stats.total) * 100)
-          : 0,
+        companyName: data.companyName,
+        totalApplications: data.total,
+        offers: data.offers,
+        rejections: data.rejections,
+        pending: data.pending,
+        offerRate: data.total > 0 ? Math.round((data.offers / data.total) * 100) : 0,
         avgResponseDays,
       })
     }

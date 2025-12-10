@@ -26,10 +26,8 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       className
     );
 
-    const cardSx = flat ? sx : { background: "transparent", ...sx };
-
     return (
-      <MuiCard ref={ref} className={cardClasses} sx={cardSx} {...props}>
+      <MuiCard ref={ref} className={cardClasses} sx={sx} {...props}>
         {children}
       </MuiCard>
     );

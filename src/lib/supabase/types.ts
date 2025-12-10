@@ -1,6 +1,3 @@
-// Column names use snake_case to match PostgreSQL conventions.
-// All primary keys are named {table}_id per proposal spec.
-
 export type DatabaseUser = {
   user_id: string
   email: string

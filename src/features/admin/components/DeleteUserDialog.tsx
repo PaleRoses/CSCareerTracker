@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -37,10 +37,12 @@ export function DeleteUserDialog({
     { success: false, error: undefined }
   )
 
-  if (state.success) {
-    onDeleted?.()
-    onClose()
-  }
+  useEffect(() => {
+    if (state.success) {
+      onDeleted?.()
+      onClose()
+    }
+  }, [state.success, onDeleted, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

@@ -5,9 +5,6 @@ import type { BarChartProps } from "./Chart.types";
 import { colors } from "@/design-system/tokens";
 import { cn } from "@/lib/utils";
 
-/**
- * Styles for MUI Charts to match our design system.
- */
 const chartStyles = {
   "& .MuiChartsAxis-tickLabel": {
     fill: colors.text.secondary,
@@ -23,26 +20,6 @@ const chartStyles = {
   },
 };
 
-/**
- * BarChart - A bar chart component
- *
- * Wraps MUI BarChart with an abstract interface that can be
- * swapped to Recharts, Nivo, or another implementation.
- *
- * @example
- * const stageData = [
- *   { label: "Applied", value: 45 },
- *   { label: "Screening", value: 28 },
- *   { label: "Interview", value: 12 },
- *   { label: "Offer", value: 5 },
- * ];
- *
- * <BarChart
- *   data={stageData}
- *   height={300}
- *   color="#6ee7ff"
- * />
- */
 export function BarChart({
   data,
   height = 300,
@@ -78,7 +55,6 @@ export function BarChart({
         {
           data: values,
           color: barColors ? undefined : color,
-          // If individual colors are provided, this would need custom rendering
         },
       ]}
       height={height}

@@ -1,9 +1,3 @@
-/**
- * Company Resolution Utility
- *
- * Resolves a company by ID or name, creating a new one if necessary.
- * Consolidates duplicate logic from create-application and create-job actions.
- */
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { invalidateCompanyCaches } from './cache-utils'
 import { logger } from '@/lib/logger'
@@ -15,34 +9,19 @@ export type ResolveCompanyResult =
 export type ResolveCompanyOptions = {
   companyId?: string
   companyName?: string
-  /** Optional locations to set when creating a new company */
   locations?: string[]
 }
 
-/**
- * Resolve or create a company by ID or name
- *
- * If companyId is provided, uses it directly.
- * If only companyName is provided, looks up existing company by name (case-insensitive).
- * If no match found, creates a new company.
- *
- * @example
- * const result = await resolveCompany(supabase, { companyName: 'Acme Corp' })
- * if (!result.success) return { success: false, error: result.error }
- * const { companyId } = result
- */
 export async function resolveCompany(
   supabase: SupabaseClient,
   options: ResolveCompanyOptions
 ): Promise<ResolveCompanyResult> {
   const { companyId, companyName, locations = [] } = options
 
-  // If companyId provided, use it directly
   if (companyId) {
     return { success: true, companyId }
   }
 
-  // Must have companyName if no companyId
   if (!companyName) {
     return {
       success: false,
@@ -50,7 +29,6 @@ export async function resolveCompany(
     }
   }
 
-  // Check for existing company (case-insensitive match)
   const { data: existingCompany } = await supabase
     .from('companies')
     .select('company_id')
@@ -61,7 +39,6 @@ export async function resolveCompany(
     return { success: true, companyId: existingCompany.company_id }
   }
 
-  // Create new company
   const { data: newCompany, error: companyError } = await supabase
     .from('companies')
     .insert({

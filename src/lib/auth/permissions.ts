@@ -1,7 +1,6 @@
 import { PRIVILEGED_ROLES, hasPrivilegedAccess } from '@/features/auth/constants'
 import type { PrivilegedRole } from '@/features/auth/constants'
 
-// Re-export for backward compatibility
 export const ADMIN_ROLES = PRIVILEGED_ROLES
 export type AdminRole = PrivilegedRole
 

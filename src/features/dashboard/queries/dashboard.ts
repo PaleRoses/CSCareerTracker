@@ -140,7 +140,7 @@ function calculateStageDistribution(
 
     if (currentStage?.stages) {
       const stageName = extractStageName(currentStage)
-      if (stageName) {
+      if (stageName && stageName !== 'Offer') {
         stageCounts[stageName] = (stageCounts[stageName] || 0) + 1
       }
     }
@@ -154,7 +154,7 @@ function calculateStageDistribution(
   )
 
   if (offers > 0) {
-    distribution.push({ stage: 'Offers', count: offers })
+    distribution.push({ stage: 'Received Offers', count: offers })
   }
   if (rejections > 0) {
     distribution.push({ stage: 'Rejected', count: rejections })

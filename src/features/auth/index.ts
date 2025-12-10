@@ -4,5 +4,3 @@ export { SyncUserSchema } from './schemas/auth.schema'
 export type { SyncUserInput } from './schemas/auth.schema'
 export { PRIVILEGED_ROLES, hasPrivilegedAccess } from './constants'
 export type { PrivilegedRole } from './constants'
-
-// Components (LoginForm, RoleSelectionForm) exported separately from /components to avoid server/client mixing

@@ -12,21 +12,6 @@ export interface NavListProps {
   sx?: SxProps<Theme>;
 }
 
-/**
- * NavList - A container for NavLink components
- *
- * @example
- * <NavList>
- *   <NavLink label="Dashboard" icon={<DashboardIcon />} active />
- *   <NavLink label="Settings" icon={<SettingsIcon />} />
- * </NavList>
- *
- * @example
- * <NavList title="Main Menu">
- *   <NavLink label="Home" icon={<HomeIcon />} />
- *   <NavLink label="Profile" icon={<ProfileIcon />} />
- * </NavList>
- */
 export const NavList = forwardRef<HTMLUListElement, NavListProps>(
   ({ children, title, className, sx, ...props }, ref) => {
     return (

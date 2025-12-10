@@ -14,10 +14,6 @@ export function formatDate(date: string | Date) {
   });
 }
 
-export function getTodayISO(): string {
-  return new Date().toISOString().split('T')[0]
-}
-
 export function capitalize(str: string): string {
   if (!str) return str
   return str.charAt(0).toUpperCase() + str.slice(1)

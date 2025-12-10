@@ -1,6 +1,3 @@
-/**
- * Formats company size into a human-readable string
- */
 export function formatSize(size: number | null): string {
   if (!size) return 'Unknown'
   if (size >= 10000) return `${Math.floor(size / 1000)}k+ employees`

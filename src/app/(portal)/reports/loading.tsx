@@ -1,5 +1,5 @@
-import { ReportsSkeleton } from '@/features/reports'
+import { PageSkeleton } from '@/features/shared'
 
 export default function ReportsLoading() {
-  return <ReportsSkeleton />
+  return <PageSkeleton />
 }

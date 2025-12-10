@@ -7,29 +7,11 @@ import { cn } from "@/lib/utils";
 
 export interface DividerProps {
   orientation?: "horizontal" | "vertical";
-  /** Required for vertical dividers in flex containers */
   flexItem?: boolean;
   className?: string;
   sx?: SxProps<Theme>;
 }
 
-/**
- * Divider - A visual separator component
- *
- * @example
- * <Stack gap={4}>
- *   <Text>Above</Text>
- *   <Divider />
- *   <Text>Below</Text>
- * </Stack>
- *
- * @example
- * <Flex gap={4}>
- *   <Text>Left</Text>
- *   <Divider orientation="vertical" flexItem />
- *   <Text>Right</Text>
- * </Flex>
- */
 export const Divider = forwardRef<HTMLHRElement, DividerProps>(
   ({ orientation = "horizontal", flexItem = false, className, sx, ...props }, ref) => {
     return (

@@ -1,11 +1,3 @@
-/**
- * DataTable Type Definitions
- *
- * Abstract interfaces for data table functionality.
- * These types are implementation-agnostic, allowing the underlying
- * library (MUI DataGrid, TanStack Table, etc.) to be swapped.
- */
-
 import type { ReactNode } from "react";
 
 export interface ColumnDef<TData = unknown> {
@@ -14,14 +6,12 @@ export interface ColumnDef<TData = unknown> {
   headerName: string;
   width?: number;
   minWidth?: number;
-  /** 1 = take remaining space */
   flex?: number;
   sortable?: boolean;
   filterable?: boolean;
   align?: "left" | "center" | "right";
   renderCell?: (params: CellRenderParams<TData>) => ReactNode;
   valueFormatter?: (value: unknown) => string;
-  /** Compute a derived value from the row (runs before valueFormatter) */
   valueGetter?: (value: unknown, row: TData) => unknown;
 }
 
@@ -64,7 +54,6 @@ export interface DataTableProps<TData = unknown> {
   onRowDoubleClick?: (params: RowClickParams<TData>) => void;
   height?: number | string;
   className?: string;
-  /** Shows pointer cursor on rows */
   clickableRows?: boolean;
   loading?: boolean;
   emptyMessage?: string;

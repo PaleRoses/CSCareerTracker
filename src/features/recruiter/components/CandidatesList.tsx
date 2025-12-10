@@ -15,10 +15,9 @@ import { STAGE_VARIANTS, STATUS_VARIANTS, OUTCOME_VARIANTS } from '../constants'
 
 interface CandidatesListProps {
   candidates: Candidate[]
-  jobId?: string
 }
 
-export function CandidatesList({ candidates, jobId: _jobId }: CandidatesListProps) {
+export function CandidatesList({ candidates }: CandidatesListProps) {
   const router = useRouter()
 
   const columns: ColumnDef<Candidate>[] = [
@@ -93,7 +92,6 @@ export function CandidatesList({ candidates, jobId: _jobId }: CandidatesListProp
     },
   ]
 
-  // Transform candidates to include `id` for DataTable compatibility
   const rows = candidates.map(c => ({ ...c, id: c.applicationId }))
 
   return (

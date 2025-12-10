@@ -1,7 +1,3 @@
-/**
- * Job types for the Job Browser feature
- */
-
 export interface Job {
   id: string
   companyId: string
@@ -11,7 +7,7 @@ export interface Job {
   locations: string[]
   url: string | null
   postedDate: string
-  postedBy: string | null  // User ID of recruiter who posted this job
+  postedBy: string | null
   companyWebsite: string | null
   companySize: number | null
   isActive: boolean
@@ -33,6 +29,6 @@ export interface JobFilters {
   search?: string
   limit?: number
   offset?: number
-  includeArchived?: boolean  // If true, includes archived (is_active = false) jobs
-  postedBy?: string  // Filter by recruiter who posted the job
+  includeArchived?: boolean
+  postedBy?: string
 }

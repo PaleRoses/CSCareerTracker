@@ -40,11 +40,7 @@ export function StageNotesModal({
   const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const [localNotes, setLocalNotes] = useState(stage.notes || '')
-
-  // Track previous stage.notes for render-phase sync (React recommended pattern)
   const [prevStageNotes, setPrevStageNotes] = useState(stage.notes)
-
-  // Track which action results have been processed to avoid re-processing
   const processedActionRef = useRef<string | null>(null)
 
   const [state, formAction, isPending] = useActionState(
@@ -52,20 +48,14 @@ export function StageNotesModal({
     initialState
   )
 
-  // Render-phase sync: update local state when prop changes (no useEffect needed)
   if (stage.notes !== prevStageNotes) {
     setPrevStageNotes(stage.notes)
     setLocalNotes(stage.notes || '')
   }
 
-  // Handle action success: reset form and refresh router
-  // Note: setState in this effect is intentional - we're responding to an async action result
-  // to provide optimistic UI feedback before server data refreshes. This is the recommended
-  // pattern for useActionState success handling with local state updates.
   useEffect(() => {
     if (state.success && state.data && state.data !== processedActionRef.current) {
       processedActionRef.current = state.data
-      // Append the new note to local state for immediate UI feedback
       const newNote = state.data
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: optimistic UI update after action success
       setLocalNotes((prev) => (prev ? `${prev}\n${newNote}` : newNote))

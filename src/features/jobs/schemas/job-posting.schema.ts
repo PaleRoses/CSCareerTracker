@@ -1,8 +1,5 @@
 import { z } from 'zod'
 
-/**
- * Schema for job posting form validation
- */
 export const JobPostingSchema = z
   .object({
     companyId: z.string().uuid().optional(),
@@ -34,9 +31,6 @@ export const JobPostingSchema = z
 
 export type JobPostingInput = z.infer<typeof JobPostingSchema>
 
-/**
- * Schema for updating an existing job posting
- */
 export const UpdateJobPostingSchema = z.object({
   jobId: z.string().uuid(),
   title: z.string().min(1).max(150).optional(),

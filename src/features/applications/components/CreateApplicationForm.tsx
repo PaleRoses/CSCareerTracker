@@ -1,17 +1,14 @@
 'use client'
 
-import { useActionState, useRef, useCallback, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRef, useCallback } from 'react'
 import {
   TextField,
   Autocomplete,
   Stack,
   Heading,
 } from '@/design-system/components'
-import { FormError, FormActionButtons } from '@/features/shared'
-import { getTodayISO } from '@/lib/utils'
+import { FormError, FormActionButtons, useFormAction } from '@/features/shared'
 import { createApplicationAction } from '../actions/create-application.action'
-import type { ActionState } from '../schemas/application.schema'
 import { UI_STRINGS } from '@/lib/constants/ui-strings'
 import { useCompanyAutocomplete, type CompanyOption } from '../hooks'
 
@@ -23,20 +20,11 @@ interface CreateApplicationFormProps {
   onCancel?: () => void
 }
 
-type CreateApplicationResult = {
-  applicationId: string
-}
-
-const initialState: ActionState<CreateApplicationResult> = {
-  success: false,
-}
-
 export function CreateApplicationForm({
   companies,
   onSuccess,
   onCancel,
 }: CreateApplicationFormProps) {
-  const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const {
     selectedCompany,
@@ -46,36 +34,27 @@ export function CreateApplicationForm({
     reset: resetCompanyAutocomplete,
   } = useCompanyAutocomplete()
 
-  // Derived values for form submission
   const existingCompanyId = selectedCompany?.id ?? ''
   const companyDisplayName = selectedCompany ? '' : companyInputValue
-
-  const [state, formAction, isPending] = useActionState(
-    createApplicationAction,
-    initialState
-  )
 
   const resetFormState = useCallback(() => {
     formRef.current?.reset()
     resetCompanyAutocomplete()
   }, [resetCompanyAutocomplete])
 
-  // Handle successful form submission
-  useEffect(() => {
-    if (state.success && state.data) {
-      resetFormState()
-      onSuccess?.(state.data.applicationId)
-      router.refresh()
+  const { state, formAction, isPending, getFieldError } = useFormAction(
+    createApplicationAction,
+    {
+      onSuccess: (data) => {
+        resetFormState()
+        if (data?.applicationId) {
+          onSuccess?.(data.applicationId)
+        }
+      },
     }
-  }, [state.success, state.data, resetFormState, onSuccess, router])
+  )
 
-  // Helper to extract field error props for TextField
-  const fieldError = (field: string) => {
-    const msg = state.fieldErrors?.[field]?.[0]
-    return { error: !!msg, errorMessage: msg }
-  }
-
-  const today = getTodayISO()
+  const today = new Date().toISOString().split('T')[0]
   const companyError = state.fieldErrors?.['companyName']?.[0] || state.fieldErrors?.['companyId']?.[0]
 
   return (
@@ -127,7 +106,7 @@ export function CreateApplicationForm({
             required
             fullWidth
             disabled={isPending}
-            {...fieldError('positionTitle')}
+            {...getFieldError('positionTitle')}
           />
 
           <TextField
@@ -138,7 +117,7 @@ export function CreateApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={today}
-            {...fieldError('applicationDate')}
+            {...getFieldError('applicationDate')}
           />
 
           <TextField
@@ -147,7 +126,7 @@ export function CreateApplicationForm({
             placeholder={UI_STRINGS.forms.application.locationPlaceholder}
             fullWidth
             disabled={isPending}
-            {...fieldError('location')}
+            {...getFieldError('location')}
           />
 
           <TextField
@@ -157,7 +136,7 @@ export function CreateApplicationForm({
             placeholder={UI_STRINGS.forms.application.jobUrlPlaceholder}
             fullWidth
             disabled={isPending}
-            {...fieldError('jobUrl')}
+            {...getFieldError('jobUrl')}
           />
 
           <FormActionButtons

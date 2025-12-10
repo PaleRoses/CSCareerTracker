@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Box, Grid, Button } from '@/design-system/components'
 import { ArrowBackIcon } from '@/design-system/icons'
 import { PageHeader } from '@/features/shared'
+import { QueryPreview } from '@/features/shared/dev'
 import { UserDetailCard, getUserDetail } from '@/features/admin'
 import { UserActionsCard } from './UserActionsCard'
 import { ROUTES } from '@/config/routes'
@@ -36,7 +37,9 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
       />
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, lg: 8 }}>
-          <UserDetailCard user={user} />
+          <QueryPreview query="user-detail">
+            <UserDetailCard user={user} />
+          </QueryPreview>
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }}>
           <UserActionsCard user={user} />

@@ -1,7 +1,6 @@
 import { Box } from "@/design-system/components";
 import { PageHeader } from "@/features/shared";
-import { JobsTable } from "@/features/jobs";
-import { getJobs } from "@/features/shared";
+import { JobsTable, getJobs } from "@/features/jobs";
 import { auth } from "@/features/auth/auth";
 import { hasPrivilegedAccess } from "@/features/auth/constants";
 import { QueryPreview } from "@/features/shared/dev";
@@ -22,7 +21,7 @@ export default async function JobBrowserPage() {
       />
 
       <QueryPreview query="jobs-list">
-        <JobsTable jobs={jobs} canManageJobs={hasJobManagement} />
+        <JobsTable jobs={jobs} canManageJobs={hasJobManagement} currentUserId={session?.user?.id} />
       </QueryPreview>
     </Box>
   );

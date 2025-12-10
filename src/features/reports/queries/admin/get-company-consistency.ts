@@ -40,7 +40,7 @@ const getCachedCompanyConsistency = unstable_cache(
       `)
 
     if (error) {
-      logger.error('Error fetching company consistency', { error })
+      logger.error('Error fetching company consistency data', { error })
       return []
     }
 
@@ -77,13 +77,13 @@ const getCachedCompanyConsistency = unstable_cache(
       }
 
       const stages = app.application_stages || []
-      const secondStage = stages
+      const firstResponse = stages
         .filter(s => s.stages && s.stages.order_index > 1 && s.started_at)
         .sort((a, b) => (a.stages?.order_index || 0) - (b.stages?.order_index || 0))[0]
 
-      if (secondStage?.started_at) {
+      if (firstResponse?.started_at) {
         const applicationDate = new Date(app.application_date)
-        const responseDate = new Date(secondStage.started_at)
+        const responseDate = new Date(firstResponse.started_at)
         const daysDiff = Math.floor(
           (responseDate.getTime() - applicationDate.getTime()) / (1000 * 60 * 60 * 24)
         )
@@ -98,22 +98,23 @@ const getCachedCompanyConsistency = unstable_cache(
     const results: CompanyConsistency[] = []
 
     for (const [companyId, data] of companyData) {
-      if (data.responseDays.length < 2) continue
+      const totalApplications = data.responseDays.length
+      if (totalApplications < 2) continue // Need at least 2 data points for variance
 
-      const days = data.responseDays
-      const avg = days.reduce((a, b) => a + b, 0) / days.length
-      const variance = days.reduce((sum, d) => sum + Math.pow(d - avg, 2), 0) / days.length
-      const stdDev = Math.sqrt(variance)
+      const avgResponseDays =
+        data.responseDays.reduce((a, b) => a + b, 0) / totalApplications
 
-      const maxStdDev = 30
-      const consistencyScore = Math.max(0, Math.round((1 - stdDev / maxStdDev) * 100))
+      const squaredDiffs = data.responseDays.map(d => Math.pow(d - avgResponseDays, 2))
+      const responseVariance =
+        squaredDiffs.reduce((a, b) => a + b, 0) / totalApplications
+      const consistencyScore = Math.max(0, Math.round(100 - Math.sqrt(responseVariance) * 5))
 
       results.push({
         companyId,
         companyName: data.companyName,
-        totalApplicationsAllUsers: days.length,
-        avgResponseDays: Math.round(avg * 10) / 10,
-        responseVariance: Math.round(variance * 10) / 10,
+        totalApplicationsAllUsers: totalApplications,
+        avgResponseDays: Math.round(avgResponseDays * 10) / 10,
+        responseVariance: Math.round(responseVariance * 10) / 10,
         consistencyScore,
       })
     }

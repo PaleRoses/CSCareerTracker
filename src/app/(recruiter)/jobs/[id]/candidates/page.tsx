@@ -13,17 +13,19 @@ interface CandidatesPageProps {
 
 export default async function JobCandidatesPage({ params }: CandidatesPageProps) {
   const { id: jobId } = await params
-  const session = await auth()
-  const userId = session?.user?.id
 
+  const [session, candidates] = await Promise.all([
+    auth(),
+    getCandidates({ jobId }),
+  ])
+
+  const userId = session?.user?.id
   const jobs = await getJobs({ postedBy: userId })
   const job = jobs.find(j => j.id === jobId)
 
   if (!job) {
     notFound()
   }
-
-  const candidates = await getCandidates({ jobId })
 
   return (
     <Box>
@@ -40,7 +42,7 @@ export default async function JobCandidatesPage({ params }: CandidatesPageProps)
             </Text>
           </Box>
         ) : (
-          <CandidatesList candidates={candidates} jobId={jobId} />
+          <CandidatesList candidates={candidates} />
         )}
       </QueryPreview>
     </Box>

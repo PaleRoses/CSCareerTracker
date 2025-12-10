@@ -14,6 +14,7 @@ import {
   databaseError,
   unexpectedError,
 } from '@/lib/actions/error-utils'
+import { splitFullName } from '@/features/auth/utils'
 
 type CreateApplicationResult = {
   applicationId: string
@@ -51,14 +52,14 @@ export async function createApplicationAction(
 
     const supabase = createUserClient(userId)
 
-    // Ensure user exists (NextAuth users aren't auto-synced to Supabase)
+    const { fname, lname } = splitFullName(session.user.name, 'User', 'OAuth')
     const { error: userError } = await supabase
       .from('users')
       .upsert({
         user_id: userId,
         email: session.user.email || `${userId}@oauth.placeholder`,
-        fname: session.user.name?.split(' ')[0] || 'User',
-        lname: session.user.name?.split(' ').slice(1).join(' ') || 'OAuth',
+        fname,
+        lname,
         password_hash: 'oauth', // Placeholder for OAuth users
       }, { onConflict: 'user_id' })
 
@@ -66,7 +67,6 @@ export async function createApplicationAction(
       return databaseError(userError, 'sync user')
     }
 
-    // Resolve or create company
     const companyResult = await resolveCompany(supabase, { companyId, companyName })
     if (!companyResult.success) {
       return { success: false, error: companyResult.error }
@@ -107,7 +107,6 @@ export async function createApplicationAction(
       return databaseError(appError, 'create application')
     }
 
-    // Initial "Applied" stage is auto-created by DB trigger
     invalidateApplicationCaches()
 
     return {

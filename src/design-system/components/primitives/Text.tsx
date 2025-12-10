@@ -60,25 +60,6 @@ const muiVariantMap: Record<TextVariant, "body1" | "body2" | "caption" | "overli
   overline: "overline",
 };
 
-/**
- * Text - A typography primitive for body text
- *
- * Use this for paragraphs, labels, captions, and other body text.
- * For headings, use the Heading component.
- *
- * @example
- * <Text>Default body text</Text>
- *
- * @example
- * <Text variant="caption" color="secondary">
- *   Secondary caption text
- * </Text>
- *
- * @example
- * <Text weight="semibold" truncate>
- *   This text will be truncated if too long...
- * </Text>
- */
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {

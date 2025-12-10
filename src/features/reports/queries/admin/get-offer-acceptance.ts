@@ -24,7 +24,6 @@ const getCachedOfferAcceptance = unstable_cache(
       .select(`
         application_id,
         final_outcome,
-        offer_status,
         jobs (
           company_id,
           companies (
@@ -33,17 +32,16 @@ const getCachedOfferAcceptance = unstable_cache(
           )
         )
       `)
-      .eq('final_outcome', 'offer')
+      .in('final_outcome', ['offer', 'withdrawn'])
 
     if (error) {
-      logger.error('Error fetching offer acceptance', { error })
+      logger.error('Error fetching offer acceptance data', { error })
       return []
     }
 
     type AppRow = {
       application_id: string
       final_outcome: string
-      offer_status: string | null
       jobs: {
         company_id: string
         companies: { company_id: string; company_name: string } | null
@@ -71,7 +69,7 @@ const getCachedOfferAcceptance = unstable_cache(
 
       existing.offersExtended++
 
-      if (app.offer_status === 'accepted') {
+      if (app.final_outcome === 'offer') {
         existing.offersAccepted++
       }
 
@@ -81,20 +79,20 @@ const getCachedOfferAcceptance = unstable_cache(
     const results: OfferAcceptance[] = []
 
     for (const [companyId, data] of companyData) {
+      if (data.offersExtended === 0) continue
+
       results.push({
         companyId,
         companyName: data.companyName,
         offersExtended: data.offersExtended,
         offersAccepted: data.offersAccepted,
-        acceptanceRate: data.offersExtended > 0
-          ? Math.round((data.offersAccepted / data.offersExtended) * 100)
-          : 0,
+        acceptanceRate: Math.round((data.offersAccepted / data.offersExtended) * 100),
       })
     }
 
     return results.sort((a, b) => b.offersExtended - a.offersExtended)
   },
-  ['offer-acceptance-ratio'],
+  ['offer-acceptance'],
   {
     tags: [QUERY_CACHE_TAGS.STATS, QUERY_CACHE_TAGS.COMPANIES],
     revalidate: LONG_REVALIDATE_SECONDS,

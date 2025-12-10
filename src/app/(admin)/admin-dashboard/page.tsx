@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Box, Button, Grid, Card, CardContent, Text, Heading } from '@/design-system/components'
 import { PageHeader } from '@/features/shared'
+import { QueryPreview } from '@/features/shared/dev'
 import { PeopleIcon, TrendingUpIcon } from '@/design-system/icons'
 import { AdminStatsGrid, getAdminStats } from '@/features/admin'
 import { ROUTES } from '@/config/routes'
@@ -22,7 +23,9 @@ export default async function AdminDashboardPage() {
         }
       />
 
-      <AdminStatsGrid stats={stats} />
+      <QueryPreview query="admin-stats">
+        <AdminStatsGrid stats={stats} />
+      </QueryPreview>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>

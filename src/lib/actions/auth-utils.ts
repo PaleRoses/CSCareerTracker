@@ -3,32 +3,19 @@ import { createUserClient } from '@/lib/supabase/server'
 import { hasPrivilegedAccess, type PrivilegedRole } from '@/features/auth/constants'
 import { authError, type ActionState } from './error-utils'
 
-/**
- * Basic auth context returned by requireAuth
- */
 export type AuthContext = {
   userId: string
   supabase: ReturnType<typeof createUserClient>
 }
 
-/**
- * Extended action context with role information
- */
 export type ActionContext = AuthContext & {
   userRole: string
 }
 
-/**
- * Action context for privileged users (recruiter, admin, techno_warlord)
- */
 export type PrivilegedActionContext = AuthContext & {
   userRole: PrivilegedRole
 }
 
-/**
- * Legacy auth check - returns null if not authenticated
- * @deprecated Use requireActionAuth() for better error handling
- */
 export async function requireAuth(): Promise<AuthContext | null> {
   const session = await auth()
   if (!session?.user?.id) {
@@ -40,15 +27,6 @@ export async function requireAuth(): Promise<AuthContext | null> {
   }
 }
 
-/**
- * Require authenticated user for server action
- * Returns discriminated union for clean error handling
- *
- * @example
- * const result = await requireActionAuth()
- * if ('error' in result) return result.error
- * const { userId, supabase, userRole } = result.context
- */
 export async function requireActionAuth(): Promise<
   { context: ActionContext } | { error: ActionState }
 > {
@@ -67,14 +45,6 @@ export async function requireActionAuth(): Promise<
   }
 }
 
-/**
- * Require privileged access (recruiter, admin, techno_warlord)
- *
- * @example
- * const result = await requirePrivilegedAuth()
- * if ('error' in result) return result.error
- * const { userId, supabase, userRole } = result.context
- */
 export async function requirePrivilegedAuth(): Promise<
   { context: PrivilegedActionContext } | { error: ActionState }
 > {
@@ -89,14 +59,6 @@ export async function requirePrivilegedAuth(): Promise<
   return { context: result.context as PrivilegedActionContext }
 }
 
-/**
- * Require admin access (admin, techno_warlord only)
- *
- * @example
- * const result = await requireAdminAuth()
- * if ('error' in result) return result.error
- * const { userId, supabase } = result.context
- */
 export async function requireAdminAuth(): Promise<
   { context: ActionContext } | { error: ActionState }
 > {

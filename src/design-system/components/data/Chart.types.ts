@@ -1,11 +1,3 @@
-/**
- * Chart Type Definitions
- *
- * Abstract interfaces for chart components.
- * These types are implementation-agnostic, allowing the underlying
- * library (MUI Charts, Recharts, Nivo, etc.) to be swapped.
- */
-
 export interface ChartDataPoint {
   label: string;
   value: number;

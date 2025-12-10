@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { Grid } from "@/design-system/components";
 import {
   WorkIcon,
@@ -25,12 +24,12 @@ export default function StatsGrid({
   pendingApplications,
   responseRate,
 }: StatsGridProps) {
-  const statsItems = useMemo(() => [
+  const statsItems = [
     { title: "Total Applications", value: totalApplications, icon: <WorkIcon />, color: colors.primary.DEFAULT },
     { title: "Offers Received", value: offersReceived, icon: <CheckCircleIcon />, color: colors.success.DEFAULT },
     { title: "Pending", value: pendingApplications, icon: <HourglassEmptyIcon />, color: colors.warning.DEFAULT },
     { title: "Response Rate", value: `${responseRate}%`, icon: <TrendingUpIcon />, color: colors.secondary.DEFAULT },
-  ], [totalApplications, offersReceived, pendingApplications, responseRate]);
+  ];
 
   return (
     <Grid container spacing={3} className="mb-8">

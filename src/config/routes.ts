@@ -133,7 +133,6 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
   },
 ] as const
 
-// Re-export for backward compatibility, prefer @/features/auth/constants
 export { PRIVILEGED_ROLES as RECRUITER_ROLES } from '@/features/auth/constants'
 
 export const ADMIN_ROLES = ['admin', 'techno_warlord'] as const

@@ -3,7 +3,7 @@
 import { auth } from '@/features/auth/auth'
 import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateJobCaches } from '@/features/jobs/utils/cache-utils'
+import { invalidateJobCaches, parseOptionalLocationsFromFormData } from '@/features/jobs/utils'
 import { UpdateJobPostingSchema } from '@/features/jobs/schemas'
 import {
   validationError,
@@ -18,10 +18,6 @@ type UpdateJobResult = {
   jobId: string
 }
 
-/**
- * Update an existing job posting
- * Only the recruiter who posted the job can update it
- */
 export async function updateJobAction(
   _prevState: ActionState<UpdateJobResult>,
   formData: FormData
@@ -39,16 +35,7 @@ export async function updateJobAction(
     const userId = session.user.id
     const supabase = createUserClient(userId)
 
-    const locationsRaw = formData.get('locations')
-    let locations: string[] | undefined
-
-    if (typeof locationsRaw === 'string' && locationsRaw.length > 0) {
-      try {
-        locations = JSON.parse(locationsRaw)
-      } catch {
-        locations = locationsRaw.split(',').map(s => s.trim()).filter(Boolean)
-      }
-    }
+    const locations = parseOptionalLocationsFromFormData(formData)
 
     const rawData = {
       jobId: formData.get('jobId'),

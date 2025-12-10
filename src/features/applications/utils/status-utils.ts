@@ -1,12 +1,7 @@
-/**
- * Application Status Utilities
- */
-
 import type { StageStatus } from '../schemas/application.schema'
 import type { Stage } from '../types'
 import { STAGE_NAMES } from '../config'
 
-// Single source of truth for status mappings
 const STATUS_DEFINITIONS = {
   successful: {
     chipVariant: 'offer' as const,

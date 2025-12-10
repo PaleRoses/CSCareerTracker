@@ -1,6 +1,3 @@
-// Supabase returns FK relations as arrays even for one-to-one relationships.
-// These utilities provide semantic wrappers instead of `jobs[0]?.companies[0]`.
-
 export function getPrimaryRelation<T>(
   relation: T[] | T | null | undefined
 ): T | null {

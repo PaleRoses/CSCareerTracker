@@ -1,13 +1,6 @@
-/**
- * Recruiter feature types
- */
-
 import type { Job, JobType } from '@/features/jobs/types'
 import type { Stage, Outcome } from '@/features/applications/types'
 
-/**
- * Candidate representation for recruiter view
- */
 export interface Candidate {
   applicationId: string
   userId: string
@@ -21,9 +14,6 @@ export interface Candidate {
   stages: CandidateStage[]
 }
 
-/**
- * Stage info for candidate timeline
- */
 export interface CandidateStage {
   id: string
   name: string
@@ -34,21 +24,15 @@ export interface CandidateStage {
   updatedBy: string | null
 }
 
-/**
- * Stats for recruiter dashboard
- */
 export interface RecruiterStats {
   totalJobsPosted: number
   activeJobsCount: number
   totalCandidates: number
   candidatesByStage: Record<string, number>
   candidatesByOutcome: Record<string, number>
-  recentApplications: number  // Last 7 days
+  recentApplications: number
 }
 
-/**
- * Job posting input for create/update
- */
 export interface JobPostingInput {
   companyId?: string
   companyName?: string
@@ -58,9 +42,6 @@ export interface JobPostingInput {
   url?: string
 }
 
-/**
- * Recruiter's job with additional stats
- */
 export interface RecruiterJob extends Job {
   candidateCount: number
   activeApplications: number

@@ -29,7 +29,6 @@ export async function createClient(request: NextRequest) {
     }
   )
 
-  // Keep this logic minimal between createServerClient and getUser() for security
   await supabase.auth.getUser()
 
   return { supabase, response: supabaseResponse }

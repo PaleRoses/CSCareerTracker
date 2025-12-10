@@ -8,10 +8,6 @@ import { QUERY_CACHE_TAGS, DEFAULT_REVALIDATE_SECONDS } from '@/lib/queries/core
 import { APPLICATION_SELECT_QUERY, transformDbToApplication } from '@/lib/queries/core/transform'
 import { type Application } from '@/features/applications/schemas/application.schema'
 
-/**
- * Get applications for a specific company
- * Requires authenticated user
- */
 export async function getApplicationsByCompany(companyId: string): Promise<Application[]> {
   const session = await auth()
 

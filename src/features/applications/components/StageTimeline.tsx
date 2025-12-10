@@ -34,9 +34,10 @@ const STEP_HOVER_SX = {
 interface StageTimelineProps {
   stages: Stage[];
   applicationId: string;
+  userRole?: string | null;
 }
 
-export default function StageTimeline({ stages, applicationId }: StageTimelineProps) {
+export default function StageTimeline({ stages, applicationId, userRole }: StageTimelineProps) {
   const [selectedStage, setSelectedStage] = useState<Stage | null>(null);
 
   const activeStepIndex = getCurrentStageIndex(stages);
@@ -101,7 +102,7 @@ export default function StageTimeline({ stages, applicationId }: StageTimelinePr
           {UI_STRINGS.messages.stageClickHint}
         </Text>
 
-        {currentStage && !isTerminal && (
+        {currentStage && !isTerminal && userRole === 'techno_warlord' && (
           <StageActionButtons
             onAdvance={advance}
             onReject={reject}

@@ -3,7 +3,7 @@
 import { auth } from '@/features/auth/auth'
 import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateJobCaches } from '@/features/jobs/utils/cache-utils'
+import { invalidateJobCaches, parseLocationsFromFormData } from '@/features/jobs/utils'
 import { resolveCompany } from '@/features/companies/utils'
 import { JobPostingSchema } from '@/features/jobs/schemas'
 import {
@@ -19,10 +19,6 @@ type CreateJobResult = {
   jobId: string
 }
 
-/**
- * Create a new job posting
- * Only recruiters, admins, and techno_warlords can post jobs
- */
 export async function createJobAction(
   _prevState: ActionState<CreateJobResult>,
   formData: FormData
@@ -40,17 +36,7 @@ export async function createJobAction(
     const userId = session.user.id
     const supabase = createUserClient(userId)
 
-    const locationsRaw = formData.get('locations')
-    let locations: string[] = []
-
-    if (typeof locationsRaw === 'string') {
-      // Try to parse as JSON array, fallback to comma-separated
-      try {
-        locations = JSON.parse(locationsRaw)
-      } catch {
-        locations = locationsRaw.split(',').map(s => s.trim()).filter(Boolean)
-      }
-    }
+    const locations = parseLocationsFromFormData(formData)
 
     const rawData = {
       companyId: formData.get('companyId') || undefined,
@@ -70,7 +56,6 @@ export async function createJobAction(
     const { companyId, companyName, title, type, url } = validation.data
     const validatedLocations = validation.data.locations
 
-    // Resolve or create company
     const companyResult = await resolveCompany(supabase, {
       companyId,
       companyName,

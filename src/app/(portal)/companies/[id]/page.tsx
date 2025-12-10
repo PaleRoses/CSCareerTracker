@@ -3,7 +3,7 @@ import {
   getCompanyDetail,
   getApplicationsByCompany,
 } from '@/features/companies'
-import { getJobs } from '@/features/shared'
+import { getJobs } from '@/features/jobs'
 import { QueryPreview } from '@/features/shared/dev'
 
 interface CompanyPageProps {

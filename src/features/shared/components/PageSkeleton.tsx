@@ -2,7 +2,7 @@
 
 import { Box, LoadingDots } from '@/design-system/components'
 
-export function ReportsSkeleton() {
+export function PageSkeleton() {
   return (
     <Box className="flex items-center justify-center min-h-[400px]">
       <LoadingDots size="lg" />
@@ -10,4 +10,4 @@ export function ReportsSkeleton() {
   )
 }
 
-export default ReportsSkeleton
+export default PageSkeleton

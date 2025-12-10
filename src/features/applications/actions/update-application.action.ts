@@ -13,14 +13,6 @@ import {
   unexpectedError,
 } from '@/lib/actions/error-utils'
 
-/**
- * Update an existing job application
- *
- * Supports partial updates - only provided fields will be updated.
- * User can only update their own applications (RLS enforced).
- *
- * Revalidates both 'applications' and specific application cache tags.
- */
 export async function updateApplicationAction(
   _prevState: ActionState,
   formData: FormData
@@ -58,7 +50,6 @@ export async function updateApplicationAction(
 
     const { id, ...updateData } = validation.data
 
-    // company is in companies table via jobs FK, location/jobUrl are in metadata JSONB
     const dbUpdate: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
     }
@@ -93,7 +84,7 @@ export async function updateApplicationAction(
       .from('applications')
       .update(dbUpdate)
       .eq('application_id', id)
-      .eq('user_id', userId) // Ownership check
+      .eq('user_id', userId)
 
     if (error) {
       return databaseError(error, 'update application')

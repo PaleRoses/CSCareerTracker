@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 import type { UserRole } from '@/lib/supabase/types'
 import { ROLE_OPTIONS, type RoleOption, type SetRoleResult } from '../constants'
+import { splitFullName } from '../utils'
 
 export async function setUserRole(role: RoleOption): Promise<SetRoleResult> {
   if (!ROLE_OPTIONS.some(opt => opt.value === role)) {
@@ -33,13 +34,14 @@ export async function setUserRole(role: RoleOption): Promise<SetRoleResult> {
     }
 
     if (!existingUser) {
+      const { fname, lname } = splitFullName(session.user.name)
       const { error: insertError } = await supabase
         .from('users')
         .insert({
           user_id: userId,
           email: session.user.email || '',
-          fname: session.user.name?.split(' ')[0] || 'User',
-          lname: session.user.name?.split(' ').slice(1).join(' ') || '',
+          fname,
+          lname,
           role: role as UserRole,
           password_hash: 'oauth',
         })
@@ -94,10 +96,6 @@ export async function getUserRole(): Promise<RoleOption | null> {
   return data.role as RoleOption
 }
 
-/**
- * Reset user role to null (triggers onboarding flow).
- * Dev convenience function for testing onboarding.
- */
 export async function resetUserRole(): Promise<{ success: boolean }> {
   const session = await auth()
   if (!session?.user?.id) {

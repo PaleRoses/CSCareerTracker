@@ -319,7 +319,17 @@ DECLARE
   is_terminal BOOLEAN;
   terminal_stage_name TEXT;
 BEGIN
-  -- Check for terminal conditions:
+  -- Skip check for upserts: if row already exists, this is an update via ON CONFLICT
+  -- (BEFORE INSERT fires even for ON CONFLICT DO UPDATE, before PG knows it will update)
+  IF EXISTS (
+    SELECT 1 FROM application_stages
+    WHERE application_id = NEW.application_id
+    AND stage_id = NEW.stage_id
+  ) THEN
+    RETURN NEW;
+  END IF;
+
+  -- Check for terminal conditions (only for genuinely new inserts):
   -- 1. Any stage with status = 'rejected'
   -- 2. Withdrawn stage exists
   -- 3. Offer stage with status = 'successful'

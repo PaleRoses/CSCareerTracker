@@ -1,9 +1,3 @@
-/**
- * User Management Schemas
- *
- * Zod validation schemas for admin user management actions.
- */
-
 import { z } from 'zod'
 
 export const UpdateUserRoleSchema = z.object({

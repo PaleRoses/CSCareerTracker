@@ -1,7 +1,6 @@
 'use client'
 
 import { useOptimistic } from 'react'
-import { formatNoteWithTimestamp, isValidNote } from '../utils/note-utils'
 
 export interface UseOptimisticNotesResult {
   optimisticNotes: string[]
@@ -18,8 +17,9 @@ export function useOptimisticNotes(
   )
 
   const prepareNote = (rawNote: string): string | null => {
-    if (!isValidNote(rawNote)) return null
-    return formatNoteWithTimestamp(rawNote)
+    if (!rawNote?.trim()) return null
+    const today = new Date().toISOString().split('T')[0]
+    return `[${today}] ${rawNote}`
   }
 
   return {

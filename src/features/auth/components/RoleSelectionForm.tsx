@@ -84,9 +84,11 @@ export default function RoleSelectionForm() {
                         {option.label}
                       </Heading>
 
-                      <Text className="text-foreground-muted text-sm leading-relaxed">
-                        {option.description}
-                      </Text>
+                      {option.description && (
+                        <Text className="text-foreground-muted text-sm leading-relaxed">
+                          {option.description}
+                        </Text>
+                      )}
 
                       <Box className={`flex items-center gap-1 h-5 ${isSelected ? 'opacity-100' : 'opacity-0'}`}>
                         <CheckIcon className="text-primary w-4 h-4" />

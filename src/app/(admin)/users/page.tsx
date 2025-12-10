@@ -1,5 +1,6 @@
 import { Box } from '@/design-system/components'
 import { PageHeader } from '@/features/shared'
+import { QueryPreview } from '@/features/shared/dev'
 import { UsersList, getUsers } from '@/features/admin'
 
 interface UsersPageProps {
@@ -32,7 +33,9 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
         title="User Management"
         subtitle={`${users.length} users found`}
       />
-      <UsersList users={users} />
+      <QueryPreview query="users-list">
+        <UsersList users={users} />
+      </QueryPreview>
     </Box>
   )
 }

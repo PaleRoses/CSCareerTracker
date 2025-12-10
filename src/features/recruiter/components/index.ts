@@ -1,4 +1,5 @@
 export { JobPostingForm } from './JobPostingForm'
+export { JobFormRouterWrapper } from './JobFormRouterWrapper'
 export { CandidatesList } from './CandidatesList'
 export { CandidateStageUpdater } from './CandidateStageUpdater'
 export { RecruiterStatsGrid } from './RecruiterStatsGrid'

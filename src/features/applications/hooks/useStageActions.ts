@@ -1,61 +1,54 @@
-"use client";
+'use client'
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
-import type { Stage } from "@/features/applications/types";
-import {
-  advanceStageAction,
-  withdrawApplicationAction,
-  updateStageAction,
-} from "../actions/update-stage.action";
+import { useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import type { Stage } from '@/features/applications/types'
+import { advanceStageAction } from '../actions/advance-stage.action'
+import { rejectStageAction } from '../actions/reject-stage.action'
+import { withdrawApplicationAction } from '../actions/withdraw-application.action'
 
 interface UseStageActionsReturn {
-  advance: () => void;
-  reject: () => void;
-  withdraw: () => void;
-  isPending: boolean;
+  advance: () => void
+  reject: () => void
+  withdraw: () => void
+  isPending: boolean
 }
 
 export function useStageActions(
   applicationId: string,
   currentStage: Stage | null
 ): UseStageActionsReturn {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   const advance = () => {
-    if (!currentStage) return;
+    if (!currentStage) return
     startTransition(async () => {
-      const result = await advanceStageAction(applicationId, currentStage.id);
+      const result = await advanceStageAction(applicationId, currentStage.id)
       if (result.success) {
-        router.refresh();
+        router.refresh()
       }
-    });
-  };
+    })
+  }
 
   const reject = () => {
-    if (!currentStage) return;
+    if (!currentStage) return
     startTransition(async () => {
-      const formData = new FormData();
-      formData.set("applicationId", applicationId);
-      formData.set("stageId", currentStage.id);
-      formData.set("status", "rejected");
-
-      const result = await updateStageAction({ success: false }, formData);
+      const result = await rejectStageAction(applicationId, currentStage.id)
       if (result.success) {
-        router.refresh();
+        router.refresh()
       }
-    });
-  };
+    })
+  }
 
   const withdraw = () => {
     startTransition(async () => {
-      const result = await withdrawApplicationAction(applicationId);
+      const result = await withdrawApplicationAction(applicationId)
       if (result.success) {
-        router.refresh();
+        router.refresh()
       }
-    });
-  };
+    })
+  }
 
-  return { advance, reject, withdraw, isPending };
+  return { advance, reject, withdraw, isPending }
 }

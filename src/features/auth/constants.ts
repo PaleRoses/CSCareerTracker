@@ -1,10 +1,3 @@
-/**
- * Auth Constants
- *
- * Types and configuration for role management.
- * Separated from server actions to avoid "use server" export restrictions.
- */
-
 import {
   TargetIcon,
   SearchIcon,
@@ -30,44 +23,34 @@ export const ROLE_ICONS: Record<RoleIconId, React.ComponentType<{ className?: st
 export const ROLE_OPTIONS: Array<{
   value: RoleOption
   label: string
-  description: string
+  description?: string
   iconId: RoleIconId
 }> = [
   {
     value: 'applicant',
     label: 'Applicant',
-    description: 'Job seeker tracking applications and hunting for opportunities',
     iconId: 'target',
   },
   {
     value: 'recruiter',
     label: 'Recruiter',
-    description: 'Talent scout posting jobs and reviewing candidates',
     iconId: 'search',
   },
   {
     value: 'admin',
     label: 'Admin',
-    description: 'System administrator with full access',
     iconId: 'settings',
   },
   {
     value: 'techno_warlord',
-    label: 'Techno Warlord',
-    description: 'Personal power user. Solo tracking. Maximum efficiency.',
+    label: 'TestPowerUser',
     iconId: 'bolt',
   },
 ]
 
-/**
- * Roles with elevated privileges (job management, recruiter features)
- */
 export const PRIVILEGED_ROLES = ['recruiter', 'admin', 'techno_warlord'] as const
 export type PrivilegedRole = (typeof PRIVILEGED_ROLES)[number]
 
-/**
- * Type guard to check if a role has privileged access
- */
 export function hasPrivilegedAccess(
   role: string | null | undefined
 ): role is PrivilegedRole {

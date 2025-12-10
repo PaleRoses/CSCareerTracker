@@ -2,7 +2,8 @@ import { Box, Card, CardContent } from '@/design-system/components'
 import { PageHeader } from '@/features/shared'
 import { getCompanies } from '@/features/applications/queries'
 import { QueryPreview } from '@/features/shared/dev'
-import JobPostingFormWrapper from './JobPostingFormWrapper'
+import { JobFormRouterWrapper } from '@/features/recruiter'
+import { ROUTES } from '@/config/routes'
 
 export default async function NewJobPage() {
   const companies = await getCompanies()
@@ -23,7 +24,11 @@ export default async function NewJobPage() {
         <Box className="max-w-2xl mx-auto">
           <Card>
             <CardContent>
-              <JobPostingFormWrapper companies={companyOptions} />
+              <JobFormRouterWrapper
+                companies={companyOptions}
+                successRoute={ROUTES.jobBrowser}
+                cancelRoute={ROUTES.recruiter.jobs}
+              />
             </CardContent>
           </Card>
         </Box>

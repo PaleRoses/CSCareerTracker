@@ -1,11 +1,3 @@
-/**
- * Primitive Components
- *
- * Low-level building blocks for layouts and typography.
- * These components provide a consistent API that abstracts
- * the underlying MUI implementation.
- */
-
 export { Box, type BoxProps } from "./Box";
 export { Flex, type FlexProps } from "./Flex";
 export { Stack, type StackProps } from "./Stack";

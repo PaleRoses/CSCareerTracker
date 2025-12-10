@@ -129,10 +129,10 @@ export default function Sidebar({ userRole }: SidebarProps) {
               size="small"
               sx={{
                 '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#a855f7',
+                  color: 'var(--color-secondary)',
                 },
                 '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#a855f7',
+                  backgroundColor: 'var(--color-secondary)',
                 },
               }}
             />
@@ -143,7 +143,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
               sx: {
                 fontSize: '0.75rem',
                 fontFamily: 'monospace',
-                color: 'rgba(255,255,255,0.5)',
+                color: 'var(--color-foreground-muted)',
                 fontWeight: 500,
               },
             },

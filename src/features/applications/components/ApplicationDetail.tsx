@@ -28,9 +28,10 @@ import type { OutcomeDisplayStatus } from "../constants";
 
 interface ApplicationDetailProps {
   application: Application | undefined;
+  userRole?: string | null;
 }
 
-export default function ApplicationDetail({ application }: ApplicationDetailProps) {
+export default function ApplicationDetail({ application, userRole }: ApplicationDetailProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [notes, setNotes] = useState<string[]>(application?.notes || []);
@@ -85,7 +86,7 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
         </Grid>
 
         <Grid size={{ xs: 12, md: 8 }}>
-          <StageTimeline stages={application.stages} applicationId={application.id} />
+          <StageTimeline stages={application.stages} applicationId={application.id} userRole={userRole} />
         </Grid>
 
         <Grid size={{ xs: 12 }}>

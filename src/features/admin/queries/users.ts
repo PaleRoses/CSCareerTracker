@@ -1,6 +1,6 @@
 'use server'
 
-import { createUserClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { auth } from '@/features/auth'
 import { isAdminRole } from '../constants'
 import { logger } from '@/lib/logger'
@@ -17,8 +17,7 @@ export async function getUsers(filters: UserFilters = {}): Promise<AdminUser[]> 
       return []
     }
 
-    const userId = session.user.id
-    const supabase = createUserClient(userId)
+    const supabase = await createAdminClient()
 
     let query = supabase
       .from('users')
@@ -82,8 +81,7 @@ export async function getUserDetail(targetUserId: string): Promise<AdminUser | n
       return null
     }
 
-    const userId = session.user.id
-    const supabase = createUserClient(userId)
+    const supabase = await createAdminClient()
 
     const { data, error } = await supabase
       .from('users')

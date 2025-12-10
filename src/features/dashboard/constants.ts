@@ -30,15 +30,3 @@ export const ACTIVITY_TYPE_TO_CHIP_VARIANT: Record<ActivityType, ChipVariant> = 
   rejection: 'rejected',
   withdrawal: 'withdrawn',
 }
-
-export const DASHBOARD_CONFIG = {
-  staleThresholdDays: STALE_THRESHOLD_DAYS,
-  maxStaleApplications: MAX_STALE_APPLICATIONS,
-  maxRecentActivity: MAX_RECENT_ACTIVITY,
-  maxRecentApplications: MAX_RECENT_APPLICATIONS,
-  maxRecentOutcomes: MAX_RECENT_OUTCOMES,
-  cacheRevalidateSeconds: CACHE_REVALIDATE_SECONDS,
-  cacheTags: CACHE_TAGS,
-} as const
-
-export type DashboardConfig = typeof DASHBOARD_CONFIG

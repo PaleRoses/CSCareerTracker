@@ -1,7 +1,3 @@
-/**
- * Company types for the Companies feature
- */
-
 export interface Company {
   id: string
   name: string

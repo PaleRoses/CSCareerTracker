@@ -1,34 +1,37 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { JobPostingForm } from '@/features/recruiter'
-import { ROUTES } from '@/config/routes'
+import { JobPostingForm } from './JobPostingForm'
 import type { Job } from '@/features/jobs/types'
 
-interface JobEditFormWrapperProps {
+interface JobFormRouterWrapperProps {
   companies: { id: string; label: string }[]
-  initialJob: Job
+  initialData?: Job
+  successRoute: string
+  cancelRoute: string
 }
 
-export default function JobEditFormWrapper({
+export function JobFormRouterWrapper({
   companies,
-  initialJob,
-}: JobEditFormWrapperProps) {
+  initialData,
+  successRoute,
+  cancelRoute,
+}: JobFormRouterWrapperProps) {
   const router = useRouter()
 
-  const handleSuccess = (_jobId: string) => {
-    router.push(ROUTES.recruiter.jobs)
+  const handleSuccess = () => {
+    router.push(successRoute)
     router.refresh()
   }
 
   const handleCancel = () => {
-    router.push(ROUTES.recruiter.jobs)
+    router.push(cancelRoute)
   }
 
   return (
     <JobPostingForm
       companies={companies}
-      initialData={initialJob}
+      initialData={initialData}
       onSuccess={handleSuccess}
       onCancel={handleCancel}
     />

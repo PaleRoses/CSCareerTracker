@@ -32,7 +32,6 @@ export function DevModeProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  // Avoid hydration mismatch by using default until mounted
   const value: DevModeContextType = {
     sqlModeEnabled: mounted ? sqlModeEnabled : true,
     toggleSqlMode,
@@ -48,7 +47,6 @@ export function DevModeProvider({ children }: { children: ReactNode }) {
 export function useDevMode(): DevModeContextType {
   const context = useContext(DevModeContext)
   if (!context) {
-    // Return default values if used outside provider (production)
     return { sqlModeEnabled: false, toggleSqlMode: () => {} }
   }
   return context

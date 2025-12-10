@@ -1,15 +1,4 @@
-/**
- * SQL Query Definitions
- *
- * These are the SQL equivalents of Supabase SDK calls used in the app.
- * Used by the QueryPreview component to show queries in dev mode.
- */
-
 export const QUERY_DEFINITIONS = {
-  // ============================================================================
-  // APPLICATIONS
-  // ============================================================================
-
   'applications-list': `
 SELECT
   a.application_id,
@@ -99,10 +88,6 @@ WHERE a.user_id = $1
     WHERE company_id = $2
   )
 ORDER BY a.application_date DESC`,
-
-  // ============================================================================
-  // STATS & ANALYTICS
-  // ============================================================================
 
   'dashboard-stats': `
 SELECT
@@ -237,10 +222,6 @@ JOIN companies c ON j.company_id = c.company_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
 LEFT JOIN stages s ON ast.stage_id = s.stage_id`,
 
-  // ============================================================================
-  // COMPANIES
-  // ============================================================================
-
   'companies-list': `
 SELECT
   company_id,
@@ -276,10 +257,6 @@ FROM companies c
 LEFT JOIN jobs j ON c.company_id = j.company_id
 WHERE c.company_id = $1
 GROUP BY c.company_id`,
-
-  // ============================================================================
-  // JOBS
-  // ============================================================================
 
   'jobs-list': `
 SELECT
@@ -318,10 +295,6 @@ FROM jobs j
 JOIN companies c ON j.company_id = c.company_id
 WHERE j.job_id = $1
   AND j.posted_by = $2`,
-
-  // ============================================================================
-  // RECRUITER
-  // ============================================================================
 
   'recruiter-candidates': `
 SELECT
@@ -382,10 +355,6 @@ JOIN application_stages ast ON a.application_id = ast.application_id
 JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.job_id IN (recruiter's job IDs)`,
 
-  // ============================================================================
-  // MUTATIONS
-  // ============================================================================
-
   'create-application': `
 INSERT INTO applications (
   user_id,
@@ -395,8 +364,7 @@ INSERT INTO applications (
   metadata
 )
 VALUES ($1, $2, $3, $4, $5)
-RETURNING application_id
--- Note: Initial "Applied" stage auto-created by trigger`,
+RETURNING application_id`,
 
   'update-application': `
 UPDATE applications
@@ -411,8 +379,7 @@ WHERE application_id = $5
 
   'delete-application': `
 DELETE FROM applications
-WHERE application_id = $1
--- Note: Stages deleted via ON DELETE CASCADE`,
+WHERE application_id = $1`,
 
   'update-stage': `
 UPDATE application_stages
@@ -429,7 +396,6 @@ SET
   ended_at = NOW()
 WHERE app_stage_id = $1;
 
--- Then:
 INSERT INTO application_stages (
   application_id,
   stage_id,
@@ -446,7 +412,6 @@ SET
 WHERE application_id = $1
   AND status = 'inProgress';
 
--- Then:
 INSERT INTO application_stages (
   application_id,
   stage_id,
@@ -462,7 +427,6 @@ VALUES (
   NOW()
 );
 
--- Then:
 UPDATE applications
 SET final_outcome = 'withdrawn'
 WHERE application_id = $1`,
@@ -474,10 +438,6 @@ SET
   updated_at = NOW()
 WHERE app_stage_id = $2
   AND application_id = $3`,
-
-  // ============================================================================
-  // AUTH
-  // ============================================================================
 
   'sync-user': `
 INSERT INTO users (
@@ -504,6 +464,171 @@ WHERE user_id = $1`,
 UPDATE users
 SET role = $1
 WHERE user_id = $2`,
+
+  'admin-stats': `
+SELECT
+  user_id,
+  role,
+  status,
+  signup_date
+FROM users`,
+
+  'users-list': `
+SELECT
+  user_id,
+  email,
+  fname,
+  lname,
+  role,
+  status,
+  signup_date,
+  created_at,
+  updated_at
+FROM users
+WHERE ($1::text IS NULL OR role = $1)
+  AND ($2::text IS NULL OR status = $2)
+  AND (
+    $3::text IS NULL
+    OR email ILIKE '%' || $3 || '%'
+    OR fname ILIKE '%' || $3 || '%'
+    OR lname ILIKE '%' || $3 || '%'
+  )
+ORDER BY created_at DESC
+LIMIT $4 OFFSET $5`,
+
+  'user-detail': `
+SELECT
+  user_id,
+  email,
+  fname,
+  lname,
+  role,
+  status,
+  signup_date,
+  created_at,
+  updated_at
+FROM users
+WHERE user_id = $1`,
+
+  'response-time': `
+SELECT
+  c.company_id,
+  c.company_name,
+  COUNT(a.application_id) AS applications,
+  AVG(
+    CASE
+      WHEN ast.started_at IS NOT NULL
+      THEN EXTRACT(DAY FROM ast.started_at - a.application_date)
+    END
+  ) AS avg_response_days,
+  SUM(CASE WHEN a.final_outcome = 'offer' THEN 1 ELSE 0 END)::float
+    / NULLIF(COUNT(a.application_id), 0) * 100 AS offer_rate
+FROM applications a
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+LEFT JOIN application_stages ast ON a.application_id = ast.application_id
+LEFT JOIN stages s ON ast.stage_id = s.stage_id AND s.order_index = 2
+WHERE a.user_id = $1
+GROUP BY c.company_id, c.company_name
+HAVING COUNT(a.application_id) >= 2
+ORDER BY avg_response_days ASC`,
+
+  'stage-dropoff': `
+SELECT
+  s.stage_name,
+  s.order_index,
+  COUNT(DISTINCT ast.application_id) AS reached,
+  COUNT(DISTINCT CASE
+    WHEN ast.status = 'rejected' OR (
+      ast.ended_at IS NOT NULL
+      AND NOT EXISTS (
+        SELECT 1 FROM application_stages ast2
+        JOIN stages s2 ON ast2.stage_id = s2.stage_id
+        WHERE ast2.application_id = ast.application_id
+        AND s2.order_index > s.order_index
+      )
+    )
+    THEN ast.application_id
+  END) AS dropped
+FROM stages s
+LEFT JOIN application_stages ast ON s.stage_id = ast.stage_id
+LEFT JOIN applications a ON ast.application_id = a.application_id AND a.user_id = $1
+GROUP BY s.stage_id, s.stage_name, s.order_index
+ORDER BY s.order_index`,
+
+  'reapplications': `
+SELECT
+  c.company_id,
+  c.company_name,
+  COUNT(a.application_id) AS application_count,
+  MIN(a.application_date) AS first_application_date,
+  MAX(a.application_date) AS last_application_date,
+  EXTRACT(DAY FROM MAX(a.application_date) - MIN(a.application_date)) AS days_between,
+  BOOL_OR(a.final_outcome = 'offer') AS successful
+FROM applications a
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+WHERE a.user_id = $1
+GROUP BY c.company_id, c.company_name
+HAVING COUNT(a.application_id) >= 2
+ORDER BY application_count DESC`,
+
+  'company-consistency': `
+SELECT
+  c.company_id,
+  c.company_name,
+  COUNT(a.application_id) AS total_applications,
+  AVG(
+    CASE
+      WHEN ast.started_at IS NOT NULL
+      THEN EXTRACT(DAY FROM ast.started_at - a.application_date)
+    END
+  ) AS avg_response_days,
+  STDDEV(
+    CASE
+      WHEN ast.started_at IS NOT NULL
+      THEN EXTRACT(DAY FROM ast.started_at - a.application_date)
+    END
+  ) AS response_variance,
+  100 - COALESCE(
+    STDDEV(
+      CASE
+        WHEN ast.started_at IS NOT NULL
+        THEN EXTRACT(DAY FROM ast.started_at - a.application_date)
+      END
+    ) / NULLIF(AVG(
+      CASE
+        WHEN ast.started_at IS NOT NULL
+        THEN EXTRACT(DAY FROM ast.started_at - a.application_date)
+      END
+    ), 0) * 100, 0
+  ) AS consistency_score
+FROM applications a
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+LEFT JOIN application_stages ast ON a.application_id = ast.application_id
+LEFT JOIN stages s ON ast.stage_id = s.stage_id AND s.order_index = 2
+GROUP BY c.company_id, c.company_name
+HAVING COUNT(a.application_id) >= 5
+ORDER BY consistency_score DESC`,
+
+  'offer-acceptance': `
+SELECT
+  c.company_id,
+  c.company_name,
+  COUNT(CASE WHEN a.final_outcome = 'offer' THEN 1 END) AS offers_extended,
+  COUNT(CASE WHEN a.final_outcome = 'accepted' THEN 1 END) AS offers_accepted,
+  COALESCE(
+    COUNT(CASE WHEN a.final_outcome = 'accepted' THEN 1 END)::float
+    / NULLIF(COUNT(CASE WHEN a.final_outcome = 'offer' THEN 1 END), 0) * 100,
+    0
+  ) AS acceptance_rate
+FROM applications a
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+GROUP BY c.company_id, c.company_name
+HAVING COUNT(CASE WHEN a.final_outcome = 'offer' THEN 1 END) > 0
+ORDER BY offers_extended DESC`,
 
 } as const
 

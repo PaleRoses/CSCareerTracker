@@ -11,9 +11,6 @@ export interface CompanyDetailData extends Company {
   industry: string | null
 }
 
-/**
- * Get a single company's details by ID
- */
 export async function getCompanyDetail(companyId: string): Promise<CompanyDetailData | null> {
   return getCachedCompanyDetail(companyId)
 }

@@ -1,5 +1,5 @@
-import { ApplicationsSkeleton } from '@/features/applications/components/ApplicationsSkeleton'
+import { PageSkeleton } from '@/features/shared'
 
 export default function ApplicationsLoading() {
-  return <ApplicationsSkeleton />
+  return <PageSkeleton />
 }

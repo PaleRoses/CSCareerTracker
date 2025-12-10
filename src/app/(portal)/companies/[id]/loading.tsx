@@ -1,5 +1,5 @@
-import { CompanyDetailSkeleton } from '@/features/companies'
+import { PageSkeleton } from '@/features/shared'
 
 export default function CompanyLoading() {
-  return <CompanyDetailSkeleton />
+  return <PageSkeleton />
 }

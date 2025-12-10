@@ -4,8 +4,8 @@ import { createCacheClient } from '@/lib/supabase/server'
 import { auth } from '@/features/auth/auth'
 import { unstable_cache } from 'next/cache'
 import { type ReapplicationStats } from '../../types'
-import { logger } from '@/lib/logger'
 import { QUERY_CACHE_TAGS, DEFAULT_REVALIDATE_SECONDS } from '@/lib/queries/core/cache'
+import { logger } from '@/lib/logger'
 
 export async function getReapplications(): Promise<ReapplicationStats[]> {
   const session = await auth()
@@ -39,7 +39,7 @@ const getCachedReapplications = unstable_cache(
       .order('application_date', { ascending: true })
 
     if (error) {
-      logger.error('Error fetching reapplications', { error })
+      logger.error('Error fetching reapplication data', { error })
       return []
     }
 
@@ -55,7 +55,7 @@ const getCachedReapplications = unstable_cache(
 
     const apps = (data || []) as unknown as AppRow[]
 
-    const companyApps = new Map<string, {
+    const companyApplications = new Map<string, {
       companyName: string
       applications: { date: string; outcome: string }[]
     }>()
@@ -65,7 +65,7 @@ const getCachedReapplications = unstable_cache(
       const companyName = app.jobs?.companies?.company_name
       if (!companyId || !companyName) continue
 
-      const existing = companyApps.get(companyId) || {
+      const existing = companyApplications.get(companyId) || {
         companyName,
         applications: [],
       }
@@ -75,42 +75,47 @@ const getCachedReapplications = unstable_cache(
         outcome: app.final_outcome,
       })
 
-      companyApps.set(companyId, existing)
+      companyApplications.set(companyId, existing)
     }
 
     const results: ReapplicationStats[] = []
 
-    for (const [companyId, data] of companyApps) {
+    for (const [companyId, data] of companyApplications) {
       if (data.applications.length < 2) continue
 
-      const sorted = data.applications.sort(
+      const sortedApps = data.applications.sort(
         (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
       )
 
-      const firstDate = new Date(sorted[0].date)
-      const lastDate = new Date(sorted[sorted.length - 1].date)
+      const firstApp = sortedApps[0]
+      const lastApp = sortedApps[sortedApps.length - 1]
+
+      const firstDate = new Date(firstApp.date)
+      const lastDate = new Date(lastApp.date)
       const daysBetween = Math.floor(
         (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)
       )
 
-      const hasSuccess = sorted.slice(1).some(a => a.outcome === 'offer')
+      const successfulReapplication = sortedApps
+        .slice(1)
+        .some(app => app.outcome === 'offer')
 
       results.push({
         companyId,
         companyName: data.companyName,
-        applicationCount: sorted.length,
-        firstApplicationDate: sorted[0].date,
-        lastApplicationDate: sorted[sorted.length - 1].date,
-        successfulReapplication: hasSuccess,
+        applicationCount: data.applications.length,
+        firstApplicationDate: firstApp.date,
+        lastApplicationDate: lastApp.date,
+        successfulReapplication,
         daysBetweenApplications: daysBetween,
       })
     }
 
     return results.sort((a, b) => b.applicationCount - a.applicationCount)
   },
-  ['reapplication-tracking'],
+  ['reapplications'],
   {
-    tags: [QUERY_CACHE_TAGS.STATS],
+    tags: [QUERY_CACHE_TAGS.STATS, QUERY_CACHE_TAGS.COMPANIES],
     revalidate: DEFAULT_REVALIDATE_SECONDS,
   }
 )

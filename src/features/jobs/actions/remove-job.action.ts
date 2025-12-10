@@ -16,16 +16,6 @@ type RemoveJobResult = {
   action: 'archived' | 'deleted'
 }
 
-/**
- * Remove a job from the system.
- *
- * Smart removal logic:
- * - If job has applications: soft delete (archive) - sets is_active = false
- * - If job has no applications: hard delete - removes from database
- *
- * Only privileged roles (admin, recruiter, techno_warlord) can perform this action.
- * RLS policies enforce this at the database level.
- */
 export async function removeJobAction(
   _prevState: ActionState<RemoveJobResult> | undefined,
   formData: FormData

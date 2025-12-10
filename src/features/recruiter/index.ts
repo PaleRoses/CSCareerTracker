@@ -6,7 +6,6 @@ export type {
   JobPostingInput,
 } from './types'
 
-// Re-export job schemas from jobs feature (where they belong)
 export {
   JobPostingSchema,
   UpdateJobPostingSchema,
@@ -17,6 +16,7 @@ export { OUTCOME_VARIANTS } from './constants'
 
 export {
   JobPostingForm,
+  JobFormRouterWrapper,
   CandidatesList,
   CandidateStageUpdater,
   RecruiterStatsGrid,
@@ -26,5 +26,3 @@ export {
   ApplicationDetailsCard,
   StageHistoryTimeline,
 } from './components'
-
-// Server-only exports (actions, queries) not re-exported - import directly from /actions or /queries

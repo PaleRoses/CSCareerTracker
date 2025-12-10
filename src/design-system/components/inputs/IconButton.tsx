@@ -31,21 +31,6 @@ const sizeClasses: Record<IconButtonSize, string> = {
   large: "p-3",
 };
 
-/**
- * IconButton - A button containing only an icon
- *
- * Always provide an aria-label for accessibility.
- *
- * @example
- * <IconButton aria-label="Close" onClick={handleClose}>
- *   <CloseIcon />
- * </IconButton>
- *
- * @example
- * <IconButton variant="primary" aria-label="Add item" size="large">
- *   <AddIcon />
- * </IconButton>
- */
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   (
     {

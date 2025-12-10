@@ -11,7 +11,6 @@ export type DrawerVariant = "permanent" | "persistent" | "temporary";
 
 export interface DrawerProps {
   children: ReactNode;
-  /** For temporary/persistent variants */
   open?: boolean;
   anchor?: DrawerAnchor;
   variant?: DrawerVariant;
@@ -21,27 +20,6 @@ export interface DrawerProps {
   sx?: SxProps<Theme>;
 }
 
-/**
- * Drawer - A slide-out panel component
- *
- * Use for sidebars, navigation menus, or slide-in panels.
- *
- * @example
- * // Permanent sidebar
- * <Drawer variant="permanent" width={260}>
- *   <NavList>...</NavList>
- * </Drawer>
- *
- * @example
- * // Temporary mobile drawer
- * <Drawer
- *   variant="temporary"
- *   open={mobileOpen}
- *   onClose={() => setMobileOpen(false)}
- * >
- *   <NavList>...</NavList>
- * </Drawer>
- */
 export const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
   (
     {

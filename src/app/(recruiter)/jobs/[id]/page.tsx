@@ -4,7 +4,8 @@ import { PageHeader } from '@/features/shared'
 import { getJob } from '@/features/jobs/queries'
 import { getCompanies } from '@/features/applications/queries'
 import { QueryPreview } from '@/features/shared/dev'
-import JobEditFormWrapper from './JobEditFormWrapper'
+import { JobFormRouterWrapper } from '@/features/recruiter'
+import { ROUTES } from '@/config/routes'
 
 interface EditJobPageProps {
   params: Promise<{ id: string }>
@@ -38,9 +39,11 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
         <Box className="max-w-2xl mx-auto">
           <Card>
             <CardContent>
-              <JobEditFormWrapper
+              <JobFormRouterWrapper
                 companies={companyOptions}
-                initialJob={job}
+                initialData={job}
+                successRoute={ROUTES.recruiter.jobs}
+                cancelRoute={ROUTES.recruiter.jobs}
               />
             </CardContent>
           </Card>

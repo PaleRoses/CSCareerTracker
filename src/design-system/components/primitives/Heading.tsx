@@ -31,25 +31,6 @@ const alignMap = {
   right: "text-right",
 };
 
-/**
- * Heading - A typography primitive for headings
- *
- * Renders semantic heading elements (h1-h6) with consistent styling.
- * Supports gradient text effect for branding.
- *
- * @example
- * <Heading level={1}>Page Title</Heading>
- *
- * @example
- * <Heading level={2} gradient>
- *   Gradient Section Title
- * </Heading>
- *
- * @example
- * <Heading level={3} align="center">
- *   Centered Heading
- * </Heading>
- */
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   (
     {

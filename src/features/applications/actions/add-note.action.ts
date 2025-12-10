@@ -2,8 +2,7 @@
 
 import { requireAuth } from '@/lib/actions/auth-utils'
 import { touchApplication, verifyApplicationOwnership } from '../utils/supabase-utils'
-import { authError, notFoundError } from '@/lib/actions/error-utils'
-import { getTodayISO } from '@/lib/utils'
+import { authError, notFoundError, validationError } from '@/lib/actions/error-utils'
 import { invalidateApplicationById } from '../utils/cache-utils'
 import { AddNoteSchema, type ActionState } from '../schemas/application.schema'
 import { logger } from '@/lib/logger'
@@ -28,11 +27,7 @@ export async function addNoteAction(
     const validation = AddNoteSchema.safeParse(rawData)
 
     if (!validation.success) {
-      return {
-        success: false,
-        error: validation.error.issues[0]?.message || 'Invalid note',
-        fieldErrors: validation.error.flatten().fieldErrors as Record<string, string[]>,
-      }
+      return validationError(validation.error, validation.error.issues[0]?.message || 'Invalid note')
     }
 
     const { applicationId, stageId, note } = validation.data
@@ -56,7 +51,8 @@ export async function addNoteAction(
       }
     }
 
-    const formattedNote = `[${getTodayISO()}] ${note}`
+    const today = new Date().toISOString().split('T')[0]
+    const formattedNote = `[${today}] ${note}`
     const currentNotes = stage.notes || ''
     const updatedNotes = currentNotes
       ? `${currentNotes}\n${formattedNote}`

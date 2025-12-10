@@ -1,7 +1,6 @@
 export {
   createApplicationAction,
   updateApplicationAction,
-  deleteApplicationAction,
   deleteApplication,
   updateStageAction,
   addNoteAction,

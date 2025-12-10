@@ -1,5 +1,5 @@
-import { JobsSkeleton } from '@/features/jobs/components/JobsSkeleton'
+import { PageSkeleton } from '@/features/shared'
 
 export default function JobBrowserLoading() {
-  return <JobsSkeleton />
+  return <PageSkeleton />
 }

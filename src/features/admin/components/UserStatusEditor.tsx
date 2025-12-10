@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -43,9 +43,11 @@ export function UserStatusEditor({
     FormData
   >(updateUserStatusAction, { success: false, error: undefined })
 
-  if (state.success) {
-    onClose()
-  }
+  useEffect(() => {
+    if (state.success) {
+      onClose()
+    }
+  }, [state.success, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

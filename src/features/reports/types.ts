@@ -103,5 +103,4 @@ export type OfferAcceptance = {
   acceptanceRate: number
 }
 
-// Re-export StageDistribution from dashboard for compatibility
 export type { StageDistribution } from '@/features/dashboard/types'

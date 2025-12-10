@@ -6,10 +6,6 @@ import { logger } from '@/lib/logger'
 import { LONG_REVALIDATE_SECONDS, QUERY_CACHE_TAGS } from '@/lib/queries/core/cache'
 import type { Company } from '../types'
 
-/**
- * Get all companies with job counts
- * Companies are public data - no user auth required
- */
 export async function getCompaniesWithStats(): Promise<Company[]> {
   return getCachedCompaniesWithStats()
 }

@@ -3,15 +3,6 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/features/auth/auth'
 import { ROUTES, AUTH_CALLBACKS } from '@/config/routes'
 
-/**
- * Proxy for route protection and onboarding redirects
- *
- * Flow:
- * 1. Public routes (/, /login, /api/auth) - always allowed
- * 2. Onboarding routes (/select-role) - require auth, no role check
- * 3. Protected routes (/dashboard, /applications, etc.) - require auth AND role
- */
-
 const PUBLIC_ROUTES = [
   ROUTES.home,
   ROUTES.login,

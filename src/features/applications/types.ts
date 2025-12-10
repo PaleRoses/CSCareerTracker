@@ -12,9 +12,6 @@ export type {
   ActionState,
 } from './schemas/application.schema'
 
-/**
- * Filters for querying applications
- */
 export type ApplicationFilters = {
   companyId?: string
   companyName?: string

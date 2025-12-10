@@ -9,8 +9,6 @@ import {
   Button,
   Grid,
   List,
-  Chip,
-  IconButton,
   Card,
   CardContent,
 } from '@/design-system/components'
@@ -23,12 +21,13 @@ import {
   WorkIcon,
 } from '@/design-system/icons'
 import { SectionCard, DetailItem } from '@/features/shared'
-import { DataTable, type ColumnDef, type CellRenderParams } from '@/design-system/components'
+import { DataTable } from '@/design-system/components'
 import type { CompanyDetailData } from '../queries'
 import type { Job } from '@/features/jobs/types'
 import type { Application } from '@/features/applications/types'
 import { ROUTES } from '@/config/routes'
 import { formatSize } from '../utils/format-utils'
+import { jobColumns, applicationColumns } from './columns'
 
 interface CompanyDetailProps {
   company: CompanyDetailData | null
@@ -53,110 +52,6 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
       </Box>
     )
   }
-
-  const jobColumns: ColumnDef<Job>[] = [
-    {
-      id: 'title',
-      field: 'title',
-      headerName: 'Position',
-      flex: 1,
-      minWidth: 200,
-    },
-    {
-      id: 'type',
-      field: 'type',
-      headerName: 'Type',
-      width: 120,
-      renderCell: (params: CellRenderParams<Job>) => {
-        const type = params.value as string | null
-        return (
-          <Chip
-            variant="secondary"
-            size="small"
-            label={type ?? 'Unknown'}
-          />
-        )
-      },
-    },
-    {
-      id: 'locations',
-      field: 'locations',
-      headerName: 'Location',
-      flex: 1,
-      minWidth: 150,
-      valueGetter: (_value: unknown, row: Job) => {
-        if (!row.locations || row.locations.length === 0) return 'Remote'
-        return row.locations[0]
-      },
-    },
-    {
-      id: 'actions',
-      field: 'url',
-      headerName: '',
-      width: 60,
-      sortable: false,
-      renderCell: (params: CellRenderParams<Job>) => {
-        if (!params.row.url) return null
-        return (
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation()
-              window.open(params.row.url!, '_blank', 'noopener,noreferrer')
-            }}
-            aria-label="View job posting"
-            className="text-foreground/50 hover:text-primary hover:bg-primary/10"
-          >
-            <OpenInNewIcon />
-          </IconButton>
-        )
-      },
-    },
-  ]
-
-  const applicationColumns: ColumnDef<Application>[] = [
-    {
-      id: 'positionTitle',
-      field: 'positionTitle',
-      headerName: 'Position',
-      flex: 1,
-      minWidth: 200,
-    },
-    {
-      id: 'dateApplied',
-      field: 'dateApplied',
-      headerName: 'Applied',
-      width: 120,
-      valueFormatter: (value: unknown) => {
-        if (!value) return 'N/A'
-        return new Date(value as string).toLocaleDateString()
-      },
-    },
-    {
-      id: 'outcome',
-      field: 'outcome',
-      headerName: 'Status',
-      width: 120,
-      renderCell: (params: CellRenderParams<Application>) => {
-        const outcome = params.value as string
-        const variant =
-          outcome === 'offer'
-            ? 'offer'
-            : outcome === 'rejected'
-              ? 'rejected'
-              : outcome === 'withdrawn'
-                ? 'withdrawn'
-                : 'pending'
-        return (
-          <Chip
-            variant={variant}
-            size="small"
-            label={outcome || 'Pending'}
-          />
-        )
-      },
-    },
-  ]
 
   return (
     <Box>

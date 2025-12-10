@@ -1,9 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
-/**
- * Update the updated_at timestamp of an application.
- * Call this after making changes to application stages or notes.
- */
 export async function touchApplication(
   supabase: SupabaseClient,
   applicationId: string
@@ -14,10 +10,6 @@ export async function touchApplication(
     .eq('application_id', applicationId)
 }
 
-/**
- * Verify that the current user owns the given application.
- * Returns true if the user owns the application, false otherwise.
- */
 export async function verifyApplicationOwnership(
   supabase: SupabaseClient,
   applicationId: string,

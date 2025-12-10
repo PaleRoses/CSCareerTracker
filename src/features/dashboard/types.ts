@@ -1,7 +1,3 @@
-/**
- * Dashboard feature types
- */
-
 export type StageDistribution = {
   stage: string
   count: number

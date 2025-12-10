@@ -50,7 +50,7 @@ const variantConfig: Record<
   },
   ghost: {
     muiVariant: "text",
-    className: "text-foreground hover:bg-background-glass",
+    className: "bg-background-glass text-foreground hover:bg-background-glass-hover border border-border/30",
   },
   danger: {
     muiVariant: "contained",
@@ -101,10 +101,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         startIcon={loading ? undefined : startIcon}
         endIcon={loading ? undefined : endIcon}
         className={buttonClasses}
-        sx={{
-          background: variant === "gradient" ? undefined : "transparent",
-          ...sx,
-        }}
+        sx={sx}
         {...props}
       >
         {loading ? "Loading..." : children}

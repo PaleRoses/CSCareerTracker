@@ -1,5 +1,5 @@
-import { PortalSkeleton } from '@/features/shared/components/PortalSkeleton'
+import { PageSkeleton } from '@/features/shared'
 
 export default function PortalLoading() {
-  return <PortalSkeleton />
+  return <PageSkeleton />
 }

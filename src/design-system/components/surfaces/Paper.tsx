@@ -21,27 +21,6 @@ const elevationClasses = {
   3: "shadow-lg",
 };
 
-/**
- * Paper - A surface component for elevation
- *
- * A basic container component that provides elevation and background.
- * Use Card for more complex content groupings with actions.
- *
- * @example
- * <Paper elevation={2}>
- *   <Text>Elevated content</Text>
- * </Paper>
- *
- * @example
- * <Paper glass>
- *   <Text>Glass effect paper</Text>
- * </Paper>
- *
- * @example
- * <Paper outlined>
- *   <Text>Outlined paper</Text>
- * </Paper>
- */
 export const Paper = forwardRef<HTMLDivElement, PaperProps>(
   (
     {

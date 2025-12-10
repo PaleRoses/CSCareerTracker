@@ -19,17 +19,10 @@ export default function LoginForm() {
   }
 
   return (
-    <Box
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        padding: '24px',
-        background:
-          'radial-gradient(circle at top, rgba(110, 231, 255, 0.15), transparent 50%), radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.1), transparent 50%)',
-      }}
-    >
-      <Card style={{ maxWidth: '480px', width: '100%' }}>
-        <CardContent style={{ padding: '48px 40px' }}>
-          <Box style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+    <Box className="min-h-screen flex items-center justify-center p-6 bg-login-gradient">
+      <Card className="max-w-[480px] w-full">
+        <CardContent className="px-10 py-12">
+          <Box className="flex justify-center mb-6">
             <Image
               src={developmentySeal}
               alt="Development Dynasty Seal"
@@ -39,27 +32,22 @@ export default function LoginForm() {
             />
           </Box>
 
-          <Heading level={1} style={{ marginBottom: '16px', textAlign: 'center', fontSize: '2rem' }}>
+          <Heading level={1} className="mb-4 text-center text-3xl">
             CS Career Tracker
           </Heading>
 
-          <Text color="secondary" style={{ marginBottom: '40px', textAlign: 'center', fontSize: '1.125rem' }}>
+          <Text color="secondary" className="mb-10 text-center text-lg">
             Track your job applications and land your dream role
           </Text>
 
-          <Box style={{ marginTop: '24px' }}>
+          <Box className="mt-6">
             <Button
               variant="outlined"
               size="large"
               fullWidth
               startIcon={<GoogleIcon />}
               onClick={handleGoogleLogin}
-              style={{
-                borderRadius: '12px',
-                fontWeight: 600,
-                padding: '16px 24px',
-                fontSize: '1rem'
-              }}
+              className="rounded-xl font-semibold py-4 px-6 text-base"
             >
               Continue with Google
             </Button>

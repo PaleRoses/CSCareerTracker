@@ -108,6 +108,7 @@
     color: var(--color-foreground);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
   }
 
   /* Ensure dark mode is always active */
@@ -379,5 +380,21 @@
 
   .transition-slow {
     transition: all var(--transition-slow);
+  }
+
+  /**
+   * Cute gradient glow animation - cyan/purple theme
+   */
+  @keyframes glow-gradient {
+    0%, 100% {
+      box-shadow: 0 0 10px rgba(110, 231, 255, 0.4), 0 0 20px rgba(167, 139, 250, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(110, 231, 255, 0.6), 0 0 30px rgba(167, 139, 250, 0.4), 0 0 45px rgba(110, 231, 255, 0.2);
+    }
+  }
+
+  .animate-glow-gradient {
+    animation: glow-gradient 2s ease-in-out infinite;
   }
 }

@@ -26,13 +26,14 @@ import { JOB_TYPE_VARIANTS } from "../constants";
 interface JobsTableProps {
   jobs: Job[];
   canManageJobs?: boolean;
+  currentUserId?: string;
 }
 
-export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProps) {
+export default function JobsTable({ jobs, canManageJobs = false, currentUserId }: JobsTableProps) {
+  const canEditJob = (job: Job) => canManageJobs && job.postedBy === currentUserId;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [jobToRemove, setJobToRemove] = useState<Job | null>(null);
-  const [_lastAction, setLastAction] = useState<'archived' | 'deleted' | null>(null);
 
   const handleRemoveJob = () => {
     if (!jobToRemove) return;
@@ -42,11 +43,10 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
       formData.append('jobId', jobToRemove.id);
 
       const result = await removeJobAction(undefined, formData);
-      if (result.success && result.data) {
-        setLastAction(result.data.action);
+      if (result.success) {
         router.refresh();
       } else {
-        console.error('Failed to remove job:', result.error);
+        alert(result.error || 'Failed to remove job. Please try again.');
       }
       setJobToRemove(null);
     });
@@ -121,7 +121,7 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
                 <OpenInNewIcon />
               </IconButton>
             )}
-            {canManageJobs && (
+            {canEditJob(params.row) && (
               <>
                 <IconButton
                   size="small"
@@ -154,7 +154,6 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
     },
   ];
 
-  // Navigate to candidates list when row is clicked (for recruiters)
   const handleRowClick = (job: Job) => {
     if (canManageJobs) {
       router.push(ROUTES.recruiter.candidates(job.id));
