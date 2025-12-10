@@ -21,6 +21,12 @@ export const ROUTES = {
     candidateDetail: (candidateId: string) => `/candidates/${candidateId}` as const,
   },
 
+  admin: {
+    dashboard: '/admin-dashboard',
+    users: '/users',
+    userDetail: (id: string) => `/users/${id}` as const,
+  },
+
   // Legacy - prefer camelCase above
   HOME: '/',
   LOGIN: '/login',
@@ -49,7 +55,7 @@ export interface NavLinkItem {
   segment: string
   label: string
   href: string
-  icon: 'DashboardIcon' | 'WorkIcon' | 'SearchIcon' | 'BusinessIcon' | 'AssessmentIcon' | 'PersonIcon'
+  icon: 'DashboardIcon' | 'WorkIcon' | 'SearchIcon' | 'BusinessIcon' | 'AssessmentIcon' | 'PersonIcon' | 'SettingsIcon' | 'PeopleIcon'
 }
 
 export interface NavDividerItem {
@@ -122,8 +128,29 @@ export const RECRUITER_NAV_ITEMS: NavItem[] = [
   },
 ] as const
 
+export const ADMIN_NAV_ITEMS: NavItem[] = [
+  { kind: 'divider' },
+  {
+    kind: 'link',
+    segment: 'admin-dashboard',
+    label: 'Admin Hub',
+    href: '/admin-dashboard',
+    icon: 'SettingsIcon',
+  },
+  {
+    kind: 'link',
+    segment: 'users',
+    label: 'User Management',
+    href: '/users',
+    icon: 'PeopleIcon',
+  },
+] as const
+
 // Re-export for backward compatibility, prefer @/features/auth/constants
 export { PRIVILEGED_ROLES as RECRUITER_ROLES } from '@/features/auth/constants'
+
+// Admin roles for route guards
+export const ADMIN_ROLES = ['admin', 'techno_warlord'] as const
 
 export function isRouteActive(pathname: string, route: string): boolean {
   return pathname === route || pathname.startsWith(`${route}/`)

@@ -12,7 +12,7 @@ import {
 } from '@/design-system/components'
 import { FormError } from '@/components/ui/FormError'
 import { FormActionButtons } from '@/components/ui/FormActionButtons'
-import { useFormSuccess } from '@/hooks/useFormSuccess'
+import { useFormSuccess } from '@/features/shared/hooks'
 import { getFieldError, getFieldErrorProps } from '@/lib/form-utils'
 import { createJobAction } from '../actions/create-job.action'
 import type { ActionState } from '@/lib/actions/error-utils'
@@ -56,16 +56,9 @@ export function JobPostingForm({
 }: JobPostingFormProps) {
   const formRef = useRef<HTMLFormElement>(null)
 
-  // Company autocomplete state
   const [selectedCompany, setSelectedCompany] = useState<CompanyOption | null>(null)
   const [companyInputValue, setCompanyInputValue] = useState('')
-
-  // Job type state
-  const [selectedType, setSelectedType] = useState<JobTypeOption | null>(
-    JOB_TYPE_OPTIONS[0] // Default to full-time
-  )
-
-  // Locations state (multi-value)
+  const [selectedType, setSelectedType] = useState<JobTypeOption | null>(JOB_TYPE_OPTIONS[0])
   const [locations, setLocations] = useState<string[]>([])
   const [locationInput, setLocationInput] = useState('')
 
@@ -123,10 +116,7 @@ export function JobPostingForm({
     }
   }
 
-  // Derive company values for hidden fields
   const existingCompanyId = selectedCompany?.id ?? undefined
-  // If we have a selected company, use empty string (companyId is set)
-  // Otherwise use the typed input value for new company creation
   const companyDisplayName = selectedCompany ? '' : companyInputValue
 
   const companyError = getFieldError(state.fieldErrors, 'companyName') || getFieldError(state.fieldErrors, 'companyId')
@@ -142,7 +132,6 @@ export function JobPostingForm({
 
           <FormError state={state} />
 
-          {/* Hidden fields for company */}
           <input
             type="hidden"
             name="companyId"
@@ -154,7 +143,6 @@ export function JobPostingForm({
             value={companyDisplayName}
           />
 
-          {/* Hidden fields for job type and locations */}
           <input
             type="hidden"
             name="type"
@@ -208,7 +196,6 @@ export function JobPostingForm({
             getOptionLabel={(option) => typeof option === 'string' ? option : option.label}
           />
 
-          {/* Locations with chips */}
           <Box>
             <TextField
               label="Locations"

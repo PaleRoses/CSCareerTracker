@@ -53,7 +53,6 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
         setLastAction(result.data.action);
         router.refresh();
       } else {
-        // For now, log the error. Could add toast/snackbar later.
         console.error('Failed to remove job:', result.error);
       }
       setJobToRemove(null);
@@ -159,7 +158,6 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
         getRowId={(row) => row.id}
       />
 
-      {/* Remove Job Confirmation Dialog */}
       <Dialog
         open={!!jobToRemove}
         onClose={() => !isPending && setJobToRemove(null)}

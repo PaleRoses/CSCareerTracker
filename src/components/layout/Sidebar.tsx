@@ -21,12 +21,16 @@ import {
   BusinessIcon,
   AssessmentIcon,
   PersonIcon,
+  SettingsIcon,
+  PeopleIcon,
 } from "@/design-system/icons";
 import { layout } from "@/design-system/tokens";
 import {
   NAV_ITEMS,
   RECRUITER_NAV_ITEMS,
+  ADMIN_NAV_ITEMS,
   RECRUITER_ROLES,
+  ADMIN_ROLES,
   isRouteActive,
   type NavLinkItem,
   type NavItem,
@@ -43,6 +47,8 @@ const ICON_MAP: Record<NavLinkItem['icon'], React.ReactNode> = {
   BusinessIcon: <BusinessIcon />,
   AssessmentIcon: <AssessmentIcon />,
   PersonIcon: <PersonIcon />,
+  SettingsIcon: <SettingsIcon />,
+  PeopleIcon: <PeopleIcon />,
 };
 
 interface SidebarProps {
@@ -55,10 +61,13 @@ export default function Sidebar({ userRole }: SidebarProps) {
   const isDev = process.env.NODE_ENV !== "production";
 
   const isRecruiter = userRole && RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number]);
+  const isAdmin = userRole && ADMIN_ROLES.includes(userRole as typeof ADMIN_ROLES[number]);
 
-  const navItems: NavItem[] = isRecruiter
-    ? [...NAV_ITEMS, ...RECRUITER_NAV_ITEMS]
-    : [...NAV_ITEMS];
+  const navItems: NavItem[] = isAdmin
+    ? [...NAV_ITEMS, ...RECRUITER_NAV_ITEMS, ...ADMIN_NAV_ITEMS]
+    : isRecruiter
+      ? [...NAV_ITEMS, ...RECRUITER_NAV_ITEMS]
+      : [...NAV_ITEMS];
 
   return (
     <Drawer variant="permanent" width={DRAWER_WIDTH}>

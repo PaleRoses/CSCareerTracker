@@ -28,7 +28,6 @@ export async function syncUserToSupabase(
 
     const supabase = await createAdminClient()
 
-    // Split name into first/last for users table schema
     const nameParts = name?.split(' ') || []
     const fname = nameParts[0] || 'User'
     const lname = nameParts.slice(1).join(' ') || ''

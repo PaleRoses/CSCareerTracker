@@ -9,7 +9,7 @@ import {
 } from '@/design-system/components'
 import { FormError } from '@/components/ui/FormError'
 import { FormActionButtons } from '@/components/ui/FormActionButtons'
-import { useFormSuccess } from '@/hooks/useFormSuccess'
+import { useFormSuccess } from '@/features/shared/hooks'
 import { getFieldErrorProps } from '@/lib/form-utils'
 import { updateApplicationAction } from '../actions/update-application.action'
 import type { ActionState, Application, Outcome } from '../schemas/application.schema'
