@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -11,6 +12,9 @@ import {
   List,
   Card,
   CardContent,
+  Flex,
+  Dialog,
+  DialogContent,
 } from '@/design-system/components'
 import {
   ArrowBackIcon,
@@ -19,6 +23,8 @@ import {
   OpenInNewIcon,
   PeopleIcon,
   WorkIcon,
+  EditIcon,
+  DeleteIcon,
 } from '@/design-system/icons'
 import { SectionCard, DetailItem } from '@/features/shared'
 import { DataTable } from '@/design-system/components'
@@ -28,15 +34,20 @@ import type { Application } from '@/features/applications/types'
 import { ROUTES } from '@/config/routes'
 import { formatSize } from '../utils/format-utils'
 import { jobColumns, applicationColumns } from './columns'
+import { CompanyForm } from './CompanyForm'
+import { DeleteCompanyDialog } from './DeleteCompanyDialog'
 
 interface CompanyDetailProps {
   company: CompanyDetailData | null
   jobs: Job[]
   applications: Application[]
+  canManage?: boolean
 }
 
-export function CompanyDetail({ company, jobs, applications }: CompanyDetailProps) {
+export function CompanyDetail({ company, jobs, applications, canManage = false }: CompanyDetailProps) {
   const router = useRouter()
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   if (!company) {
     return (
@@ -53,15 +64,57 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
     )
   }
 
+  const handleEditSuccess = () => {
+    setEditDialogOpen(false)
+    router.refresh()
+  }
+
+  const handleDeleteSuccess = () => {
+    setDeleteDialogOpen(false)
+    router.push(ROUTES.companies)
+  }
+
+  // Transform CompanyDetailData to Company type for form
+  const companyForForm = {
+    id: company.id,
+    name: company.name,
+    website: company.website,
+    locations: company.locations,
+    size: company.size,
+    description: company.description,
+    industry: company.industry,
+  }
+
   return (
     <Box>
-      <Box className="mb-6">
+      <Flex justify="between" align="center" className="mb-6">
         <NextLink href={ROUTES.companies}>
           <Button variant="ghost" startIcon={<ArrowBackIcon />} size="small">
             Back to Companies
           </Button>
         </NextLink>
-      </Box>
+
+        {canManage && (
+          <Flex gap={2}>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<EditIcon />}
+              onClick={() => setEditDialogOpen(true)}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="danger"
+              size="small"
+              startIcon={<DeleteIcon />}
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              Delete
+            </Button>
+          </Flex>
+        )}
+      </Flex>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
@@ -185,6 +238,27 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
           )}
         </Grid>
       </Grid>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogContent noPadding>
+          <CompanyForm
+            initialData={companyForForm}
+            onSuccess={handleEditSuccess}
+            onCancel={() => setEditDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
+      <DeleteCompanyDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        companyId={company.id}
+        companyName={company.name}
+        jobCount={jobs.length}
+        onDeleted={handleDeleteSuccess}
+      />
     </Box>
   )
 }

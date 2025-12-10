@@ -5,6 +5,8 @@ import {
 } from '@/features/companies'
 import { getJobs } from '@/features/jobs'
 import { QueryPreview } from '@/features/shared/dev'
+import { auth } from '@/features/auth/auth'
+import { hasPrivilegedAccess } from '@/features/auth/constants'
 
 interface CompanyPageProps {
   params: Promise<{ id: string }>
@@ -27,11 +29,14 @@ export async function generateMetadata({ params }: CompanyPageProps) {
 export default async function CompanyPage({ params }: CompanyPageProps) {
   const { id } = await params
 
-  const [company, jobs, applications] = await Promise.all([
+  const [company, jobs, applications, session] = await Promise.all([
     getCompanyDetail(id),
     getJobs({ companyId: id }),
     getApplicationsByCompany(id),
+    auth(),
   ])
+
+  const canManageCompanies = hasPrivilegedAccess(session?.user?.role)
 
   return (
     <QueryPreview query="company-detail">
@@ -39,6 +44,7 @@ export default async function CompanyPage({ params }: CompanyPageProps) {
         company={company}
         jobs={jobs}
         applications={applications}
+        canManage={canManageCompanies}
       />
     </QueryPreview>
   )

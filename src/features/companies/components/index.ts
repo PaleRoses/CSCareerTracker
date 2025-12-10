@@ -1,2 +1,6 @@
 export { default as CompaniesTable } from './CompaniesTable'
 export { default as CompanyDetail } from './CompanyDetail'
+export { AddCompanyButton } from './AddCompanyButton'
+export { CompanyForm } from './CompanyForm'
+export { CreateCompanyDialog } from './CreateCompanyDialog'
+export { DeleteCompanyDialog } from './DeleteCompanyDialog'

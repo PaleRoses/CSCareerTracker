@@ -3,7 +3,6 @@
 import { auth } from '@/features/auth/auth'
 import { createUserClient } from '@/lib/supabase/server'
 import { invalidateApplicationCaches } from '../utils/cache-utils'
-import { resolveCompany } from '@/features/companies/utils'
 import {
   CreateApplicationSchema,
   type ActionState,
@@ -12,9 +11,11 @@ import {
   validationError,
   authError,
   databaseError,
+  notFoundError,
   unexpectedError,
 } from '@/lib/actions/error-utils'
 import { splitFullName } from '@/features/auth/utils'
+import { logger } from '@/lib/logger'
 
 type CreateApplicationResult = {
   applicationId: string
@@ -33,12 +34,8 @@ export async function createApplicationAction(
     const userId = session.user.id
 
     const rawData = {
-      companyId: formData.get('companyId') || undefined,
-      companyName: formData.get('companyName') || undefined,
-      positionTitle: formData.get('positionTitle'),
-      applicationDate: formData.get('applicationDate'),
-      location: formData.get('location') || undefined,
-      jobUrl: formData.get('jobUrl') || undefined,
+      jobId: formData.get('jobId'),
+      applicationDate: formData.get('applicationDate') || undefined,
     }
 
     const validation = CreateApplicationSchema.safeParse(rawData)
@@ -47,11 +44,10 @@ export async function createApplicationAction(
       return validationError(validation.error)
     }
 
-    const { companyId, companyName, positionTitle, applicationDate, location, jobUrl } =
-      validation.data
-
+    const { jobId, applicationDate } = validation.data
     const supabase = createUserClient(userId)
 
+    // Ensure user exists in database (for OAuth users)
     const { fname, lname } = splitFullName(session.user.name, 'User', 'OAuth')
     const { error: userError } = await supabase
       .from('users')
@@ -60,54 +56,64 @@ export async function createApplicationAction(
         email: session.user.email || `${userId}@oauth.placeholder`,
         fname,
         lname,
-        password_hash: 'oauth', // Placeholder for OAuth users
+        password_hash: 'oauth',
       }, { onConflict: 'user_id' })
 
     if (userError) {
       return databaseError(userError, 'sync user')
     }
 
-    const companyResult = await resolveCompany(supabase, { companyId, companyName })
-    if (!companyResult.success) {
-      return { success: false, error: companyResult.error }
-    }
-    const resolvedCompanyId = companyResult.companyId
-
+    // Verify job exists and get its title
     const { data: job, error: jobError } = await supabase
       .from('jobs')
-      .insert({
-        company_id: resolvedCompanyId,
-        job_title: positionTitle,
-        url: jobUrl || null,
-        locations: location ? [location] : [],
-      })
-      .select('job_id')
+      .select('job_id, job_title, url, locations')
+      .eq('job_id', jobId)
+      .eq('is_active', true)
       .single()
 
-    if (jobError) {
-      return databaseError(jobError, 'create job')
+    if (jobError || !job) {
+      logger.warn('Job not found or inactive', { jobId, error: jobError })
+      return notFoundError('Job')
     }
 
+    // Check if user already applied to this job
+    const { data: existingApp } = await supabase
+      .from('applications')
+      .select('application_id')
+      .eq('user_id', userId)
+      .eq('job_id', jobId)
+      .maybeSingle()
+
+    if (existingApp) {
+      return {
+        success: false,
+        error: 'You have already applied to this job',
+      }
+    }
+
+    // Create the application
     const { data: application, error: appError } = await supabase
       .from('applications')
       .insert({
         user_id: userId,
-        job_id: job.job_id,
-        position_title: positionTitle,
-        application_date: applicationDate,
+        job_id: jobId,
+        position_title: job.job_title,
+        application_date: applicationDate || new Date().toISOString().split('T')[0],
         metadata: {
-          jobUrl: jobUrl || '',
-          location: location || '',
+          jobUrl: job.url || '',
+          location: job.locations?.[0] || '',
         },
       })
       .select('application_id')
       .single()
 
     if (appError) {
+      logger.error('Failed to create application', { error: appError, jobId, userId })
       return databaseError(appError, 'create application')
     }
 
     invalidateApplicationCaches()
+    logger.info('Application created', { applicationId: application.application_id, jobId, userId })
 
     return {
       success: true,
@@ -116,6 +122,7 @@ export async function createApplicationAction(
       },
     }
   } catch (error) {
+    logger.error('Unexpected error in createApplicationAction', { error })
     return unexpectedError(error, 'createApplicationAction')
   }
 }

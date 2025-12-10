@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { Button, Dialog, DialogContent } from '@/design-system/components'
 import { AddIcon } from '@/design-system/icons'
-import { CreateApplicationForm, type CompanyOption } from './CreateApplicationForm'
+import { CreateApplicationForm, type JobOption } from './CreateApplicationForm'
 
 interface AddApplicationButtonProps {
-  companies: CompanyOption[]
+  jobs: JobOption[]
 }
 
-export default function AddApplicationButton({ companies }: AddApplicationButtonProps) {
+export default function AddApplicationButton({ jobs }: AddApplicationButtonProps) {
   const [open, setOpen] = useState(false)
 
   const handleOpen = () => setOpen(true)
@@ -33,7 +33,7 @@ export default function AddApplicationButton({ companies }: AddApplicationButton
       >
         <DialogContent noPadding>
           <CreateApplicationForm
-            companies={companies}
+            jobs={jobs}
             onSuccess={() => handleClose()}
             onCancel={handleClose}
           />

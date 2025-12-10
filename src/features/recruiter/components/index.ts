@@ -1,4 +1,6 @@
 export { JobPostingForm } from './JobPostingForm'
+export { PostJobModal } from './PostJobModal'
+export { RecruiterJobsActions } from './RecruiterJobsActions'
 export { JobFormRouterWrapper } from './JobFormRouterWrapper'
 export { CandidatesList } from './CandidatesList'
 export { CandidateStageUpdater } from './CandidateStageUpdater'

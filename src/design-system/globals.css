@@ -163,12 +163,14 @@
   /**
    * Primary Gradient Button
    * Use: <button className="btn-gradient-primary">...</button>
+   * Uses !important to override MUI Button's default background
    */
   .btn-gradient-primary {
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-    color: var(--color-background);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%) !important;
+    background-color: transparent !important;
+    color: var(--color-background) !important;
     font-weight: 600;
-    border: none;
+    border: none !important;
     border-radius: var(--radius-default);
     padding: 0.75rem 1.5rem;
     cursor: pointer;
@@ -176,7 +178,7 @@
   }
 
   .btn-gradient-primary:hover {
-    background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-secondary-hover) 100%);
+    background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-secondary-hover) 100%) !important;
     box-shadow: var(--shadow-glow);
   }
 

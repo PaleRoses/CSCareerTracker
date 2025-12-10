@@ -15,7 +15,6 @@ export const ROUTES = {
   recruiter: {
     dashboard: '/recruiter-dashboard',
     jobs: '/jobs',
-    newJob: '/jobs/new',
     jobDetail: (id: string) => `/jobs/${id}` as const,
     candidates: (jobId: string) => `/jobs/${jobId}/candidates` as const,
     candidateDetail: (candidateId: string) => `/candidates/${candidateId}` as const,

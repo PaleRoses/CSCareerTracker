@@ -1,27 +1,27 @@
-import Link from 'next/link'
-import { Box, Button } from '@/design-system/components'
+import { Box } from '@/design-system/components'
 import { PageHeader } from '@/features/shared'
-import { AddIcon } from '@/design-system/icons'
-import { RecruiterStatsGrid, CandidatePipeline, RecruiterQuickCards } from '@/features/recruiter'
+import { RecruiterStatsGrid, CandidatePipeline, RecruiterQuickCards, RecruiterJobsActions } from '@/features/recruiter'
 import { getRecruiterStats } from '@/features/recruiter/queries'
-import { ROUTES } from '@/config/routes'
+import { getCompanies } from '@/features/applications/queries'
 import { QueryPreview } from '@/features/shared/dev'
 
 export default async function RecruiterDashboardPage() {
-  const stats = await getRecruiterStats()
+  const [stats, companies] = await Promise.all([
+    getRecruiterStats(),
+    getCompanies(),
+  ])
+
+  const companyOptions = companies.map((c) => ({
+    id: c.id,
+    label: c.name,
+  }))
 
   return (
     <Box>
       <PageHeader
         title="Recruiter Dashboard"
         subtitle="Manage your job postings and candidates"
-        action={
-          <Link href={ROUTES.recruiter.newJob}>
-            <Button variant="primary" startIcon={<AddIcon />}>
-              Post New Job
-            </Button>
-          </Link>
-        }
+        action={<RecruiterJobsActions companies={companyOptions} />}
       />
 
       <QueryPreview query="recruiter-stats">

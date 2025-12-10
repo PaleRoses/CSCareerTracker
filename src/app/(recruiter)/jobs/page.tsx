@@ -1,38 +1,39 @@
-import Link from 'next/link'
-import { Box, Button, Text } from '@/design-system/components'
-import { AddIcon } from '@/design-system/icons'
+import { Box, Text } from '@/design-system/components'
 import { PageHeader } from '@/features/shared'
 import { JobsTable } from '@/features/jobs'
 import { getJobs } from '@/features/jobs/queries'
+import { getCompanies } from '@/features/applications/queries'
 import { auth } from '@/features/auth/auth'
-import { ROUTES } from '@/config/routes'
 import { pluralize } from '@/lib/utils'
 import { QueryPreview } from '@/features/shared/dev'
+import { RecruiterJobsActions } from '@/features/recruiter'
 
 export default async function RecruiterJobsPage() {
   const session = await auth()
   const userId = session?.user?.id
 
-  const jobs = await getJobs({
-    postedBy: userId,
-    includeArchived: true,
-  })
+  const [jobs, companies] = await Promise.all([
+    getJobs({
+      postedBy: userId,
+      includeArchived: true,
+    }),
+    getCompanies(),
+  ])
 
   const active = jobs.filter(job => job.isActive)
   const archived = jobs.filter(job => !job.isActive)
+
+  const companyOptions = companies.map((c) => ({
+    id: c.id,
+    label: c.name,
+  }))
 
   return (
     <Box>
       <PageHeader
         title="My Job Postings"
         subtitle={`You have ${active.length} active ${pluralize(active.length, 'job')} posted`}
-        action={
-          <Link href={ROUTES.recruiter.newJob}>
-            <Button variant="gradient" startIcon={<AddIcon />} className="animate-glow-gradient">
-              Post New Job
-            </Button>
-          </Link>
-        }
+        action={<RecruiterJobsActions companies={companyOptions} />}
       />
 
       <QueryPreview query="jobs-list">
@@ -41,11 +42,7 @@ export default async function RecruiterJobsPage() {
             <Text variant="body1" className="text-foreground/60 mb-4">
               You haven&apos;t posted any jobs yet.
             </Text>
-            <Link href={ROUTES.recruiter.newJob}>
-              <Button variant="gradient" startIcon={<AddIcon />} className="animate-glow-gradient">
-                Post Your First Job
-              </Button>
-            </Link>
+            <RecruiterJobsActions companies={companyOptions} />
           </Box>
         ) : (
           <>

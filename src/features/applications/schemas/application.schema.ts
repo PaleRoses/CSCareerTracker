@@ -54,25 +54,10 @@ export const ApplicationSchema = z.object({
   updatedAt: z.string().datetime().optional(),
 })
 
-export const CreateApplicationSchema = z
-  .object({
-    companyId: z.string().optional(),
-    companyName: z.string().max(100, 'Company name too long').optional(),
-    positionTitle: z
-      .string()
-      .min(1, 'Position title is required')
-      .max(150, 'Position title too long'),
-    applicationDate: z.string().min(1, 'Date applied is required'),
-    location: z.string().optional(),
-    jobUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  })
-  .refine(
-    (data) => data.companyId || (data.companyName && data.companyName.length > 0),
-    {
-      message: 'Please select a company or enter a new company name',
-      path: ['companyName'],
-    }
-  )
+export const CreateApplicationSchema = z.object({
+  jobId: z.string().uuid('Please select a job'),
+  applicationDate: z.string().optional(),  // Defaults to today if not provided
+})
 
 export const UpdateApplicationSchema = z.object({
   id: z.string().uuid(),

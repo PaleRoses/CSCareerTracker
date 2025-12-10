@@ -1,46 +1,36 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import {
   TextField,
-  Autocomplete,
   Stack,
   Heading,
 } from '@/design-system/components'
 import { FormError, FormActionButtons, useFormAction } from '@/features/shared'
 import { createApplicationAction } from '../actions/create-application.action'
+import { JobPicker, type JobOption } from '@/features/jobs/components/JobPicker'
 import { UI_STRINGS } from '@/lib/constants/ui-strings'
-import { useCompanyAutocomplete, type CompanyOption } from '../hooks'
 
-export type { CompanyOption }
+export type { JobOption }
 
 interface CreateApplicationFormProps {
-  companies: CompanyOption[]
+  jobs: JobOption[]
   onSuccess?: (applicationId: string) => void
   onCancel?: () => void
 }
 
 export function CreateApplicationForm({
-  companies,
+  jobs,
   onSuccess,
   onCancel,
 }: CreateApplicationFormProps) {
   const formRef = useRef<HTMLFormElement>(null)
-  const {
-    selectedCompany,
-    companyInputValue,
-    handleChange: handleCompanyChange,
-    handleInputChange: handleCompanyInputChange,
-    reset: resetCompanyAutocomplete,
-  } = useCompanyAutocomplete()
-
-  const existingCompanyId = selectedCompany?.id ?? ''
-  const companyDisplayName = selectedCompany ? '' : companyInputValue
+  const [selectedJob, setSelectedJob] = useState<JobOption | null>(null)
 
   const resetFormState = useCallback(() => {
     formRef.current?.reset()
-    resetCompanyAutocomplete()
-  }, [resetCompanyAutocomplete])
+    setSelectedJob(null)
+  }, [])
 
   const { state, formAction, isPending, getFieldError } = useFormAction(
     createApplicationAction,
@@ -55,7 +45,7 @@ export function CreateApplicationForm({
   )
 
   const today = new Date().toISOString().split('T')[0]
-  const companyError = state.fieldErrors?.['companyName']?.[0] || state.fieldErrors?.['companyId']?.[0]
+  const jobError = state.fieldErrors?.['jobId']?.[0]
 
   return (
     <div className="p-6">
@@ -69,74 +59,28 @@ export function CreateApplicationForm({
 
           <input
             type="hidden"
-            name="companyId"
-            value={existingCompanyId}
-          />
-          <input
-            type="hidden"
-            name="companyName"
-            value={companyDisplayName}
+            name="jobId"
+            value={selectedJob?.id || ''}
           />
 
-          <Autocomplete
-            options={companies}
-            label={UI_STRINGS.forms.application.companyLabel}
-            placeholder={UI_STRINGS.forms.application.companyPlaceholder}
-            freeSolo
-            required
-            fullWidth
+          <JobPicker
+            jobs={jobs}
+            value={selectedJob}
+            onChange={setSelectedJob}
             disabled={isPending}
-            value={selectedCompany}
-            inputValue={companyInputValue}
-            onChange={handleCompanyChange}
-            onInputChange={handleCompanyInputChange}
-            error={!!companyError}
-            errorMessage={companyError}
-            noOptionsText={UI_STRINGS.forms.application.companyNoOptions}
-            getOptionLabel={(option) => {
-              if (typeof option === 'string') return option
-              return option.label
-            }}
-          />
-
-          <TextField
-            name="positionTitle"
-            label={UI_STRINGS.forms.application.positionLabel}
-            placeholder={UI_STRINGS.forms.application.positionPlaceholder}
+            error={!!jobError}
+            errorMessage={jobError}
             required
-            fullWidth
-            disabled={isPending}
-            {...getFieldError('positionTitle')}
           />
 
           <TextField
             name="applicationDate"
             label={UI_STRINGS.forms.application.dateAppliedLabel}
             type="date"
-            required
             fullWidth
             disabled={isPending}
             defaultValue={today}
             {...getFieldError('applicationDate')}
-          />
-
-          <TextField
-            name="location"
-            label={UI_STRINGS.forms.application.locationLabel}
-            placeholder={UI_STRINGS.forms.application.locationPlaceholder}
-            fullWidth
-            disabled={isPending}
-            {...getFieldError('location')}
-          />
-
-          <TextField
-            name="jobUrl"
-            label={UI_STRINGS.forms.application.jobUrlLabel}
-            type="url"
-            placeholder={UI_STRINGS.forms.application.jobUrlPlaceholder}
-            fullWidth
-            disabled={isPending}
-            {...getFieldError('jobUrl')}
           />
 
           <FormActionButtons

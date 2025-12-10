@@ -4,6 +4,9 @@ export interface Company {
   website: string | null
   locations: string[]
   size: number | null
+  description?: string | null
+  industry?: string | null
+  createdBy?: string | null
   jobCount?: number
   applicationCount?: number
 }

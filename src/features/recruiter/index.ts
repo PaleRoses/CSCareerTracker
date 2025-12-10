@@ -16,6 +16,8 @@ export { OUTCOME_VARIANTS } from './constants'
 
 export {
   JobPostingForm,
+  PostJobModal,
+  RecruiterJobsActions,
   JobFormRouterWrapper,
   CandidatesList,
   CandidateStageUpdater,
@@ -26,3 +28,5 @@ export {
   ApplicationDetailsCard,
   StageHistoryTimeline,
 } from './components'
+
+export type { CompanyOption } from './components/JobPostingForm'
