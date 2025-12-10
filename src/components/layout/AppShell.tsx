@@ -31,15 +31,9 @@ function AppShellContent({ children, userRole }: AppShellProps) {
 }
 
 export default function AppShell({ children, userRole }: AppShellProps) {
-  const isDev = process.env.NODE_ENV !== "production";
-
-  if (isDev) {
-    return (
-      <DevModeProvider>
-        <AppShellContent userRole={userRole}>{children}</AppShellContent>
-      </DevModeProvider>
-    );
-  }
-
-  return <AppShellContent userRole={userRole}>{children}</AppShellContent>;
+  return (
+    <DevModeProvider>
+      <AppShellContent userRole={userRole}>{children}</AppShellContent>
+    </DevModeProvider>
+  );
 }

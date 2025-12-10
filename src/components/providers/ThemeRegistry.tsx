@@ -7,7 +7,7 @@ import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import theme from "@/config/theme";
+import { theme } from "@/design-system";
 
 export interface ThemeRegistryProps {
   children: React.ReactNode;

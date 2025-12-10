@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AppProviders from "@/components/providers/AppProviders";
-import "@/styles/globals.css";
+import "@/design-system/globals.css";
 
 export const metadata: Metadata = {
   title: "CS Career Tracker",

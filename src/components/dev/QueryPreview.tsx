@@ -114,7 +114,7 @@ export function QueryPreview({
 }: QueryPreviewProps) {
   const { sqlModeEnabled } = useDevMode()
 
-  if (process.env.NODE_ENV === 'production' || disabled || !sqlModeEnabled) {
+  if (disabled || !sqlModeEnabled) {
     return <>{children}</>
   }
 

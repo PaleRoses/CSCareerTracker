@@ -8,7 +8,7 @@ import {
   shadows,
   transitions,
   effects,
-} from "@/design-system";
+} from "./tokens";
 
 const theme = createTheme({
   palette: {

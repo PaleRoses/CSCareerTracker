@@ -28,3 +28,5 @@ export {
 export * from './components';
 
 export * from './icons';
+
+export { default as theme } from './theme';

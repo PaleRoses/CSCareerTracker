@@ -10,7 +10,7 @@
 @import "tailwindcss";
 
 /* Import design system CSS tokens */
-@import "../design-system/css-tokens.css";
+@import "./css-tokens.css";
 
 /* =============================================================================
    TAILWIND THEME CONFIGURATION (v4 CSS-first approach)

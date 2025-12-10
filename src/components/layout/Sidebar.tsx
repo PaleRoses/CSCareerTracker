@@ -58,7 +58,6 @@ interface SidebarProps {
 export default function Sidebar({ userRole }: SidebarProps) {
   const pathname = usePathname();
   const { sqlModeEnabled, toggleSqlMode } = useDevMode();
-  const isDev = process.env.NODE_ENV !== "production";
 
   const isRecruiter = userRole && RECRUITER_ROLES.includes(userRole as typeof RECRUITER_ROLES[number]);
   const isAdmin = userRole && ADMIN_ROLES.includes(userRole as typeof ADMIN_ROLES[number]);
@@ -121,38 +120,36 @@ export default function Sidebar({ userRole }: SidebarProps) {
         })}
       </List>
 
-      {isDev && (
-        <Box className="px-4 py-3 border-t border-white/10">
-          <FormControlLabel
-            control={
-              <Switch
-                checked={sqlModeEnabled}
-                onChange={toggleSqlMode}
-                size="small"
-                sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': {
-                    color: '#a855f7',
-                  },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                    backgroundColor: '#a855f7',
-                  },
-                }}
-              />
-            }
-            label="SQL Mode"
-            slotProps={{
-              typography: {
-                sx: {
-                  fontSize: '0.75rem',
-                  fontFamily: 'monospace',
-                  color: 'rgba(255,255,255,0.5)',
-                  fontWeight: 500,
+      <Box className="px-4 py-3 border-t border-white/10">
+        <FormControlLabel
+          control={
+            <Switch
+              checked={sqlModeEnabled}
+              onChange={toggleSqlMode}
+              size="small"
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: '#a855f7',
                 },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: '#a855f7',
+                },
+              }}
+            />
+          }
+          label="SQL Mode"
+          slotProps={{
+            typography: {
+              sx: {
+                fontSize: '0.75rem',
+                fontFamily: 'monospace',
+                color: 'rgba(255,255,255,0.5)',
+                fontWeight: 500,
               },
-            }}
-          />
-        </Box>
-      )}
+            },
+          }}
+        />
+      </Box>
     </Drawer>
   );
 }
