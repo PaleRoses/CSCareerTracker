@@ -28,7 +28,6 @@ import { deleteApplication } from "../actions/delete-application.action";
 import { useDeleteConfirmation } from "@/features/shared/hooks";
 
 interface ApplicationsTableProps {
-  /** Applications data to display in the table */
   applications: Application[];
 }
 
@@ -55,7 +54,7 @@ export default function ApplicationsTable({ applications }: ApplicationsTablePro
   } = useDeleteConfirmation(handleDeleteApplication);
 
   const handleRowClick = (params: RowClickParams<Application>) => {
-    router.push(ROUTES.APPLICATION_DETAIL(String(params.id)));
+    router.push(ROUTES.applicationDetail(String(params.id)));
   };
 
   const handleDeleteClick = (application: Application, e: React.MouseEvent) => {

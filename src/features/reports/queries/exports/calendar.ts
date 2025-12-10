@@ -1,7 +1,8 @@
 'use server'
 
 import { getApplications } from '@/features/applications/queries'
-import { type ApplicationFilters, type CalendarEvent } from '@/lib/queries/core/types'
+import { type ApplicationFilters } from '@/features/applications/types'
+import { type CalendarEvent } from '../../types'
 
 const ICAL_HEADER = `BEGIN:VCALENDAR
 VERSION:2.0

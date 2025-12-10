@@ -3,7 +3,7 @@
 import { auth } from '@/features/auth/auth'
 import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient, createCacheClient } from '@/lib/supabase/server'
-import { invalidateJobCaches } from '@/lib/actions/cache-utils'
+import { invalidateJobCaches } from '../utils/cache-utils'
 import { logger } from '@/lib/logger'
 import {
   authError,
@@ -31,7 +31,6 @@ export async function removeJobAction(
   formData: FormData
 ): Promise<ActionState<RemoveJobResult>> {
   try {
-    // 1. Authenticate and check role
     const session = await auth()
     if (!session?.user?.id) {
       return authError('You must be logged in')
@@ -48,8 +47,6 @@ export async function removeJobAction(
 
     const userId = session.user.id
     const supabase = createUserClient(userId)
-
-    // 2. Check if job has any applications
     const cacheClient = createCacheClient()
     const { count, error: countError } = await cacheClient
       .from('applications')
@@ -64,7 +61,6 @@ export async function removeJobAction(
     const hasApplications = (count ?? 0) > 0
 
     if (hasApplications) {
-      // 3a. Soft delete - job has applications, preserve referential integrity
       const { error: updateError } = await supabase
         .from('jobs')
         .update({ is_active: false })
@@ -80,7 +76,6 @@ export async function removeJobAction(
 
       return { success: true, data: { action: 'archived' } }
     } else {
-      // 3b. Hard delete - no applications, safe to remove completely
       const { error: deleteError } = await supabase
         .from('jobs')
         .delete()

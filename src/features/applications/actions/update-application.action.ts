@@ -1,7 +1,7 @@
 'use server'
 
 import { requireAuth } from '@/lib/actions/auth-utils'
-import { invalidateApplicationById } from '@/lib/actions/cache-utils'
+import { invalidateApplicationById } from '../utils/cache-utils'
 import {
   UpdateApplicationSchema,
   type ActionState,
@@ -74,7 +74,6 @@ export async function updateApplicationAction(
     }
 
     if (updateData.location !== undefined || updateData.jobUrl !== undefined) {
-      // Merge with existing metadata
       const { data: existing } = await supabase
         .from('applications')
         .select('metadata')

@@ -1,7 +1,7 @@
 "use client";
 
 import { Box } from "@/design-system/components";
-import { DevModeProvider } from "@/components/dev";
+import { DevModeProvider } from "@/features/shared/dev";
 import Sidebar, { DRAWER_WIDTH } from "./Sidebar";
 import TopBar from "./TopBar";
 

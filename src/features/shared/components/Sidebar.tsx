@@ -36,7 +36,7 @@ import {
   type NavItem,
 } from "@/config/routes";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
-import { useDevMode } from "@/components/dev";
+import { useDevMode } from "@/features/shared/dev";
 
 const DRAWER_WIDTH = layout.sidebarWidth;
 

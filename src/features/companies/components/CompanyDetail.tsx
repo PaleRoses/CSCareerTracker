@@ -1,6 +1,7 @@
 'use client'
 
 import NextLink from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   Box,
   Heading,
@@ -21,12 +22,13 @@ import {
   PeopleIcon,
   WorkIcon,
 } from '@/design-system/icons'
-import { SectionCard, DetailItem } from '@/components/ui'
+import { SectionCard, DetailItem } from '@/features/shared'
 import { DataTable, type ColumnDef, type CellRenderParams } from '@/design-system/components'
 import type { CompanyDetailData } from '../queries'
 import type { Job } from '@/features/jobs/types'
 import type { Application } from '@/features/applications/types'
 import { ROUTES } from '@/config/routes'
+import { formatSize } from '../utils/format-utils'
 
 interface CompanyDetailProps {
   company: CompanyDetailData | null
@@ -34,21 +36,16 @@ interface CompanyDetailProps {
   applications: Application[]
 }
 
-function formatSize(size: number | null): string {
-  if (!size) return 'Unknown'
-  if (size >= 10000) return `${Math.floor(size / 1000)}k+ employees`
-  if (size >= 1000) return `${(size / 1000).toFixed(1)}k employees`
-  return `${size} employees`
-}
-
 export function CompanyDetail({ company, jobs, applications }: CompanyDetailProps) {
+  const router = useRouter()
+
   if (!company) {
     return (
       <Box className="text-center py-16">
         <Heading level={2} className="mb-4">
           Company not found
         </Heading>
-        <NextLink href={ROUTES.COMPANIES}>
+        <NextLink href={ROUTES.companies}>
           <Button variant="ghost" startIcon={<ArrowBackIcon />}>
             Back to Companies
           </Button>
@@ -164,7 +161,7 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
   return (
     <Box>
       <Box className="mb-6">
-        <NextLink href={ROUTES.COMPANIES}>
+        <NextLink href={ROUTES.companies}>
           <Button variant="ghost" startIcon={<ArrowBackIcon />} size="small">
             Back to Companies
           </Button>
@@ -273,7 +270,7 @@ export function CompanyDetail({ company, jobs, applications }: CompanyDetailProp
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => row.id}
                 onRowClick={(row) => {
-                  window.location.href = `${ROUTES.APPLICATIONS}/${row.id}`
+                  router.push(`${ROUTES.applications}/${row.id}`)
                 }}
               />
             </SectionCard>

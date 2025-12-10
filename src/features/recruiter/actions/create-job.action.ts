@@ -3,8 +3,9 @@
 import { auth } from '@/features/auth/auth'
 import { hasPrivilegedAccess } from '@/features/auth/constants'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateJobCaches, invalidateCompanyCaches } from '@/lib/actions/cache-utils'
-import { JobPostingSchema } from '../schemas/job-posting.schema'
+import { invalidateJobCaches } from '@/features/jobs/utils/cache-utils'
+import { resolveCompany } from '@/features/companies/utils'
+import { JobPostingSchema } from '@/features/jobs/schemas'
 import {
   validationError,
   authError,
@@ -69,45 +70,16 @@ export async function createJobAction(
     const { companyId, companyName, title, type, url } = validation.data
     const validatedLocations = validation.data.locations
 
-    let resolvedCompanyId = companyId
-
-    if (!resolvedCompanyId && companyName) {
-      // Check if company already exists (case-insensitive)
-      const { data: existingCompany } = await supabase
-        .from('companies')
-        .select('company_id')
-        .ilike('company_name', companyName)
-        .maybeSingle()
-
-      if (existingCompany) {
-        resolvedCompanyId = existingCompany.company_id
-      } else {
-        const { data: newCompany, error: companyError } = await supabase
-          .from('companies')
-          .insert({
-            company_name: companyName,
-            website: '',
-            locations: validatedLocations,
-          })
-          .select('company_id')
-          .single()
-
-        if (companyError) {
-          logger.error('Failed to create company', { error: companyError })
-          return databaseError(companyError, 'create company')
-        }
-
-        resolvedCompanyId = newCompany.company_id
-        invalidateCompanyCaches()
-      }
+    // Resolve or create company
+    const companyResult = await resolveCompany(supabase, {
+      companyId,
+      companyName,
+      locations: validatedLocations,
+    })
+    if (!companyResult.success) {
+      return { success: false, error: companyResult.error }
     }
-
-    if (!resolvedCompanyId) {
-      return {
-        success: false,
-        error: 'Could not resolve company. Please select or enter a company name.',
-      }
-    }
+    const resolvedCompanyId = companyResult.companyId
 
     const { data: job, error: jobError } = await supabase
       .from('jobs')

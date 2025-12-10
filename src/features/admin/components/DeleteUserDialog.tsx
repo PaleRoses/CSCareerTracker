@@ -11,7 +11,7 @@ import {
   Text,
 } from '@/design-system/components'
 import { WarningIcon } from '@/design-system/icons'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
+import { FormActionButtons } from '@/features/shared'
 import { deleteUserAction } from '../actions'
 import type { ActionState } from '@/lib/actions/error-utils'
 

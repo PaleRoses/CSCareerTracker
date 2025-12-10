@@ -12,6 +12,21 @@ export type {
   ActionState,
 } from './schemas/application.schema'
 
+/**
+ * Filters for querying applications
+ */
+export type ApplicationFilters = {
+  companyId?: string
+  companyName?: string
+  positionTitle?: string
+  dateFrom?: string
+  dateTo?: string
+  outcome?: 'pending' | 'offer' | 'rejected' | 'withdrawn'
+  currentStage?: string
+  limit?: number
+  offset?: number
+}
+
 export {
   StageStatusSchema,
   OutcomeSchema,

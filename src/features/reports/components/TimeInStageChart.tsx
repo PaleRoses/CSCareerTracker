@@ -3,6 +3,7 @@
 import { Box, Flex, Text } from '@/design-system/components'
 import type { TimeInStage } from '../types'
 import ReportCard from './ReportCard'
+import { normalizeToPercentage } from '../utils/chart-utils'
 
 interface TimeInStageChartProps {
   data: TimeInStage[]
@@ -20,7 +21,7 @@ export function TimeInStageChart({ data }: TimeInStageChartProps) {
     >
       <Box className="space-y-4">
         {data.map((stage) => {
-          const barWidth = (stage.avgDays / maxDays) * 100
+          const barWidth = normalizeToPercentage(stage.avgDays, maxDays)
 
           return (
             <Box key={stage.stageName}>

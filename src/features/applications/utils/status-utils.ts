@@ -1,6 +1,31 @@
+/**
+ * Application Status Utilities
+ */
+
 import type { StageStatus } from '../schemas/application.schema'
 import type { Stage } from '../types'
 import { STAGE_NAMES } from '../config'
+
+// Single source of truth for status mappings
+const STATUS_DEFINITIONS = {
+  successful: {
+    chipVariant: 'offer' as const,
+    label: 'Completed',
+    step: { completed: true, error: false },
+  },
+  rejected: {
+    chipVariant: 'rejected' as const,
+    label: 'Rejected',
+    step: { completed: true, error: true },
+  },
+  inProgress: {
+    chipVariant: 'default' as const,
+    label: 'In Progress',
+    step: { completed: false, error: false, active: true },
+  },
+} as const
+
+type StatusDefinition = (typeof STATUS_DEFINITIONS)[keyof typeof STATUS_DEFINITIONS]
 
 export function getCurrentStage(stages: Stage[]): Stage | undefined {
   return stages.find((s) => s.status === 'inProgress') || stages.at(-1)
@@ -27,43 +52,18 @@ export function getTerminalStateType(stages: Stage[]): TerminalStateType | null 
   return null
 }
 
-export function getStatusColor(status: StageStatus): string {
-  const colors: Record<StageStatus, string> = {
-    successful: 'success',
-    rejected: 'error',
-    inProgress: 'primary',
-  }
-  return colors[status] || 'default'
+function getStatusDef(status: StageStatus): StatusDefinition {
+  return STATUS_DEFINITIONS[status] ?? STATUS_DEFINITIONS.inProgress
 }
 
 export function getChipVariant(status: StageStatus): 'offer' | 'rejected' | 'default' {
-  switch (status) {
-    case 'successful':
-      return 'offer'
-    case 'rejected':
-      return 'rejected'
-    case 'inProgress':
-    default:
-      return 'default'
-  }
+  return getStatusDef(status).chipVariant
 }
 
 export function getStatusLabel(status: StageStatus): string {
-  const labels: Record<StageStatus, string> = {
-    successful: 'Completed',
-    rejected: 'Rejected',
-    inProgress: 'In Progress',
-  }
-  return labels[status] || status
+  return getStatusDef(status).label
 }
 
-export function getStepStatus(status: string): {
-  completed: boolean
-  error: boolean
-  active?: boolean
-} {
-  if (status === 'successful') return { completed: true, error: false }
-  if (status === 'rejected') return { completed: true, error: true }
-  if (status === 'inProgress') return { completed: false, error: false, active: true }
-  return { completed: false, error: false }
+export function getStepStatus(status: string): { completed: boolean; error: boolean; active?: boolean } {
+  return getStatusDef(status as StageStatus).step
 }

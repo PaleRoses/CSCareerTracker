@@ -2,8 +2,7 @@
 
 import { useActionState, useRef, useEffect } from 'react'
 import { TextField, Stack, Text } from '@/design-system/components'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
-import { FormError } from '@/components/ui/FormError'
+import { FormActionButtons, FormError } from '@/features/shared'
 import { cn } from '@/lib/utils'
 import { addNoteAction } from '../actions/add-note.action'
 import type { ActionState } from '../schemas/application.schema'

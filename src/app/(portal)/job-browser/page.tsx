@@ -1,10 +1,10 @@
 import { Box } from "@/design-system/components";
-import PageHeader from "@/components/ui/PageHeader";
+import { PageHeader } from "@/features/shared";
 import { JobsTable } from "@/features/jobs";
 import { getJobs } from "@/features/shared";
 import { auth } from "@/features/auth/auth";
-import { canManageJobs } from "@/lib/auth";
-import { QueryPreview } from "@/components/dev";
+import { hasPrivilegedAccess } from "@/features/auth/constants";
+import { QueryPreview } from "@/features/shared/dev";
 
 export default async function JobBrowserPage() {
   const [jobs, session] = await Promise.all([
@@ -12,7 +12,7 @@ export default async function JobBrowserPage() {
     auth(),
   ]);
 
-  const hasJobManagement = canManageJobs(session?.user?.role);
+  const hasJobManagement = hasPrivilegedAccess(session?.user?.role);
 
   return (
     <Box>

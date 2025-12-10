@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useRef, useCallback, useState } from 'react'
+import { useActionState, useRef, useCallback, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   TextField,
   Autocomplete,
@@ -10,13 +11,11 @@ import {
   Box,
   Chip,
 } from '@/design-system/components'
-import { FormError } from '@/components/ui/FormError'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
-import { useFormSuccess } from '@/features/shared/hooks'
-import { getFieldError, getFieldErrorProps } from '@/lib/form-utils'
+import { FormError, FormActionButtons } from '@/features/shared'
 import { createJobAction } from '../actions/create-job.action'
+import { updateJobAction } from '../actions/update-job.action'
 import type { ActionState } from '@/lib/actions/error-utils'
-import { JOB_TYPE_LABELS } from '@/features/jobs/types'
+import { JOB_TYPE_LABELS, type Job } from '@/features/jobs/types'
 
 export interface CompanyOption {
   id: string
@@ -26,6 +25,7 @@ export interface CompanyOption {
 
 interface JobPostingFormProps {
   companies: CompanyOption[]
+  initialData?: Job  // For edit mode - pre-populate form with existing job data
   onSuccess?: (jobId: string) => void
   onCancel?: () => void
 }
@@ -51,18 +51,30 @@ const JOB_TYPE_OPTIONS: JobTypeOption[] = Object.entries(JOB_TYPE_LABELS).map(([
 
 export function JobPostingForm({
   companies,
+  initialData,
   onSuccess,
   onCancel,
 }: JobPostingFormProps) {
+  const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
+  const isEditMode = !!initialData
 
-  const [selectedCompany, setSelectedCompany] = useState<CompanyOption | null>(null)
-  const [companyInputValue, setCompanyInputValue] = useState('')
-  const [selectedType, setSelectedType] = useState<JobTypeOption | null>(JOB_TYPE_OPTIONS[0])
-  const [locations, setLocations] = useState<string[]>([])
+  const initialCompanyOption = initialData
+    ? companies.find(c => c.id === initialData.companyId) || null
+    : null
+
+  const initialTypeOption = initialData
+    ? JOB_TYPE_OPTIONS.find(t => t.id === initialData.type) || JOB_TYPE_OPTIONS[0]
+    : JOB_TYPE_OPTIONS[0]
+
+  const [selectedCompany, setSelectedCompany] = useState<CompanyOption | null>(initialCompanyOption)
+  const [companyInputValue, setCompanyInputValue] = useState(initialData?.companyName || '')
+  const [selectedType, setSelectedType] = useState<JobTypeOption | null>(initialTypeOption)
+  const [locations, setLocations] = useState<string[]>(initialData?.locations || [])
   const [locationInput, setLocationInput] = useState('')
 
-  const [state, formAction, isPending] = useActionState(createJobAction, initialState)
+  const action = isEditMode ? updateJobAction : createJobAction
+  const [state, formAction, isPending] = useActionState(action, initialState)
 
   const resetFormState = useCallback(() => {
     formRef.current?.reset()
@@ -73,10 +85,20 @@ export function JobPostingForm({
     setLocationInput('')
   }, [])
 
-  useFormSuccess(state, {
-    onSuccess: (data) => data && onSuccess?.(data.jobId),
-    resetForm: resetFormState,
-  })
+  // Handle successful form submission
+  useEffect(() => {
+    if (state.success && state.data) {
+      resetFormState()
+      onSuccess?.(state.data.jobId)
+      router.refresh()
+    }
+  }, [state.success, state.data, resetFormState, onSuccess, router])
+
+  // Helper to extract field error props for TextField
+  const fieldError = (field: string) => {
+    const msg = state.fieldErrors?.[field]?.[0]
+    return { error: !!msg, errorMessage: msg }
+  }
 
   const handleCompanyChange = (
     _event: React.SyntheticEvent,
@@ -119,18 +141,26 @@ export function JobPostingForm({
   const existingCompanyId = selectedCompany?.id ?? undefined
   const companyDisplayName = selectedCompany ? '' : companyInputValue
 
-  const companyError = getFieldError(state.fieldErrors, 'companyName') || getFieldError(state.fieldErrors, 'companyId')
-  const locationsError = getFieldError(state.fieldErrors, 'locations')
+  const companyError = state.fieldErrors?.['companyName']?.[0] || state.fieldErrors?.['companyId']?.[0]
+  const locationsError = state.fieldErrors?.['locations']?.[0]
 
   return (
     <div className="p-6">
       <form ref={formRef} action={formAction}>
         <Stack gap={4}>
           <Heading level={3} className="text-center">
-            Post New Job
+            {isEditMode ? 'Edit Job' : 'Post New Job'}
           </Heading>
 
           <FormError state={state} />
+
+          {isEditMode && (
+            <input
+              type="hidden"
+              name="jobId"
+              value={initialData.id}
+            />
+          )}
 
           <input
             type="hidden"
@@ -161,7 +191,7 @@ export function JobPostingForm({
             freeSolo
             required
             fullWidth
-            disabled={isPending}
+            disabled={isPending || isEditMode} // Can't change company when editing
             value={selectedCompany}
             inputValue={companyInputValue}
             onChange={handleCompanyChange}
@@ -179,10 +209,11 @@ export function JobPostingForm({
             name="title"
             label="Position Title"
             placeholder="e.g. Senior Software Engineer"
+            defaultValue={initialData?.title || ''}
             required
             fullWidth
             disabled={isPending}
-            {...getFieldErrorProps(state.fieldErrors, 'title')}
+            {...fieldError('title')}
           />
 
           <Autocomplete
@@ -234,16 +265,17 @@ export function JobPostingForm({
             label="Job Posting URL"
             type="url"
             placeholder="https://company.com/careers/job-posting"
+            defaultValue={initialData?.url || ''}
             fullWidth
             disabled={isPending}
-            {...getFieldErrorProps(state.fieldErrors, 'url')}
+            {...fieldError('url')}
           />
 
           <FormActionButtons
             onCancel={onCancel}
             isPending={isPending}
-            submitLabel="Post Job"
-            pendingLabel="Posting..."
+            submitLabel={isEditMode ? 'Save Changes' : 'Post Job'}
+            pendingLabel={isEditMode ? 'Saving...' : 'Posting...'}
           />
         </Stack>
       </form>

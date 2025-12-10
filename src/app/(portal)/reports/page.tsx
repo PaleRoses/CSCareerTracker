@@ -1,5 +1,5 @@
 import { Box, Flex, Grid } from '@/design-system/components'
-import { PageHeader } from '@/components/ui'
+import { PageHeader } from '@/features/shared'
 import {
   MonthlyTrendsChart,
   OfferRateTable,
@@ -21,7 +21,7 @@ import {
   getHiddenGemCompanies,
 } from '@/features/reports/queries'
 
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 
 export const metadata = {
   title: 'Reports | Career Tracker',

@@ -19,3 +19,11 @@ export {
 export type { RawApplicationRow } from './transform'
 
 export { isAdmin } from './auth-utils'
+
+export {
+  getQueryContext,
+  getCacheContext,
+  requireQueryContext,
+  type QueryContext,
+  type CacheQueryContext,
+} from './query-auth'

@@ -1,6 +1,5 @@
 import { List } from "@/design-system/components";
-import { SectionCard } from "@/components/ui/SectionCard";
-import { DetailItem } from "@/components/ui/DetailItem";
+import { SectionCard, DetailItem } from "@/features/shared";
 import {
   OpenInNewIcon,
   LocationOnIcon,

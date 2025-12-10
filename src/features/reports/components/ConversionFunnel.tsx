@@ -4,6 +4,7 @@ import { Box, Flex, Text } from '@/design-system/components'
 import { ArrowForwardIcon } from '@/design-system/icons'
 import type { StageConversion } from '../types'
 import ReportCard from './ReportCard'
+import { getThresholdColor } from '../utils/chart-utils'
 
 interface ConversionFunnelProps {
   data: StageConversion[]
@@ -19,13 +20,7 @@ export function ConversionFunnel({ data }: ConversionFunnelProps) {
     >
       <Box className="space-y-4">
         {data.map((conversion, index) => {
-          const colorClass = conversion.conversionRate >= 75
-            ? 'bg-success/80'
-            : conversion.conversionRate >= 50
-              ? 'bg-primary/80'
-              : conversion.conversionRate >= 25
-                ? 'bg-warning/80'
-                : 'bg-error/60'
+          const colorClass = getThresholdColor(conversion.conversionRate)
 
           return (
             <Box key={index} className="space-y-2">

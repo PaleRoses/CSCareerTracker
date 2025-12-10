@@ -286,7 +286,3 @@ export type TransitionToken = typeof transitions;
 export type GradientToken = typeof gradients;
 export type LayoutToken = typeof layout;
 export type StatusColorToken = typeof statusColors;
-export type OpacityToken = typeof opacity;
-export type ComponentSizeToken = typeof componentSizes;
-export type PaginationToken = typeof pagination;
-export type FormDefaultsToken = typeof formDefaults;

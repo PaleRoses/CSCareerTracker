@@ -3,7 +3,7 @@
 import { createCacheClient } from '@/lib/supabase/server'
 import { auth } from '@/features/auth/auth'
 import { unstable_cache } from 'next/cache'
-import { type StaleApplication } from '@/lib/queries/core/types'
+import { type StaleApplication } from '../types'
 import {
   QUERY_CACHE_TAGS,
   DEFAULT_REVALIDATE_SECONDS,

@@ -15,7 +15,6 @@ export function ExportButtons() {
       try {
         const result = await generateApplicationsCSVBlob()
 
-        // Create blob and download
         const blob = new Blob([result.data], { type: result.mimeType })
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
@@ -39,7 +38,6 @@ export function ExportButtons() {
       try {
         const result = await generateCalendarBlob()
 
-        // Create blob and download
         const blob = new Blob([result.data], { type: result.mimeType })
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')

@@ -1,22 +1,19 @@
 import { Box, Grid, Text } from "@/design-system/components";
-import PageHeader from "@/components/ui/PageHeader";
+import { PageHeader } from "@/features/shared";
 import StatsGrid from "@/features/dashboard/components/StatsGrid";
 import StageChart from "@/features/dashboard/components/StageChart";
 import StaleApplications from "@/features/dashboard/components/StaleApplications";
 import EventsList from "@/features/dashboard/components/EventsList";
 import { auth } from "@/features/auth/auth";
 import { getDashboardStats } from "@/features/dashboard/queries";
-import { transformDashboardData } from "@/features/dashboard/services/dashboard-transformer";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
-import { QueryPreview } from "@/components/dev";
+import { QueryPreview } from "@/features/shared/dev";
 
 export default async function DashboardPage() {
   const session = (await auth())!; // Layout guarantees auth
   const user = session.user!;
 
   const dashboardData = await getDashboardStats();
-  const { stats, stageDistribution, staleApplications } = transformDashboardData(dashboardData);
-
   const greeting = UI_STRINGS.pages.dashboard.greeting(user.name);
 
   return (
@@ -31,18 +28,23 @@ export default async function DashboardPage() {
       </Text>
 
       <QueryPreview query="dashboard-stats">
-        <StatsGrid stats={stats} />
+        <StatsGrid
+          totalApplications={dashboardData.totalApplications}
+          offersReceived={dashboardData.offersReceived}
+          pendingApplications={dashboardData.pendingApplications}
+          responseRate={dashboardData.responseRate}
+        />
       </QueryPreview>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
           <QueryPreview query="stage-distribution">
-            <StageChart stageDistribution={stageDistribution} />
+            <StageChart stageDistribution={dashboardData.stageDistribution} />
           </QueryPreview>
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <QueryPreview query="stale-applications">
-            <StaleApplications staleApplications={staleApplications} />
+            <StaleApplications staleApplications={dashboardData.staleApplications} />
           </QueryPreview>
         </Grid>
         <Grid size={{ xs: 12 }}>

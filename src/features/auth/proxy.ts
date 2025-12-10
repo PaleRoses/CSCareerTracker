@@ -12,14 +12,12 @@ import { ROUTES, AUTH_CALLBACKS } from '@/config/routes'
  * 3. Protected routes (/dashboard, /applications, etc.) - require auth AND role
  */
 
-// Routes that don't require authentication
 const PUBLIC_ROUTES = [
-  ROUTES.HOME,
-  ROUTES.LOGIN,
+  ROUTES.home,
+  ROUTES.login,
   '/api/auth',
 ]
 
-// Routes that require auth but NOT a role (onboarding flow)
 const ONBOARDING_ROUTES = [
   '/select-role',
 ]
@@ -40,37 +38,31 @@ export async function proxy(request: NextRequest) {
   const session = await auth()
   const pathname = request.nextUrl.pathname
 
-  // 1. Public routes - always allowed
   if (isPublicRoute(pathname)) {
     return NextResponse.next()
   }
 
-  // 2. Not authenticated - redirect to login
   if (!session?.user) {
     const loginUrl = new URL(AUTH_CALLBACKS.UNAUTHENTICATED, request.nextUrl.origin)
     loginUrl.searchParams.set('callbackUrl', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  // 3. Onboarding routes - allow authenticated users without role
   if (isOnboardingRoute(pathname)) {
     if (session.user.role) {
-      return NextResponse.redirect(new URL(ROUTES.DASHBOARD, request.nextUrl.origin))
+      return NextResponse.redirect(new URL(ROUTES.dashboard, request.nextUrl.origin))
     }
     return NextResponse.next()
   }
 
-  // 4. Protected routes - require role
   if (!session.user.role) {
     return NextResponse.redirect(new URL(AUTH_CALLBACKS.NEEDS_ONBOARDING, request.nextUrl.origin))
   }
 
-  // 5. Authenticated with role - allow access
   return NextResponse.next()
 }
 
 export const config = {
-  // Match all routes except static files and Next.js internals
   matcher: [
     /*
      * Match all request paths except for:

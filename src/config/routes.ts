@@ -26,26 +26,13 @@ export const ROUTES = {
     users: '/users',
     userDetail: (id: string) => `/users/${id}` as const,
   },
-
-  // Legacy - prefer camelCase above
-  HOME: '/',
-  LOGIN: '/login',
-  SIGNUP: '/signup',
-  SELECT_ROLE: '/select-role',
-  DASHBOARD: '/dashboard',
-  APPLICATIONS: '/applications',
-  APPLICATION_DETAIL: (id: string) => `/applications/${id}` as const,
-  JOB_BROWSER: '/job-browser',
-  COMPANIES: '/companies',
-  COMPANY_DETAIL: (id: string) => `/companies/${id}` as const,
-  REPORTS: '/reports',
 } as const
 
 export const AUTH_CALLBACKS = {
-  SIGN_IN_SUCCESS: ROUTES.DASHBOARD,
-  SIGN_OUT_SUCCESS: ROUTES.HOME,
-  UNAUTHENTICATED: ROUTES.HOME,
-  NEEDS_ONBOARDING: ROUTES.SELECT_ROLE,
+  SIGN_IN_SUCCESS: ROUTES.dashboard,
+  SIGN_OUT_SUCCESS: ROUTES.home,
+  UNAUTHENTICATED: ROUTES.home,
+  NEEDS_ONBOARDING: ROUTES.selectRole,
 } as const
 
 export type NavItemKind = 'link' | 'divider'
@@ -69,14 +56,14 @@ export const NAV_ITEMS: NavItem[] = [
     kind: 'link',
     segment: 'dashboard',
     label: 'Dashboard',
-    href: ROUTES.DASHBOARD,
+    href: ROUTES.dashboard,
     icon: 'DashboardIcon',
   },
   {
     kind: 'link',
     segment: 'applications',
     label: 'Applications',
-    href: ROUTES.APPLICATIONS,
+    href: ROUTES.applications,
     icon: 'WorkIcon',
   },
   { kind: 'divider' },
@@ -84,21 +71,21 @@ export const NAV_ITEMS: NavItem[] = [
     kind: 'link',
     segment: 'job-browser',
     label: 'Job Browser',
-    href: ROUTES.JOB_BROWSER,
+    href: ROUTES.jobBrowser,
     icon: 'SearchIcon',
   },
   {
     kind: 'link',
     segment: 'companies',
     label: 'Companies',
-    href: ROUTES.COMPANIES,
+    href: ROUTES.companies,
     icon: 'BusinessIcon',
   },
   {
     kind: 'link',
     segment: 'reports',
     label: 'Reports',
-    href: ROUTES.REPORTS,
+    href: ROUTES.reports,
     icon: 'AssessmentIcon',
   },
 ] as const
@@ -149,7 +136,6 @@ export const ADMIN_NAV_ITEMS: NavItem[] = [
 // Re-export for backward compatibility, prefer @/features/auth/constants
 export { PRIVILEGED_ROLES as RECRUITER_ROLES } from '@/features/auth/constants'
 
-// Admin roles for route guards
 export const ADMIN_ROLES = ['admin', 'techno_warlord'] as const
 
 export function isRouteActive(pathname: string, route: string): boolean {

@@ -1,7 +1,7 @@
 'use server'
 
 import { getApplications } from '@/features/applications/queries'
-import { type ApplicationFilters } from '@/lib/queries/core/types'
+import { type ApplicationFilters } from '@/features/applications/types'
 
 const CSV_HEADERS = [
   'Company',

@@ -1,46 +1,26 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import {
   DataTable,
   Chip,
   Text,
   type ColumnDef,
   type CellRenderParams,
-  type ChipVariant,
 } from '@/design-system/components'
 import { formatDate } from '@/lib/utils'
 import type { Candidate } from '../types'
 import { ROUTES } from '@/config/routes'
+import { STAGE_VARIANTS, STATUS_VARIANTS, OUTCOME_VARIANTS } from '../constants'
 
 interface CandidatesListProps {
   candidates: Candidate[]
   jobId?: string
 }
 
-const STAGE_VARIANTS: Record<string, ChipVariant> = {
-  'Applied': 'default',
-  'OA': 'secondary',
-  'Phone Screen': 'primary',
-  'Onsite/Virtual': 'warning',
-  'Offer': 'success',
-  'Rejected': 'error',
-  'Withdrawn': 'default',
-}
-
-const STATUS_VARIANTS: Record<string, ChipVariant> = {
-  'inProgress': 'primary',
-  'successful': 'success',
-  'rejected': 'error',
-}
-
-const OUTCOME_VARIANTS: Record<string, ChipVariant> = {
-  'pending': 'default',
-  'offer': 'success',
-  'rejected': 'error',
-  'withdrawn': 'warning',
-}
-
 export function CandidatesList({ candidates, jobId: _jobId }: CandidatesListProps) {
+  const router = useRouter()
+
   const columns: ColumnDef<Candidate>[] = [
     {
       id: 'userName',
@@ -124,8 +104,7 @@ export function CandidatesList({ candidates, jobId: _jobId }: CandidatesListProp
       pageSizeOptions={[10, 25, 50]}
       getRowId={(row) => row.id}
       onRowClick={(params) => {
-        // Navigate to candidate detail
-        window.location.href = ROUTES.recruiter.candidateDetail(params.row.applicationId)
+        router.push(ROUTES.recruiter.candidateDetail(params.row.applicationId))
       }}
     />
   )

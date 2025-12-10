@@ -13,7 +13,7 @@ import {
   Flex,
   Button,
 } from '@/design-system/components'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
+import { FormActionButtons } from '@/features/shared'
 import { CloseIcon, NoteIcon } from '@/design-system/icons'
 import { addNoteAction } from '../actions/add-note.action'
 import { getChipVariant, getStatusLabel } from '../utils/status-utils'

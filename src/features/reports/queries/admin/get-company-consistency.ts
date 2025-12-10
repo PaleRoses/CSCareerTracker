@@ -2,7 +2,7 @@
 
 import { createCacheClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
-import { type CompanyConsistency } from '@/lib/queries/core/types'
+import { type CompanyConsistency } from '../../types'
 import { QUERY_CACHE_TAGS, LONG_REVALIDATE_SECONDS } from '@/lib/queries/core/cache'
 import { isAdmin } from '@/lib/queries/core/auth-utils'
 import { logger } from '@/lib/logger'

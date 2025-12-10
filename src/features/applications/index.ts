@@ -2,7 +2,7 @@ export {
   createApplicationAction,
   updateApplicationAction,
   deleteApplicationAction,
-  deleteApplicationAndRedirect,
+  deleteApplication,
   updateStageAction,
   addNoteAction,
 } from './actions'

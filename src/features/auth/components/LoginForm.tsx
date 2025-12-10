@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import {
   Box,
@@ -10,6 +11,7 @@ import {
   Button,
 } from '@/design-system/components'
 import { GoogleIcon } from '@/design-system/icons'
+import developmentySeal from '@/design-system/icons/developmenty_seal.svg'
 
 export default function LoginForm() {
   const handleGoogleLogin = () => {
@@ -27,6 +29,16 @@ export default function LoginForm() {
     >
       <Card style={{ maxWidth: '480px', width: '100%' }}>
         <CardContent style={{ padding: '48px 40px' }}>
+          <Box style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
+            <Image
+              src={developmentySeal}
+              alt="Development Dynasty Seal"
+              width={220}
+              height={220}
+              priority
+            />
+          </Box>
+
           <Heading level={1} style={{ marginBottom: '16px', textAlign: 'center', fontSize: '2rem' }}>
             CS Career Tracker
           </Heading>

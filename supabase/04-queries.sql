@@ -43,8 +43,8 @@ SELECT
   s.order_index,
   s.success_flag
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
 LEFT JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.user_id = $1
@@ -92,8 +92,8 @@ SELECT
   s.order_index,
   s.success_flag
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
 LEFT JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.application_id = $1
@@ -125,10 +125,10 @@ SELECT
   s.stage_name,
   s.order_index
 FROM applications a
-INNER JOIN jobs j ON a.job_id = j.job_id
-INNER JOIN companies c ON j.company_id = c.company_id
-LEFT JOIN application_stages ast ON a.application_id = ast.application_id
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+JOIN application_stages ast ON a.application_id = ast.application_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.application_id = $1
   AND a.user_id = $2;
 
@@ -149,8 +149,8 @@ SELECT
   s.stage_name,
   s.order_index
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
 LEFT JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.user_id = $1
@@ -170,10 +170,10 @@ SELECT
   s.stage_name,
   s.order_index
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
-LEFT JOIN application_stages ast ON a.application_id = ast.application_id
-LEFT JOIN stages s ON ast.stage_id = s.stage_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
+JOIN application_stages ast ON a.application_id = ast.application_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.user_id = $1
   AND ast.status = 'inProgress'
   AND (a.date_updated < NOW() - INTERVAL '$2 days'
@@ -269,7 +269,7 @@ SELECT
   s.order_index,
   s.success_flag
 FROM application_stages ast
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE ast.app_stage_id = $1
   AND ast.application_id = $2;
 
@@ -383,8 +383,8 @@ SELECT
   c.company_id,
   c.company_name
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
 WHERE a.user_id = $1
 ORDER BY a.application_date ASC;
 
@@ -409,8 +409,8 @@ SELECT
   ast.ended_at,
   s.stage_name
 FROM application_stages ast
-INNER JOIN stages s ON ast.stage_id = s.stage_id
-INNER JOIN applications a ON ast.application_id = a.application_id
+JOIN stages s ON ast.stage_id = s.stage_id
+JOIN applications a ON ast.application_id = a.application_id
 WHERE a.user_id = $1
   AND ast.started_at IS NOT NULL
   AND ast.ended_at IS NOT NULL;
@@ -446,7 +446,7 @@ SELECT
   ast.status,
   a.application_id
 FROM application_stages ast
-INNER JOIN applications a ON ast.application_id = a.application_id
+JOIN applications a ON ast.application_id = a.application_id
 WHERE a.user_id = $1;
 
 
@@ -472,7 +472,7 @@ SELECT
   c.website,
   c.size
 FROM jobs j
-INNER JOIN companies c ON j.company_id = c.company_id
+JOIN companies c ON j.company_id = c.company_id
 WHERE j.is_active = true
 ORDER BY j.posted_date DESC;
 
@@ -525,8 +525,8 @@ SELECT
   a.final_outcome,
   -- (full APPLICATION_SELECT_QUERY join)
 FROM applications a
-LEFT JOIN jobs j ON a.job_id = j.job_id
-LEFT JOIN companies c ON j.company_id = c.company_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN companies c ON j.company_id = c.company_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
 LEFT JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.user_id = $1
@@ -623,10 +623,10 @@ SELECT
   s.stage_name,
   s.order_index
 FROM applications a
-INNER JOIN users u ON a.user_id = u.user_id
-INNER JOIN jobs j ON a.job_id = j.job_id
+JOIN users u ON a.user_id = u.user_id
+JOIN jobs j ON a.job_id = j.job_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE j.posted_by = $1  -- recruiter's user_id
 ORDER BY a.application_date DESC;
 
@@ -661,10 +661,10 @@ SELECT
   s.stage_name,
   s.order_index
 FROM applications a
-INNER JOIN users u ON a.user_id = u.user_id
-INNER JOIN jobs j ON a.job_id = j.job_id
+JOIN users u ON a.user_id = u.user_id
+JOIN jobs j ON a.job_id = j.job_id
 LEFT JOIN application_stages ast ON a.application_id = ast.application_id
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.application_id = $1
   AND j.posted_by = $2;
 
@@ -677,9 +677,9 @@ SELECT
   ast.status,
   s.stage_name
 FROM application_stages ast
-INNER JOIN applications a ON ast.application_id = a.application_id
-INNER JOIN jobs j ON a.job_id = j.job_id
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN applications a ON ast.application_id = a.application_id
+JOIN jobs j ON a.job_id = j.job_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE j.posted_by = $1
   AND ast.ended_at IS NULL;
 
@@ -701,8 +701,8 @@ SELECT
   ast.ended_at,
   s.stage_name
 FROM applications a
-INNER JOIN application_stages ast ON a.application_id = ast.application_id
-INNER JOIN stages s ON ast.stage_id = s.stage_id
+JOIN application_stages ast ON a.application_id = ast.application_id
+JOIN stages s ON ast.stage_id = s.stage_id
 WHERE a.job_id IN ($1, $2, ...);  -- recruiter's job IDs
 
 
@@ -720,7 +720,7 @@ SELECT
   a.application_id,
   j.posted_by
 FROM applications a
-INNER JOIN jobs j ON a.job_id = j.job_id
+JOIN jobs j ON a.job_id = j.job_id
 WHERE a.application_id = $1;
 
 -- Update stage status
@@ -746,7 +746,7 @@ SELECT
   a.application_id,
   j.posted_by
 FROM applications a
-INNER JOIN jobs j ON a.job_id = j.job_id
+JOIN jobs j ON a.job_id = j.job_id
 WHERE a.application_id = $1;
 
 -- Get next stage ID by name

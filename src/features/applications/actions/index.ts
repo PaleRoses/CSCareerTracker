@@ -1,5 +1,5 @@
 export { createApplicationAction } from './create-application.action'
 export { updateApplicationAction } from './update-application.action'
-export { deleteApplicationAction, deleteApplicationAndRedirect } from './delete-application.action'
+export { deleteApplicationAction, deleteApplication } from './delete-application.action'
 export { updateStageAction, advanceStageAction, withdrawApplicationAction } from './update-stage.action'
 export { addNoteAction, updateStageNotesAction } from './add-note.action'

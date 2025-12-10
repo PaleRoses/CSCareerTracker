@@ -6,17 +6,15 @@ import {
   ListItem,
   ListItemText,
 } from "@/design-system/components";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { SectionCard } from "@/components/ui/SectionCard";
+import { EmptyState, SectionCard } from "@/features/shared";
 import { cn, formatDate } from "@/lib/utils";
 import {
   ACTIVITY_TYPE_LABELS,
   ACTIVITY_TYPE_TO_CHIP_VARIANT,
 } from "../constants";
-import type { ActivityItem } from "@/lib/queries/core/types";
+import type { ActivityItem } from "../types";
 
 interface EventsListProps {
-  /** Recent activity items to display */
   activities?: ActivityItem[];
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   DataTable,
   IconButton,
@@ -16,6 +17,8 @@ interface CompaniesTableProps {
 }
 
 export default function CompaniesTable({ companies }: CompaniesTableProps) {
+  const router = useRouter();
+
   const columns: ColumnDef<Company>[] = [
     {
       id: "name",
@@ -99,7 +102,7 @@ export default function CompaniesTable({ companies }: CompaniesTableProps) {
       pageSizeOptions={[10, 25, 50]}
       getRowId={(row) => row.id}
       onRowClick={(row) => {
-        window.location.href = ROUTES.COMPANY_DETAIL(String(row.id));
+        router.push(ROUTES.companyDetail(String(row.id)));
       }}
     />
   );

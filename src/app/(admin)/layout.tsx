@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/features/auth/auth'
-import AppShell from '@/components/layout/AppShell'
+import { AppShell } from '@/features/shared'
 import { ROUTES, ADMIN_ROLES } from '@/config/routes'
 
 export default async function AdminLayout({

@@ -1,11 +1,11 @@
 import { Box } from "@/design-system/components";
-import PageHeader from "@/components/ui/PageHeader";
+import { PageHeader } from "@/features/shared";
 import ApplicationsTable from "@/features/applications/components/ApplicationsTable";
 import { getApplications, getCompanies } from "@/features/applications/queries";
 import AddApplicationButton from "@/features/applications/components/AddApplicationButton";
 import { transformCompaniesToOptions } from "@/features/applications/utils/company-utils";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
-import { QueryPreview } from "@/components/dev";
+import { QueryPreview } from "@/features/shared/dev";
 
 export default async function ApplicationsPage() {
   const [applications, companiesData] = await Promise.all([

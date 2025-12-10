@@ -8,7 +8,7 @@ import {
   Step,
   StepLabel,
 } from "@/design-system/components";
-import { SectionCard } from "@/components/ui/SectionCard";
+import { SectionCard } from "@/features/shared";
 import { NoteIcon } from "@/design-system/icons";
 import { StageActionButtons } from "./StageActionButtons";
 import { formatDate } from "@/lib/utils";

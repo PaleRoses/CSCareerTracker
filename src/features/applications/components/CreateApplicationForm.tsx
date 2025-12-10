@@ -1,17 +1,15 @@
 'use client'
 
-import { useActionState, useRef, useCallback } from 'react'
+import { useActionState, useRef, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   TextField,
   Autocomplete,
   Stack,
   Heading,
 } from '@/design-system/components'
-import { FormError } from '@/components/ui/FormError'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
-import { useFormSuccess } from '@/features/shared/hooks'
+import { FormError, FormActionButtons } from '@/features/shared'
 import { getTodayISO } from '@/lib/utils'
-import { getFieldError, getFieldErrorProps } from '@/lib/form-utils'
 import { createApplicationAction } from '../actions/create-application.action'
 import type { ActionState } from '../schemas/application.schema'
 import { UI_STRINGS } from '@/lib/constants/ui-strings'
@@ -38,16 +36,19 @@ export function CreateApplicationForm({
   onSuccess,
   onCancel,
 }: CreateApplicationFormProps) {
+  const router = useRouter()
   const formRef = useRef<HTMLFormElement>(null)
   const {
     selectedCompany,
     companyInputValue,
-    existingCompanyId,
-    companyDisplayName,
     handleChange: handleCompanyChange,
     handleInputChange: handleCompanyInputChange,
     reset: resetCompanyAutocomplete,
   } = useCompanyAutocomplete()
+
+  // Derived values for form submission
+  const existingCompanyId = selectedCompany?.id ?? ''
+  const companyDisplayName = selectedCompany ? '' : companyInputValue
 
   const [state, formAction, isPending] = useActionState(
     createApplicationAction,
@@ -59,13 +60,23 @@ export function CreateApplicationForm({
     resetCompanyAutocomplete()
   }, [resetCompanyAutocomplete])
 
-  useFormSuccess(state, {
-    onSuccess: (data) => data && onSuccess?.(data.applicationId),
-    resetForm: resetFormState,
-  })
+  // Handle successful form submission
+  useEffect(() => {
+    if (state.success && state.data) {
+      resetFormState()
+      onSuccess?.(state.data.applicationId)
+      router.refresh()
+    }
+  }, [state.success, state.data, resetFormState, onSuccess, router])
+
+  // Helper to extract field error props for TextField
+  const fieldError = (field: string) => {
+    const msg = state.fieldErrors?.[field]?.[0]
+    return { error: !!msg, errorMessage: msg }
+  }
 
   const today = getTodayISO()
-  const companyError = getFieldError(state.fieldErrors, 'companyName') || getFieldError(state.fieldErrors, 'companyId')
+  const companyError = state.fieldErrors?.['companyName']?.[0] || state.fieldErrors?.['companyId']?.[0]
 
   return (
     <div className="p-6">
@@ -80,7 +91,7 @@ export function CreateApplicationForm({
           <input
             type="hidden"
             name="companyId"
-            value={existingCompanyId || ''}
+            value={existingCompanyId}
           />
           <input
             type="hidden"
@@ -116,7 +127,7 @@ export function CreateApplicationForm({
             required
             fullWidth
             disabled={isPending}
-            {...getFieldErrorProps(state.fieldErrors, 'positionTitle')}
+            {...fieldError('positionTitle')}
           />
 
           <TextField
@@ -127,7 +138,7 @@ export function CreateApplicationForm({
             fullWidth
             disabled={isPending}
             defaultValue={today}
-            {...getFieldErrorProps(state.fieldErrors, 'applicationDate')}
+            {...fieldError('applicationDate')}
           />
 
           <TextField
@@ -136,7 +147,7 @@ export function CreateApplicationForm({
             placeholder={UI_STRINGS.forms.application.locationPlaceholder}
             fullWidth
             disabled={isPending}
-            {...getFieldErrorProps(state.fieldErrors, 'location')}
+            {...fieldError('location')}
           />
 
           <TextField
@@ -146,7 +157,7 @@ export function CreateApplicationForm({
             placeholder={UI_STRINGS.forms.application.jobUrlPlaceholder}
             fullWidth
             disabled={isPending}
-            {...getFieldErrorProps(state.fieldErrors, 'jobUrl')}
+            {...fieldError('jobUrl')}
           />
 
           <FormActionButtons

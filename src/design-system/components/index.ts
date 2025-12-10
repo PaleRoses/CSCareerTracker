@@ -121,9 +121,6 @@ export {
   type PaginationModel,
   type DataListProps,
   type BarChartProps,
-  type PieChartProps,
-  type LineChartProps,
-  type MultiLineChartProps,
   type ChartDataPoint,
   type ChartSeries,
 } from "./data";

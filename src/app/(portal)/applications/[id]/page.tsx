@@ -1,6 +1,6 @@
 import { getApplicationWithTag } from "@/features/applications/queries";
 import ApplicationDetail from "@/features/applications/components/ApplicationDetail";
-import { QueryPreview } from "@/components/dev";
+import { QueryPreview } from "@/features/shared/dev";
 
 export default async function ApplicationDetailPage({
   params,

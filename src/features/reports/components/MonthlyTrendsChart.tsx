@@ -3,15 +3,10 @@
 import { Box, Flex, Text } from '@/design-system/components'
 import type { MonthlyStats } from '../types'
 import ReportCard from './ReportCard'
+import { formatMonth, normalizeToPercentage } from '../utils/chart-utils'
 
 interface MonthlyTrendsChartProps {
   data: MonthlyStats[]
-}
-
-function formatMonth(month: string): string {
-  const [year, monthNum] = month.split('-')
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${months[parseInt(monthNum, 10) - 1]} ${year.slice(2)}`
 }
 
 export function MonthlyTrendsChart({ data }: MonthlyTrendsChartProps) {
@@ -35,9 +30,7 @@ export function MonthlyTrendsChart({ data }: MonthlyTrendsChartProps) {
     >
       <Box className="space-y-3">
         {data.slice(-6).map((month) => {
-          const barWidth = maxApplications > 0
-            ? (month.applications / maxApplications) * 100
-            : 0
+          const barWidth = normalizeToPercentage(month.applications, maxApplications)
 
           return (
             <Box key={month.month}>

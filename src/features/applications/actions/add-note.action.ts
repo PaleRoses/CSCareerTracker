@@ -1,10 +1,10 @@
 'use server'
 
 import { requireAuth } from '@/lib/actions/auth-utils'
-import { touchApplication, verifyApplicationOwnership } from '@/lib/actions/supabase-utils'
+import { touchApplication, verifyApplicationOwnership } from '../utils/supabase-utils'
 import { authError, notFoundError } from '@/lib/actions/error-utils'
 import { getTodayISO } from '@/lib/utils'
-import { invalidateApplicationById } from '@/lib/actions/cache-utils'
+import { invalidateApplicationById } from '../utils/cache-utils'
 import { AddNoteSchema, type ActionState } from '../schemas/application.schema'
 import { logger } from '@/lib/logger'
 

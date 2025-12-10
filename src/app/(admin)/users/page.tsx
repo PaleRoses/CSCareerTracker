@@ -1,5 +1,5 @@
 import { Box } from '@/design-system/components'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { UsersList, getUsers } from '@/features/admin'
 
 interface UsersPageProps {

@@ -4,7 +4,7 @@ import {
   getApplicationsByCompany,
 } from '@/features/companies'
 import { getJobs } from '@/features/shared'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 
 interface CompanyPageProps {
   params: Promise<{ id: string }>

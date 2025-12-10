@@ -300,6 +300,25 @@ JOIN companies c ON j.company_id = c.company_id
 WHERE j.is_active = true
 ORDER BY j.posted_date DESC`,
 
+  'job-detail': `
+SELECT
+  j.job_id,
+  j.job_title,
+  j.job_type,
+  j.locations,
+  j.url,
+  j.posted_date,
+  j.posted_by,
+  j.is_active,
+  j.company_id,
+  c.company_name,
+  c.website,
+  c.size
+FROM jobs j
+JOIN companies c ON j.company_id = c.company_id
+WHERE j.job_id = $1
+  AND j.posted_by = $2`,
+
   // ============================================================================
   // RECRUITER
   // ============================================================================

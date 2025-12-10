@@ -2,22 +2,21 @@
 
 import { BarChart } from "@/design-system/components";
 import { colors } from "@/design-system/tokens";
-import { SectionCard } from "@/components/ui/SectionCard";
+import { SectionCard } from "@/features/shared";
 
-interface StageDistributionItem {
+interface StageDistribution {
   stage: string;
-  value: number;
+  count: number;
 }
 
 interface StageChartProps {
-  /** Stage distribution data */
-  stageDistribution: StageDistributionItem[];
+  stageDistribution: StageDistribution[];
 }
 
 export default function StageChart({ stageDistribution }: StageChartProps) {
   const chartData = stageDistribution.map((item) => ({
     label: item.stage,
-    value: item.value,
+    value: item.count,
   }));
 
   return (
@@ -30,5 +29,3 @@ export default function StageChart({ stageDistribution }: StageChartProps) {
     </SectionCard>
   );
 }
-
-export type { StageDistributionItem };

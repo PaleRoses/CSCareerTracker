@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { Box, Button, Text } from '@/design-system/components'
 import { AddIcon } from '@/design-system/icons'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { JobsTable } from '@/features/jobs'
 import { getJobs } from '@/features/jobs/queries'
 import { auth } from '@/features/auth/auth'
 import { ROUTES } from '@/config/routes'
 import { filterJobsByStatus } from '@/features/jobs/utils'
 import { pluralize } from '@/lib/utils'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 
 export default async function RecruiterJobsPage() {
   const session = await auth()

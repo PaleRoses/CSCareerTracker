@@ -1,2 +1,2 @@
 export { useDeleteConfirmation } from "./useDeleteConfirmation";
-export { useFormSuccess } from "./useFormSuccess";
+export { useConfirmDialog, type ConfirmDialogState } from "./useConfirmDialog";

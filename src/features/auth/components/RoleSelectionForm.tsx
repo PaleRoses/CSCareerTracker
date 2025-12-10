@@ -35,7 +35,7 @@ export default function RoleSelectionForm() {
       const result = await setUserRole(selectedRole)
 
       if (result.success) {
-        router.push(ROUTES.DASHBOARD)
+        router.push(ROUTES.dashboard)
       } else {
         setError(result.error)
       }

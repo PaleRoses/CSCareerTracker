@@ -2,7 +2,8 @@
 
 import { auth } from '@/features/auth/auth'
 import { createUserClient } from '@/lib/supabase/server'
-import { invalidateApplicationCaches, invalidateCompanyCaches } from '@/lib/actions/cache-utils'
+import { invalidateApplicationCaches } from '../utils/cache-utils'
+import { resolveCompany } from '@/features/companies/utils'
 import {
   CreateApplicationSchema,
   type ActionState,
@@ -65,42 +66,12 @@ export async function createApplicationAction(
       return databaseError(userError, 'sync user')
     }
 
-    let resolvedCompanyId = companyId
-
-    if (!resolvedCompanyId && companyName) {
-      const { data: existingCompany } = await supabase
-        .from('companies')
-        .select('company_id')
-        .ilike('company_name', companyName)
-        .maybeSingle()
-
-      if (existingCompany) {
-        resolvedCompanyId = existingCompany.company_id
-      } else {
-        const { data: newCompany, error: companyError } = await supabase
-          .from('companies')
-          .insert({
-            company_name: companyName,
-            website: '',
-          })
-          .select('company_id')
-          .single()
-
-        if (companyError) {
-          return databaseError(companyError, 'create company')
-        }
-
-        resolvedCompanyId = newCompany.company_id
-        invalidateCompanyCaches()
-      }
+    // Resolve or create company
+    const companyResult = await resolveCompany(supabase, { companyId, companyName })
+    if (!companyResult.success) {
+      return { success: false, error: companyResult.error }
     }
-
-    if (!resolvedCompanyId) {
-      return {
-        success: false,
-        error: 'Could not resolve company. Please select or enter a company name.',
-      }
-    }
+    const resolvedCompanyId = companyResult.companyId
 
     const { data: job, error: jobError } = await supabase
       .from('jobs')

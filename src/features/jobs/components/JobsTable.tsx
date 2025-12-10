@@ -12,28 +12,21 @@ import {
   DialogActions,
   Button,
   Text,
-  type ChipVariant,
   type ColumnDef,
   type CellRenderParams,
 } from "@/design-system/components";
-import { OpenInNewIcon, DeleteIcon } from "@/design-system/icons";
+import { OpenInNewIcon, DeleteIcon, EditIcon } from "@/design-system/icons";
 import { formatDate, capitalize } from "@/lib/utils";
+import { ROUTES } from "@/config/routes";
 import type { Job } from "../types";
 import { JOB_TYPE_LABELS } from "../types";
 import { removeJobAction } from "../actions";
+import { JOB_TYPE_VARIANTS } from "../constants";
 
 interface JobsTableProps {
   jobs: Job[];
   canManageJobs?: boolean;
 }
-
-const JOB_TYPE_VARIANTS: Record<string, ChipVariant> = {
-  'full-time': 'primary',
-  'part-time': 'secondary',
-  'internship': 'success',
-  'contract': 'warning',
-  'other': 'default',
-};
 
 export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProps) {
   const router = useRouter();
@@ -110,7 +103,7 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
       id: "actions",
       field: "actions",
       headerName: "",
-      width: canManageJobs ? 100 : 60,
+      width: canManageJobs ? 140 : 60,
       sortable: false,
       renderCell: (params: CellRenderParams<Job>) => {
         return (
@@ -129,24 +122,44 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
               </IconButton>
             )}
             {canManageJobs && (
-              <IconButton
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setJobToRemove(params.row);
-                }}
-                aria-label="Remove job"
-                className="text-foreground/50 hover:text-error hover:bg-error/10"
-                disabled={isPending}
-              >
-                <DeleteIcon />
-              </IconButton>
+              <>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(ROUTES.recruiter.jobDetail(params.row.id));
+                  }}
+                  aria-label="Edit job"
+                  className="text-foreground/50 hover:text-primary hover:bg-primary/10"
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setJobToRemove(params.row);
+                  }}
+                  aria-label="Remove job"
+                  className="text-foreground/50 hover:text-error hover:bg-error/10"
+                  disabled={isPending}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </>
             )}
           </div>
         );
       },
     },
   ];
+
+  // Navigate to candidates list when row is clicked (for recruiters)
+  const handleRowClick = (job: Job) => {
+    if (canManageJobs) {
+      router.push(ROUTES.recruiter.candidates(job.id));
+    }
+  };
 
   return (
     <>
@@ -156,6 +169,8 @@ export default function JobsTable({ jobs, canManageJobs = false }: JobsTableProp
         sortModel={[{ field: "postedDate", sort: "desc" }]}
         pageSizeOptions={[10, 25, 50]}
         getRowId={(row) => row.id}
+        onRowClick={canManageJobs ? (params) => handleRowClick(params.row) : undefined}
+        className={canManageJobs ? "[&_.MuiDataGrid-row]:cursor-pointer" : undefined}
       />
 
       <Dialog

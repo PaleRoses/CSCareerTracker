@@ -12,7 +12,7 @@ import {
   DeleteIcon,
   EditIcon,
 } from "@/design-system/icons";
-import StatusChip from "@/components/ui/StatusChip";
+import StatusChip from "./StatusChip";
 import { ROUTES } from "@/config/routes";
 import { UI_STRINGS } from "@/lib/constants/ui-strings";
 import type { OutcomeDisplayStatus } from "../constants";
@@ -45,7 +45,7 @@ export function ApplicationHeader({
       <Button
         variant="ghost"
         startIcon={<ArrowBackIcon />}
-        onClick={() => router.push(ROUTES.APPLICATIONS)}
+        onClick={() => router.push(ROUTES.applications)}
         className="mb-4 text-foreground/60"
       >
         {UI_STRINGS.buttons.backToApplications}

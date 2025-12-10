@@ -23,18 +23,3 @@ export function invalidateApplicationById(applicationId: string): void {
   revalidatePath(`/applications/${applicationId}`, 'page')
   invalidateApplicationCaches()
 }
-
-/**
- * Invalidate job-related caches.
- */
-export function invalidateJobCaches(): void {
-  updateTag(QUERY_CACHE_TAGS.JOBS)
-  revalidatePath('/job-browser', 'page')
-}
-
-/**
- * Invalidate company-related caches.
- */
-export function invalidateCompanyCaches(): void {
-  updateTag(QUERY_CACHE_TAGS.COMPANIES)
-}

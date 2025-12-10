@@ -12,10 +12,9 @@ import {
   DialogActions,
   Text,
   Chip,
-  type ChipVariant,
 } from '@/design-system/components'
 import { CheckCircleIcon, CloseIcon, ArrowForwardIcon } from '@/design-system/icons'
-import { FormError } from '@/components/ui/FormError'
+import { FormError } from '@/features/shared'
 import type { Candidate } from '../types'
 import {
   updateCandidateStageAction,
@@ -23,34 +22,12 @@ import {
 } from '../actions'
 import type { ActionState } from '@/lib/actions/error-utils'
 import { useState } from 'react'
+import { STAGE_VARIANTS, STATUS_VARIANTS } from '../constants'
+import { findActiveStage, getNextStageName, isTerminalState } from '../utils/stage-utils'
 
 interface CandidateStageUpdaterProps {
   candidate: Candidate
   onUpdate?: () => void
-}
-
-const STAGE_ORDER = [
-  'Applied',
-  'OA',
-  'Phone Screen',
-  'Onsite/Virtual',
-  'Offer',
-]
-
-const STAGE_VARIANTS: Record<string, ChipVariant> = {
-  'Applied': 'default',
-  'OA': 'secondary',
-  'Phone Screen': 'primary',
-  'Onsite/Virtual': 'warning',
-  'Offer': 'success',
-  'Rejected': 'error',
-  'Withdrawn': 'default',
-}
-
-const STATUS_VARIANTS: Record<string, ChipVariant> = {
-  'inProgress': 'primary',
-  'successful': 'success',
-  'rejected': 'error',
 }
 
 const initialState: ActionState<{ stageId: string }> = {
@@ -74,17 +51,9 @@ export function CandidateStageUpdater({ candidate, onUpdate: _onUpdate }: Candid
 
   const isPending = isUpdatePending || isAdvancePending
 
-  // Find current active stage
-  const activeStage = candidate.stages.find(s => s.endedAt === null)
-  const currentStageIndex = STAGE_ORDER.indexOf(candidate.currentStage)
-  const nextStageName = currentStageIndex >= 0 && currentStageIndex < STAGE_ORDER.length - 1
-    ? STAGE_ORDER[currentStageIndex + 1]
-    : null
-
-  // Can't update if already in terminal state
-  const isTerminal = candidate.outcome !== 'pending' ||
-    candidate.currentStage === 'Rejected' ||
-    candidate.currentStage === 'Withdrawn'
+  const activeStage = findActiveStage(candidate.stages)
+  const nextStageName = getNextStageName(candidate.currentStage)
+  const isTerminal = isTerminalState(candidate)
 
   const handleOpenDialog = (action: 'reject' | 'advance') => {
     setDialogAction(action)
@@ -101,7 +70,6 @@ export function CandidateStageUpdater({ candidate, onUpdate: _onUpdate }: Candid
 
   return (
     <Box>
-      {/* Stage Timeline */}
       <Stack gap={3} className="mb-6">
         <Text variant="body1" className="font-semibold">
           Application Progress
@@ -126,7 +94,6 @@ export function CandidateStageUpdater({ candidate, onUpdate: _onUpdate }: Candid
         </Box>
       </Stack>
 
-      {/* Action Buttons */}
       {!isTerminal && activeStage && (
         <Stack direction="horizontal" gap={2}>
           {nextStageName && (
@@ -170,7 +137,6 @@ export function CandidateStageUpdater({ candidate, onUpdate: _onUpdate }: Candid
         </Text>
       )}
 
-      {/* Confirmation Dialog */}
       <Dialog open={dialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           {dialogAction === 'reject'

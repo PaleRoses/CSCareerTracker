@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Box, Button, Grid, Card, CardContent, Text, Heading } from '@/design-system/components'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { PeopleIcon, TrendingUpIcon } from '@/design-system/icons'
 import { AdminStatsGrid, getAdminStats } from '@/features/admin'
 import { ROUTES } from '@/config/routes'

@@ -1,8 +1,8 @@
 import { Box, Text } from '@/design-system/components'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { CandidatesList, StageSummaryBar } from '@/features/recruiter'
 import { getCandidates, getCandidateCountsByStage } from '@/features/recruiter/queries'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 
 export default async function AllCandidatesPage() {
   const [candidates, stageCounts] = await Promise.all([

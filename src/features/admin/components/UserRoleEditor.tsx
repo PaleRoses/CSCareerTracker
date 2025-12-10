@@ -10,7 +10,7 @@ import {
   Box,
   Text,
 } from '@/design-system/components'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
+import { FormActionButtons } from '@/features/shared'
 import { updateUserRoleAction } from '../actions'
 import type { RoleOption } from '@/features/auth/constants'
 import { ROLE_OPTIONS } from '@/features/auth/constants'

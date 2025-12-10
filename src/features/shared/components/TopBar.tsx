@@ -18,7 +18,7 @@ export default function TopBar() {
     startTransition(async () => {
       const result = await resetUserRole();
       if (result.success) {
-        router.push(ROUTES.SELECT_ROLE);
+        router.push(ROUTES.selectRole);
       }
     });
   };

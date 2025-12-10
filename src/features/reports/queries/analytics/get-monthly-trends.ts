@@ -3,7 +3,8 @@
 import { createCacheClient } from '@/lib/supabase/server'
 import { auth } from '@/features/auth/auth'
 import { unstable_cache } from 'next/cache'
-import { type MonthlyStats, type DateRange } from '@/lib/queries/core/types'
+import { type MonthlyStats } from '../../types'
+import { type DateRange } from '@/lib/queries/core/types'
 import { QUERY_CACHE_TAGS, DEFAULT_REVALIDATE_SECONDS } from '@/lib/queries/core/cache'
 import { logger } from '@/lib/logger'
 

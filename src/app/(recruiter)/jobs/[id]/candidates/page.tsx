@@ -1,10 +1,10 @@
 import { Box, Text } from '@/design-system/components'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { CandidatesList } from '@/features/recruiter'
 import { getCandidates } from '@/features/recruiter/queries'
 import { getJobs } from '@/features/jobs/queries'
 import { auth } from '@/features/auth/auth'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 import { notFound } from 'next/navigation'
 
 interface CandidatesPageProps {

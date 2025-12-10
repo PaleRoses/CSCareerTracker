@@ -1,8 +1,8 @@
 import { Box } from '@/design-system/components'
-import PageHeader from '@/components/ui/PageHeader'
+import { PageHeader } from '@/features/shared'
 import { ApplicationDetailsCard, StageHistoryTimeline } from '@/features/recruiter'
 import { getCandidateDetail } from '@/features/recruiter/queries'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 import { notFound } from 'next/navigation'
 
 interface CandidateDetailPageProps {

@@ -12,11 +12,11 @@ import {
   Dialog,
   DialogContent,
 } from "@/design-system/components";
-import { SectionCard } from "@/components/ui/SectionCard";
+import { SectionCard } from "@/features/shared";
 import { ArrowBackIcon } from "@/design-system/icons";
 
 import type { Application } from "@/features/applications/types";
-import { deleteApplicationAndRedirect } from "../actions/delete-application.action";
+import { deleteApplication } from "../actions/delete-application.action";
 import { ApplicationHeader } from "./ApplicationHeader";
 import { ApplicationMetadata } from "./ApplicationMetadata";
 import StageTimeline from "./StageTimeline";
@@ -40,7 +40,10 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
   const handleDelete = () => {
     if (!application) return;
     startTransition(async () => {
-      await deleteApplicationAndRedirect(application.id);
+      const result = await deleteApplication(application.id);
+      if (result.success) {
+        router.push(ROUTES.applications);
+      }
     });
   };
 
@@ -50,7 +53,7 @@ export default function ApplicationDetail({ application }: ApplicationDetailProp
         <Heading level={2} className="mb-4">
           {UI_STRINGS.pages.applicationDetail.notFound}
         </Heading>
-        <NextLink href={ROUTES.APPLICATIONS}>
+        <NextLink href={ROUTES.applications}>
           <Button variant="ghost" startIcon={<ArrowBackIcon />}>
             {UI_STRINGS.buttons.backToApplications}
           </Button>

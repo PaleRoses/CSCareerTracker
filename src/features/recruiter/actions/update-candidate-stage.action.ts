@@ -16,7 +16,6 @@ type UpdateStageResult = {
   stageId: string
 }
 
-/** Input shape for updateCandidateStageAction - used via FormData */
 interface _UpdateCandidateStageInput {
   applicationId: string
   stageId: string  // Current stage to update
@@ -24,7 +23,6 @@ interface _UpdateCandidateStageInput {
   notes?: string
 }
 
-/** Input shape for advanceCandidateAction - used via FormData */
 interface _AdvanceCandidateInput {
   applicationId: string
   nextStageName: string
@@ -104,7 +102,6 @@ export async function updateCandidateStageAction(
       return databaseError(updateError, 'update stage')
     }
 
-    // If rejected, also update the application outcome
     if (newStatus === 'rejected') {
       const { error: outcomeError } = await supabase
         .from('applications')
@@ -224,7 +221,6 @@ export async function advanceCandidateAction(
       return databaseError(createError, 'create new stage')
     }
 
-    // If advancing to Offer and marking successful, update application outcome
     if (nextStageName === 'Offer') {
       const { error: offerError } = await supabase
         .from('applications')

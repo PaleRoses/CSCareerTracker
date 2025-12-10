@@ -6,11 +6,12 @@ export type {
   JobPostingInput,
 } from './types'
 
+// Re-export job schemas from jobs feature (where they belong)
 export {
   JobPostingSchema,
   UpdateJobPostingSchema,
   type UpdateJobPostingInput,
-} from './schemas/job-posting.schema'
+} from '@/features/jobs/schemas'
 
 export { OUTCOME_VARIANTS } from './constants'
 

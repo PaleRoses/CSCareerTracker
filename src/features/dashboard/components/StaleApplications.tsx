@@ -6,19 +6,17 @@ import {
   ListItem,
   ListItemText,
 } from "@/design-system/components";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { SectionCard } from "@/components/ui/SectionCard";
+import { EmptyState, SectionCard } from "@/features/shared";
 import { STALE_THRESHOLD_DAYS } from "../constants";
 
 interface StaleApplication {
   id: string;
   company: string;
-  stage: string;
-  days: number;
+  currentStage: string;
+  daysSinceUpdate: number;
 }
 
 interface StaleApplicationsProps {
-  /** Applications that need attention */
   staleApplications: StaleApplication[];
 }
 
@@ -37,7 +35,7 @@ export default function StaleApplications({ staleApplications }: StaleApplicatio
             <ListItem key={app.id} disablePadding className="mb-2 flex items-center justify-between">
               <ListItemText
                 primary={app.company}
-                secondary={`${app.stage} • ${app.days} days`}
+                secondary={`${app.currentStage} • ${app.daysSinceUpdate} days`}
               />
               <Chip
                 label="Follow up"
@@ -52,5 +50,3 @@ export default function StaleApplications({ staleApplications }: StaleApplicatio
     </SectionCard>
   );
 }
-
-export type { StaleApplication };

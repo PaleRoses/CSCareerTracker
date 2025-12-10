@@ -10,17 +10,7 @@ export interface CompanyOption extends AutocompleteOption {
   website: string;
 }
 
-interface UseCompanyAutocompleteReturn {
-  selectedCompany: CompanyOption | null;
-  companyInputValue: string;
-  existingCompanyId: string | null;
-  companyDisplayName: string;
-  handleChange: (event: SyntheticEvent, value: AutocompleteOption | string | null) => void;
-  handleInputChange: (event: SyntheticEvent, value: string) => void;
-  reset: () => void;
-}
-
-export function useCompanyAutocomplete(): UseCompanyAutocompleteReturn {
+export function useCompanyAutocomplete() {
   const [selectedCompany, setSelectedCompany] = useState<CompanyOption | null>(null);
   const [companyInputValue, setCompanyInputValue] = useState("");
 
@@ -55,14 +45,9 @@ export function useCompanyAutocomplete(): UseCompanyAutocompleteReturn {
     setCompanyInputValue("");
   }, []);
 
-  const existingCompanyId = selectedCompany?.id ?? null;
-  const companyDisplayName = selectedCompany ? "" : companyInputValue;
-
   return {
     selectedCompany,
     companyInputValue,
-    existingCompanyId,
-    companyDisplayName,
     handleChange,
     handleInputChange,
     reset,

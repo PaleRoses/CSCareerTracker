@@ -12,9 +12,6 @@ export type {
 export { BarChart } from "./BarChart";
 export type {
   BarChartProps,
-  PieChartProps,
-  LineChartProps,
-  MultiLineChartProps,
   ChartDataPoint,
   ChartSeries,
 } from "./Chart.types";

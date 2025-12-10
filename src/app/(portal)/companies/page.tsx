@@ -1,7 +1,7 @@
 import { Box } from '@/design-system/components'
-import { PageHeader } from '@/components/ui'
+import { PageHeader } from '@/features/shared'
 import { CompaniesTable, getCompaniesWithStats } from '@/features/companies'
-import { QueryPreview } from '@/components/dev'
+import { QueryPreview } from '@/features/shared/dev'
 
 export const metadata = {
   title: 'Companies | Career Tracker',

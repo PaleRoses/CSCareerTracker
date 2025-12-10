@@ -1,10 +1,10 @@
 'use server'
 
 import { requireAuth } from '@/lib/actions/auth-utils'
-import { touchApplication, verifyApplicationOwnership } from '@/lib/actions/supabase-utils'
+import { touchApplication, verifyApplicationOwnership } from '../utils/supabase-utils'
 import { authError, notFoundError, databaseError, unexpectedError } from '@/lib/actions/error-utils'
 import { logger } from '@/lib/logger'
-import { invalidateApplicationById } from '@/lib/actions/cache-utils'
+import { invalidateApplicationById } from '../utils/cache-utils'
 import {
   UpdateStageSchema,
   type ActionState,

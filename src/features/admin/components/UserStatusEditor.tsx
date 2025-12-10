@@ -11,7 +11,7 @@ import {
   Text,
   TextField,
 } from '@/design-system/components'
-import { FormActionButtons } from '@/components/ui/FormActionButtons'
+import { FormActionButtons } from '@/features/shared'
 import { updateUserStatusAction } from '../actions'
 import { STATUS_LABELS, STATUS_VARIANTS } from '../constants'
 import type { UserStatus } from '../types'

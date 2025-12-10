@@ -1,9 +1,8 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { requireAuth } from '@/lib/actions/auth-utils'
 import { authError, databaseError, unexpectedError } from '@/lib/actions/error-utils'
-import { invalidateApplicationById, invalidateApplicationCaches } from '@/lib/actions/cache-utils'
+import { invalidateApplicationById, invalidateApplicationCaches } from '../utils/cache-utils'
 import {
   DeleteApplicationSchema,
   type ActionState,
@@ -56,32 +55,6 @@ export async function deleteApplicationAction(
   } catch (error) {
     return unexpectedError(error, 'deleteApplicationAction')
   }
-}
-
-/**
- * Delete application and redirect
- * Use this variant when you want automatic redirect to applications list
- *
- * @deprecated Use deleteApplication() with client-side router.refresh() instead.
- * redirect() throws an exception that gets swallowed by startTransition.
- */
-export async function deleteApplicationAndRedirect(
-  id: string
-): Promise<never> {
-  const authContext = await requireAuth()
-  if (!authContext) {
-    redirect('/') // Redirect to login
-  }
-  const { supabase } = authContext
-
-  await supabase
-    .from('applications')
-    .delete()
-    .eq('application_id', id) // RLS enforces ownership
-
-  invalidateApplicationCaches()
-
-  redirect('/applications')
 }
 
 /**

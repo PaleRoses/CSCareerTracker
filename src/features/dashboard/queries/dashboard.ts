@@ -18,7 +18,7 @@ import {
   extractCompanyName,
 } from '@/lib/queries/core/transform'
 import { logger } from '@/lib/logger'
-import type { StageDistribution, StaleApplication, ActivityItem, DashboardStats } from '@/lib/queries/core/types'
+import type { StageDistribution, StaleApplication, ActivityItem, DashboardStats } from '../types'
 
 export type { StageDistribution, StaleApplication, ActivityItem, DashboardStats }
 

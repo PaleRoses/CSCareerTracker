@@ -1,7 +1,7 @@
 'use client'
 
 import { Grid } from '@/design-system/components'
-import StatCard from '@/components/ui/StatCard'
+import { StatCard } from '@/features/shared'
 import { WorkIcon, PersonIcon, TrendingUpIcon, CheckCircleIcon } from '@/design-system/icons'
 import { colors } from '@/design-system/tokens'
 import type { RecruiterStats } from '../types'

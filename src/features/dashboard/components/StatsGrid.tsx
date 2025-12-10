@@ -9,28 +9,28 @@ import {
   TrendingUpIcon,
 } from "@/design-system/icons";
 
-import StatCard from "@/components/ui/StatCard";
+import { StatCard } from "@/features/shared";
 import { colors } from "@/design-system/tokens";
 
-interface DashboardStats {
+interface StatsGridProps {
   totalApplications: number;
   offersReceived: number;
-  pendingCount: number;
-  responseRate: string;
+  pendingApplications: number;
+  responseRate: number;
 }
 
-interface StatsGridProps {
-  /** Dashboard statistics data */
-  stats: DashboardStats;
-}
-
-export default function StatsGrid({ stats }: StatsGridProps) {
+export default function StatsGrid({
+  totalApplications,
+  offersReceived,
+  pendingApplications,
+  responseRate,
+}: StatsGridProps) {
   const statsItems = useMemo(() => [
-    { title: "Total Applications", value: stats.totalApplications, icon: <WorkIcon />, color: colors.primary.DEFAULT },
-    { title: "Offers Received", value: stats.offersReceived, icon: <CheckCircleIcon />, color: colors.success.DEFAULT },
-    { title: "Pending", value: stats.pendingCount, icon: <HourglassEmptyIcon />, color: colors.warning.DEFAULT },
-    { title: "Response Rate", value: stats.responseRate, icon: <TrendingUpIcon />, color: colors.secondary.DEFAULT },
-  ], [stats.totalApplications, stats.offersReceived, stats.pendingCount, stats.responseRate]);
+    { title: "Total Applications", value: totalApplications, icon: <WorkIcon />, color: colors.primary.DEFAULT },
+    { title: "Offers Received", value: offersReceived, icon: <CheckCircleIcon />, color: colors.success.DEFAULT },
+    { title: "Pending", value: pendingApplications, icon: <HourglassEmptyIcon />, color: colors.warning.DEFAULT },
+    { title: "Response Rate", value: `${responseRate}%`, icon: <TrendingUpIcon />, color: colors.secondary.DEFAULT },
+  ], [totalApplications, offersReceived, pendingApplications, responseRate]);
 
   return (
     <Grid container spacing={3} className="mb-8">
@@ -42,5 +42,3 @@ export default function StatsGrid({ stats }: StatsGridProps) {
     </Grid>
   );
 }
-
-export type { DashboardStats };

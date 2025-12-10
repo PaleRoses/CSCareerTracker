@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, Grid, Heading, Text } from '@/design-system/components'
-import type { OverviewStats } from '@/lib/queries/core/types'
+import type { OverviewStats } from '../types'
 
 interface OverviewStatsCardProps {
   stats: OverviewStats
