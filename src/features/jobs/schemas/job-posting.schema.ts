@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const JobPostingSchema = z
   .object({
-    companyId: z.string().uuid().optional(),
+    companyId: z.string().uuid().optional().or(z.literal('')),
     companyName: z
       .string()
       .max(100, 'Company name too long')

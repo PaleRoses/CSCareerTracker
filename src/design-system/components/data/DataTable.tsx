@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { DataGrid, type GridColDef, type GridRowParams } from "@mui/x-data-grid";
 import { Box } from "../primitives/Box";
 import type {
@@ -96,6 +96,12 @@ export function DataTable<TData extends { id: string | number }>({
 }: DataTableProps<TData>) {
   const gridColumns = useMemo(() => toGridColumns(columns), [columns]);
 
+  // Defer DataGrid rendering until after mount to avoid SSR hydration issues
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleRowClick = (params: GridRowParams<TData>) => {
     onRowClick?.({
       id: params.id,
@@ -109,6 +115,20 @@ export function DataTable<TData extends { id: string | number }>({
       row: params.row,
     } as RowClickParams<TData>);
   };
+
+  // Render placeholder until mounted to prevent SSR state update errors
+  if (!mounted) {
+    return (
+      <Box
+        className={className}
+        sx={{
+          height,
+          width: "100%",
+          ...dataGridStyles,
+        }}
+      />
+    );
+  }
 
   return (
     <Box
